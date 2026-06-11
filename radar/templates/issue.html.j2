@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>London Seed Radar: week of {{ issue.issue_date }}</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 44rem; margin: 2rem auto;
+         padding: 0 1rem; line-height: 1.6; color: #1a1a1a; }
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.2rem; margin-top: 2rem; }
+  .banner { background: #fff3cd; border: 1px solid #e0c869; padding: .6rem 1rem;
+            border-radius: 4px; font-size: .9rem; }
+  .meta { color: #666; font-size: .9rem; }
+  a { color: #0b5394; }
+  footer { margin-top: 3rem; font-size: .85rem; color: #666;
+           border-top: 1px solid #ddd; padding-top: 1rem; }
+</style>
+</head>
+<body>
+<p><a href="../index.html">&larr; London Seed Radar</a></p>
+<h1>Week of {{ issue.issue_date }}</h1>
+{% if sample_data %}
+<p class="banner">Sample data: generated from recorded test fixtures to
+demonstrate the pipeline. The companies are fictional.</p>
+{% endif %}
+<p>{{ entries|length }} newly funded early-stage companies in London this week.</p>
+
+{% for entry in entries %}
+<h2>{{ entry.company.name }} <span class="meta">({{ entry.event.stage }}, {{ entry.amount_label }})</span></h2>
+<p>{{ entry.company.one_liner }}</p>
+<p class="meta">
+{% if entry.founders %}
+Founders: {% for f in entry.founders %}{{ f.name }}{% if f.role %} ({{ f.role }}){% endif %}{% if not loop.last %}, {% endif %}{% endfor %}.
+{% endif %}
+Team: est. {{ entry.company.headcount_estimate or "unknown" }}.
+{% if entry.jobs %}
+Hiring: {{ entry.jobs|length }} live role(s){% if entry.company.website %}, <a href="{{ entry.company.website }}">site</a>{% endif %}.
+{% elif entry.company.ats_status == "unverifiable" %}
+Hiring: board exists, public API disabled, unverifiable.
+{% endif %}
+Evidence: {% for e in entry.evidence %}<a href="{{ e.url }}">{{ e.source_name }}</a>{% if not loop.last %}, {% endif %}{% endfor %}.
+</p>
+{% endfor %}
+
+<footer>
+Names, public roles, and public filings only; no personal contact data.
+Amounts from filings are best-effort. Corrections welcome via GitHub issues.
+</footer>
+</body>
+</html>

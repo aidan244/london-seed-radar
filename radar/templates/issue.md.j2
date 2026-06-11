@@ -1,0 +1,40 @@
+# London Seed Radar: week of {{ week_label }}
+
+> DRAFT. Edit before publishing; the voice below is scaffolding, not the
+> final copy. Re-check every claim against the evidence links. Amounts
+> from filings are best-effort: an SH01 proves a raise happened, not how
+> big it was.
+
+[INTRO: two or three sentences in your own voice about the week.]
+
+This week: {{ entries|length }} newly funded early-stage companies in London.
+
+{% for entry in entries %}
+## {{ loop.index }}. {{ entry.company.name }} ({{ entry.event.stage }}, {{ entry.amount_label }})
+
+{{ entry.company.one_liner or "[TODO: one-liner]" }}
+
+{% if entry.founders %}
+**Founders:** {% for f in entry.founders %}{{ f.name }}{% if f.role %} ({{ f.role }}{% if f.background %}; {{ f.background }}{% endif %}){% endif %}{% if not loop.last %}, {% endif %}{% endfor %}
+
+{% endif %}
+**Team size:** est. {{ entry.company.headcount_estimate or "unknown" }}{% if entry.company.headcount_source %} ({{ entry.company.headcount_source }}){% endif %}
+
+{% if entry.jobs %}
+**Hiring now:** {{ entry.jobs|length }} live role(s) on {{ entry.company.ats_provider }}, including {% for j in entry.jobs[:3] %}{{ j.title }}{% if not loop.last %}, {% endif %}{% endfor %}
+
+{% elif entry.company.ats_status == "unverifiable" %}
+**Hiring now:** job board exists but its public API is disabled; hiring unverifiable
+
+{% else %}
+**Hiring now:** no public job board found
+
+{% endif %}
+**Evidence:** {% for e in entry.evidence %}[{{ e.source_name }}]({{ e.url }}){% if not loop.last %}, {% endif %}{% endfor %}
+
+{% endfor %}
+---
+
+[OUTRO: your sign-off, subscribe link, and a request for replies.]
+
+Dataset and archive: see the GitHub Pages site for this repo.

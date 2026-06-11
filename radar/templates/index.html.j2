@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>London Seed Radar</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 44rem; margin: 2rem auto;
+         padding: 0 1rem; line-height: 1.6; color: #1a1a1a; }
+  h1 { font-size: 1.8rem; }
+  .banner { background: #fff3cd; border: 1px solid #e0c869; padding: .6rem 1rem;
+            border-radius: 4px; font-size: .9rem; }
+  .issue { margin: 1rem 0; }
+  .muted { color: #666; font-size: .9rem; }
+  a { color: #0b5394; }
+  footer { margin-top: 3rem; font-size: .85rem; color: #666;
+           border-top: 1px solid #ddd; padding-top: 1rem; }
+</style>
+</head>
+<body>
+<h1>London Seed Radar</h1>
+<p>A weekly briefing on every newly funded pre-seed, seed, and Series A
+company in London: what they do, who founded them, how big the team is,
+and who is hiring right now. Built on Companies House filings, funding
+press, and public ATS job boards. For founders, operators, and angels in
+the London early-stage scene.</p>
+{% if sample_data %}
+<p class="banner">Sample data: the entries below were generated from
+recorded test fixtures to demonstrate the pipeline. The companies are
+fictional. Live data replaces this after the first real issue.</p>
+{% endif %}
+
+<h2>Issues</h2>
+{% for item in issues %}
+<div class="issue">
+  <a href="issues/{{ item.issue.issue_date }}.html">Week of {{ item.issue.issue_date }}</a>
+  <span class="muted">{{ item.count }} companies{% if item.issue.status != "published" %}, draft{% endif %}</span>
+</div>
+{% else %}
+<p class="muted">No issues yet.</p>
+{% endfor %}
+
+<h2>Public dataset</h2>
+<p>Every featured company and funding event, as
+<a href="data/companies.json">companies.json</a>,
+<a href="data/companies.csv">companies.csv</a>,
+<a href="data/funding_events.json">funding_events.json</a>,
+<a href="data/funding_events.csv">funding_events.csv</a>.
+Amounts from filings are best-effort: an SH01 proves a raise happened,
+not how big it was.</p>
+
+<footer>
+Generated {{ generated }} by the London Seed Radar pipeline.
+Names, public roles, and public filings only; no personal contact data.
+Corrections welcome via GitHub issues.
+</footer>
+</body>
+</html>

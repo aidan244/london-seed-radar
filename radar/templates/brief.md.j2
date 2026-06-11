@@ -1,0 +1,55 @@
+# Research brief: {{ entry.company.name }}
+
+Prepared for the {{ issue_date }} issue. Internal working notes; the
+draft issue is the public-facing artifact.
+
+## Company
+
+- One-liner: {{ entry.company.one_liner or "unknown" }}{% if entry.company.one_liner_source %} (source: {{ entry.company.one_liner_source }}){% endif %}
+
+- Website: {{ entry.company.website or "unknown" }}
+- Companies House number: {{ entry.company.company_number or "not matched" }}
+- Incorporated: {{ entry.company.incorporated_on or "unknown" }}
+- Registered office: {{ entry.company.location_text or "unknown" }}
+- Headcount estimate: {{ entry.company.headcount_estimate or "unknown" }}{% if entry.company.headcount_source %} (source: {{ entry.company.headcount_source }}){% endif %}
+
+
+## Round
+
+- Stage: {{ entry.event.stage }}
+- Amount (best effort): {{ entry.amount_label }}{% if entry.event.amount_source %} (source: {{ entry.event.amount_source }}){% endif %}
+
+- Event date: {{ entry.event.event_date }}
+- Companies House filing: {{ entry.event.filing_id or "none yet; press only, filing may lag" }}
+
+## Founders (names and public roles only; no contact data in this repo)
+
+{% for f in entry.founders %}
+- {{ f.name }}{% if f.role %}, {{ f.role }}{% endif %}{% if f.background %}. {{ f.background }}{% endif %}{% if f.source_url %} [source]({{ f.source_url }}){% endif %}
+
+{% else %}
+- none recorded; check the company site and press before featuring
+{% endfor %}
+
+## Hiring signals
+
+- ATS: {{ entry.company.ats_provider or "none found" }}{% if entry.company.ats_status %} ({{ entry.company.ats_status }}){% endif %}
+
+{% for j in entry.jobs %}
+- {{ j.title }}{% if j.location %} ({{ j.location }}){% endif %}{% if j.url %} [link]({{ j.url }}){% endif %}
+
+{% else %}
+- no live roles recorded
+{% endfor %}
+
+## Evidence trail
+
+{% for e in entry.evidence %}
+- {{ e.kind }}: [{{ e.title or e.source_name }}]({{ e.url }}) ({{ e.source_name }}, {{ e.published_date or "undated" }})
+{% endfor %}
+
+## Outreach note
+
+Any message drafted for a specific founder is written by the human, or
+with Claude Opus 4.8 for the copy when available, and is sent from the
+human's own accounts. Nothing in this repo sends anything.
