@@ -1,0 +1,27 @@
+{
+  "_note": "Recorded fixture; fictional company. Framed as results of checking the company site and press only.",
+  "website": "https://hedgerowlabs.example.com",
+  "website_reachable": true,
+  "one_liner": "Carbon accounting platform that lets SME lenders measure and report the climate footprint of their loan books.",
+  "one_liner_source": "company site (recorded fixture)",
+  "founders": [
+    {
+      "name": "Priya Shah",
+      "role": "CEO",
+      "background": "previously led credit risk products at a London neobank",
+      "source_url": "https://hedgerowlabs.example.com/about"
+    },
+    {
+      "name": "Tom Okafor",
+      "role": "CTO",
+      "background": "former quant engineer in commodities trading",
+      "source_url": "https://hedgerowlabs.example.com/about"
+    }
+  ],
+  "headcount_estimate": "11-25",
+  "headcount_source": "company team page",
+  "ats": {
+    "provider": "greenhouse",
+    "token": "hedgerowlabs"
+  }
+}

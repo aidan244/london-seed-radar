@@ -1,0 +1,26 @@
+{
+  "website": "https://brockwellhealth.example.com",
+  "website_reachable": true,
+  "one_liner": "Menopause care platform pairing patients with specialist clinicians, sold through employers and the NHS.",
+  "one_liner_source": "company site (recorded fixture)",
+  "founders": [
+    {
+      "name": "Amara Boateng",
+      "role": "CEO",
+      "background": "NHS GP for eight years, women's health lead",
+      "source_url": "https://brockwellhealth.example.com/team"
+    },
+    {
+      "name": "Felix Hart",
+      "role": "CPO",
+      "background": "former product lead at a digital health scaleup",
+      "source_url": "https://brockwellhealth.example.com/team"
+    }
+  ],
+  "headcount_estimate": "11-25",
+  "headcount_source": "company team page",
+  "ats": {
+    "provider": "lever",
+    "token": "brockwellhealth"
+  }
+}

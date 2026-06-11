@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>Sifted</title>
+<link>https://press.example.org/sifted</link>
+<description>Recorded fixture feed. All companies are fictional.</description>
+<item>
+  <title>Pellwharf raises £1.8m seed for port call optimisation</title>
+  <link>https://press.example.org/sifted/pellwharf-seed</link>
+  <pubDate>Fri, 05 Jun 2026 12:00:00 GMT</pubDate>
+  <description>Canary Wharf maritime software startup Pellwharf has raised a £1.8m seed round to cut the time cargo ships spend waiting outside ports.</description>
+</item>
+<item>
+  <title>Tansy Money raises £600k pre-seed for gig worker savings</title>
+  <link>https://press.example.org/sifted/tansy-money-pre-seed</link>
+  <pubDate>Mon, 08 Jun 2026 08:00:00 GMT</pubDate>
+  <description>Soho fintech Tansy Money has raised £600k pre-seed to build automatic savings buffers for gig economy workers with irregular income.</description>
+</item>
+<item>
+  <title>Foxglove Diagnostics raises £2m seed round for at-home blood testing</title>
+  <link>https://press.example.org/sifted/foxglove-diagnostics-seed</link>
+  <pubDate>Mon, 08 Jun 2026 09:20:00 GMT</pubDate>
+  <description>King's Cross biotech Foxglove Diagnostics has raised a £2m seed round for its at-home capillary blood testing kits, with results read in its London lab.</description>
+</item>
+<item>
+  <title>Granite Bay Bio raises $12m Series A to expand its New England lab network</title>
+  <link>https://press.example.org/sifted/granite-bay-series-a</link>
+  <pubDate>Thu, 04 Jun 2026 14:00:00 GMT</pubDate>
+  <description>Boston-based Granite Bay Bio has raised a $12m Series A to add three sites to its New England contract research lab network.</description>
+</item>
+<item>
+  <title>Oldcastle Compute raises £1.5m seed for GPU scheduling</title>
+  <link>https://press.example.org/sifted/oldcastle-compute-seed</link>
+  <pubDate>Wed, 22 Apr 2026 10:00:00 GMT</pubDate>
+  <description>London developer tools startup Oldcastle Compute has raised a £1.5m seed round for its GPU workload scheduler for ML teams.</description>
+</item>
+<item>
+  <title>Wrenfold raises £1.2m seed for its stealth fintech</title>
+  <link>https://press.example.org/sifted/wrenfold-seed</link>
+  <pubDate>Sat, 06 Jun 2026 09:00:00 GMT</pubDate>
+  <description>London fintech Wrenfold has raised £1.2m in seed funding, according to a new Companies House filing. The company is still in stealth and has no public website.</description>
+</item>
+</channel>
+</rss>

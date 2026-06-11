@@ -1,0 +1,26 @@
+{
+  "website": "https://marrowbone.example.com",
+  "website_reachable": true,
+  "one_liner": "Robotic arms and workflow software that automate prep and cooking in delivery-only kitchens.",
+  "one_liner_source": "company site (recorded fixture)",
+  "founders": [
+    {
+      "name": "Jonas Keller",
+      "role": "CEO",
+      "background": "robotics PhD, ex food logistics operations",
+      "source_url": "https://marrowbone.example.com/about"
+    },
+    {
+      "name": "Sofia Reyes",
+      "role": "COO",
+      "background": "former dark kitchen network operator",
+      "source_url": "https://marrowbone.example.com/about"
+    }
+  ],
+  "headcount_estimate": "26-50",
+  "headcount_source": "press coverage of the round",
+  "ats": {
+    "provider": "greenhouse",
+    "token": "marrowbone"
+  }
+}

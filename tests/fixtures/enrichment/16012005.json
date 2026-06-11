@@ -1,0 +1,23 @@
+{
+  "website": "https://pellwharf.example.com",
+  "website_reachable": true,
+  "one_liner": "Port call optimisation software that cuts the time cargo ships spend waiting at anchor.",
+  "one_liner_source": "company site (recorded fixture)",
+  "founders": [
+    {
+      "name": "Edward Nkemelu",
+      "role": "CEO",
+      "background": "ten years in freight forwarding and port operations",
+      "source_url": "https://pellwharf.example.com/about"
+    },
+    {
+      "name": "Hana Suzuki",
+      "role": "CTO",
+      "background": "former marine traffic data engineer",
+      "source_url": "https://pellwharf.example.com/about"
+    }
+  ],
+  "headcount_estimate": "1-10",
+  "headcount_source": "company team page",
+  "ats": null
+}

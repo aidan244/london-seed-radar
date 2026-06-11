@@ -1,0 +1,15 @@
+{
+  "company_name": "BROCKWELL HEALTH LTD",
+  "company_number": "16012003",
+  "company_status": "active",
+  "type": "ltd",
+  "date_of_creation": "2024-05-20",
+  "sic_codes": [
+    "62012"
+  ],
+  "registered_office_address": {
+    "address_line_1": "210 Coldharbour Lane",
+    "locality": "Brixton, London",
+    "postal_code": "SW9 8SA"
+  }
+}

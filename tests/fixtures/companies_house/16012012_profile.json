@@ -1,0 +1,15 @@
+{
+  "company_name": "WRENFOLD LTD",
+  "company_number": "16012012",
+  "company_status": "active",
+  "type": "ltd",
+  "date_of_creation": "2025-09-09",
+  "sic_codes": [
+    "62012"
+  ],
+  "registered_office_address": {
+    "address_line_1": "86-90 Paul Street",
+    "locality": "London",
+    "postal_code": "EC2A 4NE"
+  }
+}

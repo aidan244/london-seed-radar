@@ -1,0 +1,21 @@
+{
+  "items": [
+    {
+      "category": "capital",
+      "type": "SH01",
+      "date": "2026-06-06",
+      "description": "capital-allotment-shares",
+      "description_values": {
+        "date": "2026-06-06",
+        "capital": [
+          {
+            "currency": "GBP",
+            "figure": "9,750"
+          }
+        ]
+      },
+      "transaction_id": "FIX16012004A"
+    }
+  ],
+  "total_count": 1
+}

@@ -1,0 +1,32 @@
+{
+  "jobs": [
+    {
+      "title": "Senior Backend Engineer",
+      "location": {
+        "name": "London"
+      },
+      "absolute_url": "https://boards.greenhouse.io/hedgerowlabs/jobs/1000"
+    },
+    {
+      "title": "Founding Account Executive",
+      "location": {
+        "name": "London"
+      },
+      "absolute_url": "https://boards.greenhouse.io/hedgerowlabs/jobs/1001"
+    },
+    {
+      "title": "Climate Data Analyst",
+      "location": {
+        "name": "London"
+      },
+      "absolute_url": "https://boards.greenhouse.io/hedgerowlabs/jobs/1002"
+    },
+    {
+      "title": "Product Designer",
+      "location": {
+        "name": "London (hybrid)"
+      },
+      "absolute_url": "https://boards.greenhouse.io/hedgerowlabs/jobs/1003"
+    }
+  ]
+}

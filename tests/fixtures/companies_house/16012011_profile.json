@@ -1,0 +1,15 @@
+{
+  "company_name": "OLDCASTLE COMPUTE LTD",
+  "company_number": "16012011",
+  "company_status": "active",
+  "type": "ltd",
+  "date_of_creation": "2024-02-01",
+  "sic_codes": [
+    "62012"
+  ],
+  "registered_office_address": {
+    "address_line_1": "31 Worship Street",
+    "locality": "London",
+    "postal_code": "EC2A 2DX"
+  }
+}

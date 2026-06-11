@@ -1,0 +1,26 @@
+{
+  "website": "https://tansymoney.example.com",
+  "website_reachable": true,
+  "one_liner": "Savings app that builds automatic cash buffers for gig workers with irregular income.",
+  "one_liner_source": "company site (recorded fixture)",
+  "founders": [
+    {
+      "name": "Grace Adeyemi",
+      "role": "CEO",
+      "background": "former payments product manager",
+      "source_url": "https://tansymoney.example.com/about"
+    },
+    {
+      "name": "Callum Doyle",
+      "role": "CTO",
+      "background": "previously backend engineer at a UK payroll provider",
+      "source_url": "https://tansymoney.example.com/about"
+    }
+  ],
+  "headcount_estimate": "1-10",
+  "headcount_source": "company team page",
+  "ats": {
+    "provider": "ashby",
+    "token": "tansymoney"
+  }
+}

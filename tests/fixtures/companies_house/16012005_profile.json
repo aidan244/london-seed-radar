@@ -1,0 +1,15 @@
+{
+  "company_name": "PELLWHARF LTD",
+  "company_number": "16012005",
+  "company_status": "active",
+  "type": "ltd",
+  "date_of_creation": "2025-01-15",
+  "sic_codes": [
+    "62012"
+  ],
+  "registered_office_address": {
+    "address_line_1": "25 Cabot Square",
+    "locality": "Canary Wharf, London",
+    "postal_code": "E14 4QZ"
+  }
+}

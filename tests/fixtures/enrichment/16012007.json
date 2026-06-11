@@ -1,0 +1,26 @@
+{
+  "website": "https://foxglovedx.example.com",
+  "website_reachable": true,
+  "one_liner": "At-home capillary blood testing kits with results read in an accredited London lab.",
+  "one_liner_source": "company site (recorded fixture)",
+  "founders": [
+    {
+      "name": "Lena Vogt",
+      "role": "CEO",
+      "background": "former genomics postdoctoral researcher",
+      "source_url": "https://foxglovedx.example.com/about"
+    },
+    {
+      "name": "Marcus Tan",
+      "role": "CTO",
+      "background": "previously built lab information systems",
+      "source_url": "https://foxglovedx.example.com/about"
+    }
+  ],
+  "headcount_estimate": "1-10",
+  "headcount_source": "company team page",
+  "ats": {
+    "provider": "greenhouse",
+    "token": "foxglovedx"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "jobs": [
+    {
+      "title": "Robotics Engineer",
+      "location": {
+        "name": "London"
+      },
+      "absolute_url": "https://boards.greenhouse.io/marrowbone/jobs/1000"
+    },
+    {
+      "title": "Embedded Software Engineer",
+      "location": {
+        "name": "London"
+      },
+      "absolute_url": "https://boards.greenhouse.io/marrowbone/jobs/1001"
+    },
+    {
+      "title": "Mechanical Design Engineer",
+      "location": {
+        "name": "London"
+      },
+      "absolute_url": "https://boards.greenhouse.io/marrowbone/jobs/1002"
+    },
+    {
+      "title": "Field Operations Lead",
+      "location": {
+        "name": "London"
+      },
+      "absolute_url": "https://boards.greenhouse.io/marrowbone/jobs/1003"
+    },
+    {
+      "title": "Supply Chain Manager",
+      "location": {
+        "name": "London"
+      },
+      "absolute_url": "https://boards.greenhouse.io/marrowbone/jobs/1004"
+    },
+    {
+      "title": "Office and People Coordinator",
+      "location": {
+        "name": "London"
+      },
+      "absolute_url": "https://boards.greenhouse.io/marrowbone/jobs/1005"
+    }
+  ]
+}

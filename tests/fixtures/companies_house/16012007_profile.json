@@ -1,0 +1,15 @@
+{
+  "company_name": "FOXGLOVE DIAGNOSTICS LTD",
+  "company_number": "16012007",
+  "company_status": "active",
+  "type": "ltd",
+  "date_of_creation": "2024-12-02",
+  "sic_codes": [
+    "86900"
+  ],
+  "registered_office_address": {
+    "address_line_1": "4 Pancras Square",
+    "locality": "King's Cross, London",
+    "postal_code": "N1C 4AG"
+  }
+}

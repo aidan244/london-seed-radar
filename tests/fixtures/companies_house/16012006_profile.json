@@ -1,0 +1,15 @@
+{
+  "company_name": "TANSY MONEY LTD",
+  "company_number": "16012006",
+  "company_status": "active",
+  "type": "ltd",
+  "date_of_creation": "2025-06-30",
+  "sic_codes": [
+    "62012"
+  ],
+  "registered_office_address": {
+    "address_line_1": "7 Berwick Street",
+    "locality": "Soho, London",
+    "postal_code": "W1F 0PJ"
+  }
+}

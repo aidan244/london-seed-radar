@@ -1,0 +1,15 @@
+{
+  "company_name": "MARROWBONE ROBOTICS LTD",
+  "company_number": "16012004",
+  "company_status": "active",
+  "type": "ltd",
+  "date_of_creation": "2023-11-08",
+  "sic_codes": [
+    "62012"
+  ],
+  "registered_office_address": {
+    "address_line_1": "Unit 4, Queens Yard",
+    "locality": "Hackney Wick, London",
+    "postal_code": "E9 5EN"
+  }
+}

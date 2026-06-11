@@ -1,0 +1,26 @@
+{
+  "website": "https://quillstone.example.com",
+  "website_reachable": true,
+  "one_liner": "AI copilot that drafts and negotiates contract clauses for in-house legal teams.",
+  "one_liner_source": "company site (recorded fixture)",
+  "founders": [
+    {
+      "name": "Maya Lindqvist",
+      "role": "CEO",
+      "background": "former commercial contracts lawyer at a City firm",
+      "source_url": "https://quillstone.example.com/about"
+    },
+    {
+      "name": "Dev Arora",
+      "role": "CTO",
+      "background": "previously ML engineer on document understanding systems",
+      "source_url": "https://quillstone.example.com/about"
+    }
+  ],
+  "headcount_estimate": "1-10",
+  "headcount_source": "company team page",
+  "ats": {
+    "provider": "ashby",
+    "token": "quillstone"
+  }
+}
