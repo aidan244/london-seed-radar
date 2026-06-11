@@ -15,7 +15,7 @@ import sys
 
 import jinja2
 
-from radar import config, db, stages, util
+from radar import config, db, juniors, stages, util
 
 PUBLIC_COMPANY_FIELDS = [
     "name", "company_number", "domain", "website", "location_text",
@@ -25,6 +25,11 @@ PUBLIC_COMPANY_FIELDS = [
 PUBLIC_EVENT_FIELDS = [
     "stage", "amount_gbp", "amount_source", "event_date", "filing_id",
     "status", "issue_date",
+]
+# junior_flag is guessed from the title alone; jobs.html says so.
+PUBLIC_JOB_FIELDS = [
+    "company_name", "title", "location", "url", "ats_provider",
+    "junior_flag", "first_seen",
 ]
 
 
@@ -57,9 +62,24 @@ def export_dataset(conn, data_dir):
                 (row["company_id"],))]
         companies.append(company)
 
+    job_rows = conn.execute(
+        "SELECT j.*, c.name AS company_name FROM jobs j "
+        "JOIN companies c ON c.id = j.company_id "
+        "WHERE j.company_id IN (SELECT company_id FROM funding_events "
+        "WHERE status IN ('featured','published')) "
+        "ORDER BY c.name, j.title").fetchall()
+    job_items = []
+    for j in job_rows:
+        item = {k: j[k] for k in
+                ("company_name", "title", "location", "url",
+                 "ats_provider", "first_seen")}
+        item["junior_flag"] = juniors.looks_junior(j["title"])
+        job_items.append(item)
+
     data_dir.mkdir(parents=True, exist_ok=True)
     generated = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-    for name, items in (("companies", companies), ("funding_events", events)):
+    for name, items in (("companies", companies),
+                        ("funding_events", events), ("jobs", job_items)):
         (data_dir / ("%s.json" % name)).write_text(json.dumps(
             {"generated_at": generated, "count": len(items), name: items},
             indent=2) + "\n")
@@ -67,7 +87,8 @@ def export_dataset(conn, data_dir):
                PUBLIC_COMPANY_FIELDS, companies)
     _write_csv(data_dir / "funding_events.csv",
                ["company_name"] + PUBLIC_EVENT_FIELDS, events)
-    return len(companies), len(events)
+    _write_csv(data_dir / "jobs.csv", PUBLIC_JOB_FIELDS, job_items)
+    return len(companies), len(events), len(job_items)
 
 
 def _write_csv(path, fields, items):
@@ -99,6 +120,34 @@ def _issue_entries(conn, issue_date):
     return entries
 
 
+def gather_hiring(conn):
+    """Live roles at featured or published companies, grad-friendly
+    titles first. The 🎓 flag is title-based; the page says so."""
+    companies = conn.execute(
+        "SELECT c.*, fe.stage, fe.amount_gbp, MAX(fe.event_date) AS event_date "
+        "FROM companies c JOIN funding_events fe ON fe.company_id = c.id "
+        "WHERE fe.status IN ('featured','published') "
+        "GROUP BY c.id ORDER BY c.name").fetchall()
+    groups = []
+    for row in companies:
+        jobs = conn.execute(
+            "SELECT * FROM jobs WHERE company_id = ? ORDER BY title",
+            (row["id"],)).fetchall()
+        if not jobs:
+            continue
+        roles = sorted(
+            ({"title": j["title"], "url": j["url"], "location": j["location"],
+              "junior": juniors.looks_junior(j["title"])} for j in jobs),
+            key=lambda r: (not r["junior"], r["title"]))
+        groups.append({
+            "company": dict(row),
+            "stage_label": stages.display_stage(row["stage"]),
+            "amount_label": stages.format_amount(row["amount_gbp"]),
+            "roles": roles,
+        })
+    return groups
+
+
 def render_site(conn, sample_data):
     env = _env()
     issues = conn.execute(
@@ -114,6 +163,10 @@ def render_site(conn, sample_data):
             env.get_template("issue.html.j2").render(
                 issue=dict(issue), entries=entries, sample_data=sample_data))
         rendered.append({"issue": dict(issue), "count": len(entries)})
+    (config.DOCS_DIR / "jobs.html").write_text(
+        env.get_template("jobs.html.j2").render(
+            groups=gather_hiring(conn), sample_data=sample_data,
+            generated=datetime.date.today().isoformat()))
     (config.DOCS_DIR / "index.html").write_text(
         env.get_template("index.html.j2").render(
             issues=rendered, sample_data=sample_data,
@@ -159,14 +212,16 @@ def main(argv=None):
         "SELECT COUNT(*) c FROM funding_events WHERE source_mode = 'fixture' "
         "AND status IN ('featured','published')").fetchone()["c"] > 0
 
-    n_companies, n_events = export_dataset(conn, config.DOCS_DIR / "data")
+    n_companies, n_events, n_jobs = export_dataset(
+        conn, config.DOCS_DIR / "data")
     n_pages = render_site(conn, sample_data)
     conn.commit()
 
     print("publish: issue %s marked published in the DB" % issue["issue_date"])
-    print("  dataset: docs/data/ (%d companies, %d events, JSON and CSV)"
-          % (n_companies, n_events))
-    print("  site:    docs/index.html plus %d issue page(s)" % n_pages)
+    print("  dataset: docs/data/ (%d companies, %d events, %d jobs, "
+          "JSON and CSV)" % (n_companies, n_events, n_jobs))
+    print("  site:    docs/index.html, docs/jobs.html, plus %d issue "
+          "page(s)" % n_pages)
     if sample_data:
         print("  note: dataset includes fixture-mode events; pages carry a "
               "sample-data banner")

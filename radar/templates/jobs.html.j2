@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who is hiring · London Seed Radar</title>
+<style>
+  body { font-family: Georgia, serif; max-width: 44rem; margin: 2rem auto;
+         padding: 0 1rem; line-height: 1.6; color: #1a1a1a; }
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.2rem; margin-bottom: .2rem; }
+  .banner { background: #fff3cd; border: 1px solid #e0c869; padding: .6rem 1rem;
+            border-radius: 4px; font-size: .9rem; }
+  .company { margin: 1.6rem 0; }
+  .muted { color: #666; font-size: .9rem; }
+  .grad { background: #e8f4e8; border-radius: 4px; padding: 0 .35rem;
+          font-size: .85rem; white-space: nowrap; }
+  ul { margin: .4rem 0 0 1.2rem; padding: 0; }
+  li { margin: .2rem 0; }
+  a { color: #0b5394; }
+  footer { margin-top: 3rem; font-size: .85rem; color: #666;
+           border-top: 1px solid #ddd; padding-top: 1rem; }
+</style>
+</head>
+<body>
+<p><a href="index.html">London Seed Radar</a> / who is hiring</p>
+<h1>Who is hiring</h1>
+<p>Live roles on public job boards at companies featured in the radar.
+🎓 marks a role a recent grad could apply for, guessed from the job
+title alone; read the posting before applying. Job boards change daily,
+so treat this page as a snapshot from when it was generated.</p>
+{% if sample_data %}
+<p class="banner">Sample data: the entries below were generated from
+recorded test fixtures to demonstrate the pipeline. The companies are
+fictional. Live data replaces this after the first real issue.</p>
+{% endif %}
+
+{% for group in groups %}
+<div class="company">
+  <h2>{{ group.company.name }}</h2>
+  <p class="muted">{{ group.stage_label }} · {{ group.amount_label }}
+  {%- if group.company.website %} · <a href="{{ group.company.website }}">{{ group.company.domain or group.company.website }}</a>{% endif %}</p>
+  <p>{{ group.company.one_liner }}</p>
+  <ul>
+  {% for role in group.roles %}
+    <li><a href="{{ role.url }}">{{ role.title }}</a>{% if role.junior %} <span class="grad">🎓 grad-friendly title</span>{% endif %}{% if role.location %} <span class="muted">· {{ role.location }}</span>{% endif %}</li>
+  {% endfor %}
+  </ul>
+</div>
+{% else %}
+<p class="muted">No live roles right now. Check back after the next issue.</p>
+{% endfor %}
+
+<footer>
+Generated {{ generated }} by the London Seed Radar pipeline.
+Roles come from public ATS job boards (Greenhouse, Ashby, Lever);
+no personal contact data. Corrections welcome via GitHub issues.
+</footer>
+</body>
+</html>

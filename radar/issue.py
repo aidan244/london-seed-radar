@@ -15,7 +15,7 @@ import sys
 
 import jinja2
 
-from radar import config, db, stages, util
+from radar import config, db, juniors, stages, util
 
 WEEKLY_TASKS = [
     ("Edit the draft issue at {path} and finalise the copy; the published "
@@ -92,7 +92,8 @@ def _short_pitch(one_liner):
 def _display_labels(entry):
     """Precomputed strings so the markdown template stays whitespace-safe.
     Badge legend: 🟢 hiring now, ⚪ no live roles found, 🔒 job board
-    unverifiable. 🎓 is added by the human while editing, never by code."""
+    unverifiable. 🎓 is flagged from the job title only; the draft says
+    so and the human verifies against the posting while editing."""
     founders = []
     for f in entry["founders"]:
         detail = "; ".join(filter(None, [f["role"], f["background"]]))
@@ -100,9 +101,17 @@ def _display_labels(entry):
 
     company, jobs = entry["company"], entry["jobs"]
     if jobs:
-        badge = "🟢"
+        any_junior = any(juniors.looks_junior(j["title"]) for j in jobs)
+        badge = "🟢 🎓" if any_junior else "🟢"
         chip = "🟢 %d role%s" % (len(jobs), "" if len(jobs) == 1 else "s")
-        titles = ", ".join(sorted(j["title"] for j in jobs)[:3])
+        if any_junior:
+            chip += " · 🎓"
+        # Grad-friendly titles surface first so the skim reader sees them.
+        ordered = sorted(jobs, key=lambda j: (not juniors.looks_junior(j["title"]),
+                                              j["title"]))
+        titles = ", ".join(
+            j["title"] + (" 🎓" if juniors.looks_junior(j["title"]) else "")
+            for j in ordered[:3])
         hiring = ("%d live role(s) on %s, including %s"
                   % (len(jobs), company["ats_provider"], titles))
     elif company["ats_status"] == "unverifiable":
