@@ -60,6 +60,15 @@ def parse_amount_gbp(text):
     return int(value)
 
 
+_STAGE_DISPLAY = {"pre-seed": "Pre-seed", "seed": "Seed", "series-a": "Series A"}
+
+
+def display_stage(stage):
+    if not stage:
+        return "unknown stage"
+    return _STAGE_DISPLAY.get(stage, stage.replace("-", " ").capitalize())
+
+
 def format_amount(amount_gbp):
     if amount_gbp is None:
         return "undisclosed"

@@ -1,30 +1,88 @@
-# London Seed Radar: week of {{ week_label }}
+# 📡 London Seed Radar · week of {{ week_label }}
+
+**{{ subtitle }}**
 
 > DRAFT. Edit before publishing; the voice below is scaffolding, not the
 > final copy. Re-check every claim against the evidence links. Amounts
 > from filings are best-effort: an SH01 proves a raise happened, not how
 > big it was.
 
+[IMAGE: masthead banner, 1100 x 220 px; reuse the Canva template and
+swap the issue numbers.]
+
 [INTRO: two or three sentences in your own voice about the week.]
 
+{% if shortfall_note %}
+{{ shortfall_note }}
+
+{% endif %}
 This week: {{ entries|length }} newly funded early-stage companies in London.
 
+---
+
+## ⚡ THE WEEK AT A GLANCE
+
 {% for entry in entries %}
-## {{ loop.index }}. {{ entry.company.name }} ({{ entry.event.stage }}, {{ entry.amount_label }})
+{{ loop.index }}. {{ entry.glance_label }}
+{% endfor %}
+
+*🟢 hiring now · ⚪ no live roles found · 🔒 job board unverifiable ·
+🎓 a role a recent grad could apply for (added by hand while editing)*
+
+{% if headline_label %}
+> {{ headline_label }}
+> [SUBSTACK: format this as a pull quote]
+
+{% endif %}
+{% for entry in entries %}
+---
+
+## {{ loop.index }} · {{ entry.company.name }} {{ entry.badge }}
+
+**{{ entry.strapline }}**
 
 {{ entry.company.one_liner or "[TODO: one-liner]" }}
 
-{% if entry.founders_label %}
-- **Founders:** {{ entry.founders_label }}
-{% endif %}
-- **Team size:** est. {{ entry.company.headcount_estimate or "unknown" }}{% if entry.company.headcount_source %} ({{ entry.company.headcount_source }}){% endif %}
+*Why it matters: [one line on why a reader should care; cut it if you have nothing].*
 
-- **Hiring now:** {{ entry.hiring_label }}
-- **Evidence:** {{ entry.evidence_label }}
+{% if entry.founders_label %}
+- 👥 **Founders:** {{ entry.founders_label }}
+{% endif %}
+- 📊 **Team:** {{ entry.team_label }}
+- 📈 **Hiring:** {{ entry.hiring_label }}
+- 🧾 **Evidence:** {{ entry.evidence_label }}
 
 {% endfor %}
 ---
 
-[OUTRO: your sign-off, subscribe link, and a request for replies.]
+## 📬 BEFORE YOU GO
 
-Dataset and archive: see the GitHub Pages site for this repo.
+[OUTRO: your sign-off, in your own voice.]
+
+**Spotted an error?** Reply to this email; corrections run in the next
+issue. If you are a founder featured here, replies are especially
+welcome.
+
+[SUBSTACK: insert Subscribe and Share buttons here]
+
+📂 **Dataset and archive:** every company, every week, as JSON and CSV
+on the [archive site](https://aidan244.github.io/london-seed-radar/).
+
+---
+
+## 🛠️ PASTE CHECKLIST (python -m radar.paste strips this section)
+
+1. Edit the copy above; rewrite or cut every "Why it matters" line.
+2. Add 🎓 next to roles a recent grad could apply for, judged from the
+   posting itself, not just the title.
+3. Replace the [IMAGE] placeholder with the 1100 x 220 weekly banner.
+4. Run: python -m radar.paste --copy (puts the rendered rich text on
+   the clipboard).
+5. Open a new Substack post and paste. If the clipboard route fails,
+   open the substack-paste.html it wrote, select all, copy, paste.
+   Raw markdown does not paste; rendered rich text does.
+6. Convert the "largest round" blockquote into a pull quote; insert
+   Subscribe and Share buttons where marked.
+7. Subject line starts with 📡; preheader is the subtitle line.
+8. Mobile preview: if at-a-glance lines wrap badly, shorten the
+   descriptors, not the badges.

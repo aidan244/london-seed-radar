@@ -1,6 +1,7 @@
 # CLAUDE.md: London Seed Radar
 
 Read MISTAKES.md at the start of every session, before doing anything else.
+Then read HANDOVER.md for the current state and open threads.
 
 ## What this project is
 
@@ -104,6 +105,16 @@ figures, label filing-derived figures as statement of capital, and say
 posting API (the endpoint 404s while the hosted page renders); report
 those as unverifiable, never guess. Headcount is a bucketed estimate
 with its source stored and shown.
+
+## Handover convention
+
+HANDOVER.md is the living snapshot of project state: where things
+stand, decisions made, and open threads. It is untracked (local working
+notes). Read it at the start of every session, right after MISTAKES.md.
+Before closing a session, append or update it with what was done this
+session, any new decisions, and the open threads as they now stand, so
+the next session (human or model) can pick up without re-deriving
+context.
 
 ## Mistakes log convention
 

@@ -20,8 +20,8 @@ from radar import config, db, stages, util
 WEEKLY_TASKS = [
     ("Edit the draft issue at {path} and finalise the copy; the published "
      "voice must be yours", "before sending"),
-    ("Paste the final issue into the newsletter platform and schedule it",
-     "publication day"),
+    ("Run python -m radar.paste --copy, paste into a new post on the "
+     "newsletter platform, and schedule it", "publication day"),
     ("Post the issue to LinkedIn from your account", "publication day"),
     ("Send a personal note to each featured founder from your own email "
      "or LinkedIn", "within 2 days of sending"),
@@ -75,8 +75,24 @@ def gather_featured(conn, limit):
     return scored[:limit]
 
 
+GLANCE_PITCH_CHARS = 48
+
+
+def _short_pitch(one_liner):
+    """Opening words of the one-liner for skim lines; the human shortens
+    it further while editing."""
+    if not one_liner:
+        return "[2-4 word descriptor]"
+    text = one_liner.strip().rstrip(".")
+    if len(text) <= GLANCE_PITCH_CHARS:
+        return text
+    return text[:GLANCE_PITCH_CHARS].rsplit(" ", 1)[0] + "..."
+
+
 def _display_labels(entry):
-    """Precomputed strings so the markdown template stays whitespace-safe."""
+    """Precomputed strings so the markdown template stays whitespace-safe.
+    Badge legend: 🟢 hiring now, ⚪ no live roles found, 🔒 job board
+    unverifiable. 🎓 is added by the human while editing, never by code."""
     founders = []
     for f in entry["founders"]:
         detail = "; ".join(filter(None, [f["role"], f["background"]]))
@@ -84,19 +100,66 @@ def _display_labels(entry):
 
     company, jobs = entry["company"], entry["jobs"]
     if jobs:
+        badge = "🟢"
+        chip = "🟢 %d role%s" % (len(jobs), "" if len(jobs) == 1 else "s")
         titles = ", ".join(sorted(j["title"] for j in jobs)[:3])
         hiring = ("%d live role(s) on %s, including %s"
                   % (len(jobs), company["ats_provider"], titles))
     elif company["ats_status"] == "unverifiable":
-        hiring = ("job board exists but its public API is disabled; "
+        badge = chip = "🔒"
+        hiring = ("🔒 job board exists but its public API is disabled; "
                   "hiring unverifiable")
     else:
-        hiring = "no public job board found"
+        badge = chip = "⚪"
+        hiring = "⚪ no public job board found"
 
-    evidence = ", ".join("[%s](%s)" % (e["source_name"], e["url"])
-                         for e in entry["evidence"])
-    return {"founders_label": ", ".join(founders),
-            "hiring_label": hiring, "evidence_label": evidence}
+    stage_label = stages.display_stage(entry["event"]["stage"])
+    pitch = _short_pitch(company["one_liner"])
+    team = "est. %s" % (company["headcount_estimate"] or "unknown")
+    if company["headcount_source"]:
+        team += " (%s)" % company["headcount_source"]
+
+    evidence = " · ".join("[%s](%s)" % (e["source_name"], e["url"])
+                          for e in entry["evidence"])
+    return {
+        "founders_label": ", ".join(founders),
+        "hiring_label": hiring,
+        "evidence_label": evidence,
+        "badge": badge,
+        "stage_label": stage_label,
+        "team_label": team,
+        "strapline": "%s · %s · %s" % (stage_label, entry["amount_label"], pitch),
+        "glance_label": "**%s** · %s · %s · %s · %s" % (
+            company["name"], stage_label, entry["amount_label"], pitch, chip),
+    }
+
+
+def _issue_header(featured, target):
+    """Subtitle, pull-quote, and shortfall strings for the draft header."""
+    disclosed = [e for e in featured if e["event"]["amount_gbp"]]
+    n = len(featured)
+    bits = ["%d new round%s" % (n, "" if n == 1 else "s")]
+    if disclosed:
+        total = sum(e["event"]["amount_gbp"] for e in disclosed)
+        bits.append("%s disclosed" % stages.format_amount(total))
+    bits.append("~%d min read" % max(2, round(n * 0.6)))
+
+    headline_label = None
+    if disclosed:
+        top = max(disclosed, key=lambda e: e["event"]["amount_gbp"])
+        headline_label = ("**%s for %s**, the week's largest disclosed "
+                          "round: %s" % (top["amount_label"],
+                                         top["company"]["name"],
+                                         _short_pitch(top["company"]["one_liner"])))
+
+    shortfall_note = None
+    if n < target:
+        shortfall_note = ("[NOTE: only %d compan%s qualified this week "
+                          "against a target of %d; say so plainly in the "
+                          "intro, never pad.]"
+                          % (n, "y" if n == 1 else "ies", target))
+    return {"subtitle": " · ".join(bits), "headline_label": headline_label,
+            "shortfall_note": shortfall_note}
 
 
 def create_weekly_todos(conn, issue_date, issue_path):
@@ -167,7 +230,8 @@ def main(argv=None):
 
     draft = env.get_template("issue.md.j2").render(
         entries=featured, issue_date=as_of,
-        week_label=as_of.strftime("%-d %B %Y"))
+        week_label=as_of.strftime("%-d %B %Y"),
+        **_issue_header(featured, target))
     draft_path = issue_dir / "draft-issue.md"
     draft_path.write_text(draft)
 
