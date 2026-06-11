@@ -1,0 +1,76 @@
+{
+  "generated_at": "2026-06-10 22:56",
+  "count": 7,
+  "funding_events": [
+    {
+      "stage": "seed",
+      "amount_gbp": 2000000,
+      "amount_source": "press: Sifted",
+      "event_date": "2026-06-08",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-06-10",
+      "company_name": "Foxglove Diagnostics"
+    },
+    {
+      "stage": "pre-seed",
+      "amount_gbp": 600000,
+      "amount_source": "press: Sifted",
+      "event_date": "2026-06-07",
+      "filing_id": "FIX16012006A",
+      "status": "published",
+      "issue_date": "2026-06-10",
+      "company_name": "Tansy Money"
+    },
+    {
+      "stage": "series-a",
+      "amount_gbp": 8500000,
+      "amount_source": "press: UKTN",
+      "event_date": "2026-06-06",
+      "filing_id": "FIX16012004A",
+      "status": "published",
+      "issue_date": "2026-06-10",
+      "company_name": "Marrowbone Robotics"
+    },
+    {
+      "stage": "pre-seed",
+      "amount_gbp": 750000,
+      "amount_source": "press: UKTN",
+      "event_date": "2026-06-05",
+      "filing_id": "FIX16012002A",
+      "status": "published",
+      "issue_date": "2026-06-10",
+      "company_name": "Quillstone AI"
+    },
+    {
+      "stage": "seed",
+      "amount_gbp": 1800000,
+      "amount_source": "press: Sifted",
+      "event_date": "2026-06-04",
+      "filing_id": "FIX16012005A",
+      "status": "published",
+      "issue_date": "2026-06-10",
+      "company_name": "Pellwharf"
+    },
+    {
+      "stage": "seed",
+      "amount_gbp": 2400000,
+      "amount_source": "press: UKTN",
+      "event_date": "2026-06-03",
+      "filing_id": "FIX16012001A",
+      "status": "published",
+      "issue_date": "2026-06-10",
+      "company_name": "Hedgerow Labs"
+    },
+    {
+      "stage": "seed",
+      "amount_gbp": 3000000,
+      "amount_source": "press: UKTN",
+      "event_date": "2026-06-02",
+      "filing_id": "FIX16012003A",
+      "status": "published",
+      "issue_date": "2026-06-10",
+      "company_name": "Brockwell Health"
+    }
+  ]
+}
