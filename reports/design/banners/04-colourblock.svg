@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="220" viewBox="0 0 1100 220" role="img" aria-label="London Seed Radar: weekly briefing banner">
+  <title>London Seed Radar</title>
+  <!-- Bold colour-block masthead: one acid-green field, one black slab, nothing else. -->
+  <!-- Palette: acid green #CCFF00, near-black #0A0A0A, white page behind. -->
+
+  <!-- Colour field -->
+  <rect x="0" y="0" width="1100" height="220" fill="#CCFF00"/>
+
+  <!-- Black slab, cut on a slight diagonal for poster energy -->
+  <polygon points="800,0 1100,0 1100,220 856,220" fill="#0A0A0A"/>
+
+  <!-- Radar motif, drawn with primitives only -->
+  <g>
+    <circle cx="965" cy="106" r="74" fill="none" stroke="#CCFF00" stroke-width="2" stroke-opacity="0.45"/>
+    <circle cx="965" cy="106" r="50" fill="none" stroke="#CCFF00" stroke-width="2" stroke-opacity="0.65"/>
+    <circle cx="965" cy="106" r="26" fill="none" stroke="#CCFF00" stroke-width="2" stroke-opacity="0.9"/>
+    <line x1="891" y1="106" x2="1039" y2="106" stroke="#CCFF00" stroke-width="1.5" stroke-opacity="0.3"/>
+    <line x1="965" y1="32" x2="965" y2="180" stroke="#CCFF00" stroke-width="1.5" stroke-opacity="0.3"/>
+    <!-- Sweep wedge plus its leading edge -->
+    <path d="M 965 106 L 965 32 A 74 74 0 0 1 1021.7 58.4 Z" fill="#CCFF00" fill-opacity="0.18"/>
+    <line x1="965" y1="106" x2="1021.7" y2="58.4" stroke="#CCFF00" stroke-width="2.5"/>
+    <!-- A fresh blip on the scope -->
+    <circle cx="935" cy="140" r="5" fill="#CCFF00"/>
+    <circle cx="935" cy="140" r="10" fill="none" stroke="#CCFF00" stroke-width="1.5" stroke-opacity="0.5"/>
+    <circle cx="965" cy="106" r="3" fill="#CCFF00"/>
+  </g>
+
+  <!-- Kicker pill -->
+  <rect x="48" y="24" width="178" height="27" fill="#0A0A0A"/>
+  <text x="137" y="42.5" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-weight="bold" font-size="13" letter-spacing="2" fill="#CCFF00">WEEKLY BRIEFING</text>
+
+  <!-- Wordmark: textLength pins the measure so system fonts always fill the block -->
+  <text x="48" y="130" font-family="'Arial Black', 'Arial Bold', Arial, Helvetica, sans-serif" font-weight="900" font-size="62" fill="#0A0A0A" textLength="700" lengthAdjust="spacingAndGlyphs">LONDON SEED RADAR</text>
+
+  <!-- Issue line: swap the text content below for each issue -->
+  <polygon points="48,159 48,175 61,167" fill="#0A0A0A"/>
+  <text id="issue-line" x="70" y="174" font-family="Helvetica, Arial, sans-serif" font-weight="bold" font-size="21" fill="#0A0A0A">7 new rounds &#183; week of 10 June 2026</text>
+
+  <!-- Base rule grounds the banner against the white email below -->
+  <rect x="0" y="214" width="1100" height="6" fill="#0A0A0A"/>
+</svg>

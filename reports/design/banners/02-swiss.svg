@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 220" width="1100" height="220" role="img" aria-label="London Seed Radar, weekly funding briefing banner">
+  <title>London Seed Radar masthead, Swiss typographic style</title>
+  <!-- Grid: left margin 64, right margin 64, baseline grid in 8px units. One accent colour: Swiss red #E30613. -->
+
+  <!-- Background -->
+  <rect x="0" y="0" width="1100" height="220" fill="#ffffff"/>
+
+  <!-- Accent anchor: short red bar on the grid, top left -->
+  <rect x="64" y="44" width="56" height="6" fill="#E30613"/>
+
+  <!-- Wordmark: flush left, Helvetica bold caps, tight -->
+  <text x="64" y="130"
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="60" font-weight="700" letter-spacing="-0.5"
+        fill="#111111">LONDON SEED RADAR</text>
+
+  <!-- Issue line: swap the text content below each week -->
+  <text x="64" y="172"
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="20" font-weight="400" letter-spacing="0.2"
+        fill="#555555">7 new rounds &#183; week of 10 June 2026</text>
+
+  <!-- Hairline column rule: articulates the asymmetric grid -->
+  <line x1="880" y1="44" x2="880" y2="176" stroke="#dcdcdc" stroke-width="1"/>
+
+  <!-- Radar mark: concentric rings, red sweep, one blip. Primitives only. -->
+  <g>
+    <circle cx="976" cy="110" r="63" fill="none" stroke="#b4b4b4" stroke-width="1.25"/>
+    <circle cx="976" cy="110" r="42" fill="none" stroke="#b4b4b4" stroke-width="1.25"/>
+    <circle cx="976" cy="110" r="21" fill="none" stroke="#b4b4b4" stroke-width="1.25"/>
+    <line x1="976" y1="110" x2="1016.5" y2="61.7" stroke="#E30613" stroke-width="2.5" stroke-linecap="round"/>
+    <circle cx="948" cy="132" r="4" fill="#E30613"/>
+    <circle cx="976" cy="110" r="3" fill="#111111"/>
+  </g>
+</svg>

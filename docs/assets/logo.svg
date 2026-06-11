@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="London Seed Radar logo">
+  <title>London Seed Radar logo</title>
+  <!--
+    Square logo mark derived from the masthead (06-hybrid): the radar
+    scope centred on the Thames bend, acid green on near-black, white
+    halo on the freshest round. Same palette as the banner: #CCFF00,
+    #0A0A0A, white.
+  -->
+
+  <defs>
+    <pattern id="cityGridLogo" width="34" height="34" patternUnits="userSpaceOnUse">
+      <circle cx="17" cy="17" r="2.2" fill="#CCFF00"/>
+    </pattern>
+  </defs>
+
+  <rect x="0" y="0" width="512" height="512" fill="#0A0A0A"/>
+  <rect x="0" y="0" width="512" height="512" fill="url(#cityGridLogo)" opacity="0.22"/>
+
+  <!-- The Thames: the signature U bend, one stroke across the mark -->
+  <g fill="none" stroke="#CCFF00" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M 40 230 C 110 215 160 225 185 270 C 205 307 230 330 266 330 C 302 330 330 305 340 262 C 352 215 410 196 472 210" stroke-width="34" opacity="0.18"/>
+    <path d="M 40 230 C 110 215 160 225 185 270 C 205 307 230 330 266 330 C 302 330 330 305 340 262 C 352 215 410 196 472 210" stroke-width="14" opacity="0.95"/>
+  </g>
+
+  <!-- Radar scope centred on the bend -->
+  <g>
+    <circle cx="266" cy="272" r="170" fill="none" stroke="#CCFF00" stroke-width="4" stroke-opacity="0.35"/>
+    <circle cx="266" cy="272" r="112" fill="none" stroke="#CCFF00" stroke-width="4" stroke-opacity="0.55"/>
+    <circle cx="266" cy="272" r="56" fill="none" stroke="#CCFF00" stroke-width="4" stroke-opacity="0.85"/>
+    <path d="M 266 272 L 266 102 A 170 170 0 0 1 396 162 Z" fill="#CCFF00" fill-opacity="0.15"/>
+    <line x1="266" y1="272" x2="396" y2="162" stroke="#CCFF00" stroke-width="7"/>
+    <circle cx="266" cy="272" r="9" fill="#CCFF00"/>
+  </g>
+
+  <!-- Rounds across the city; the freshest haloed in white -->
+  <g fill="#CCFF00">
+    <circle cx="96" cy="120" r="8"/>
+    <circle cx="160" cy="408" r="7"/>
+    <circle cx="420" cy="338" r="8"/>
+    <circle cx="448" cy="96" r="7"/>
+  </g>
+  <circle cx="356" cy="372" r="11" fill="#FFFFFF"/>
+  <circle cx="356" cy="372" r="26" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-opacity="0.6"/>
+</svg>

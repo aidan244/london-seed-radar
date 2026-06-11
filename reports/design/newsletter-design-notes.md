@@ -105,6 +105,34 @@ Image selection stays a human editing step. The pipeline does not
 fetch or attach images; judging whether a press kit covers a use is
 exactly the kind of call rule 5 keeps with the human.
 
+## Weekly banner export (added 2026-06-11, banner finalised)
+
+The chosen masthead is 06-hybrid (acid green colour-block carrying the
+London map, radar scope on the Thames bend). Canonical assets live in
+docs/assets/: masthead.svg (source of truth), masthead-1100x220.png,
+masthead-2200x440.png (use this one in Substack, it renders sharpest),
+logo.svg, and logo-512.png (square publication logo).
+
+Each week:
+
+1. Edit the text node with id="issue-line" in docs/assets/masthead.svg
+   to the new numbers, e.g. "9 new rounds · week of 22 June 2026".
+   Optional: make the blip circles match the round count.
+2. Re-export both PNGs with headless Chrome:
+
+   cd docs/assets
+   CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+   "$CHROME" --headless --disable-gpu --hide-scrollbars \
+     --screenshot=masthead-1100x220.png --window-size=1100,220 \
+     "file://$PWD/masthead.svg"
+   "$CHROME" --headless --disable-gpu --hide-scrollbars \
+     --screenshot=masthead-2200x440.png --window-size=1100,220 \
+     --force-device-scale-factor=2 "file://$PWD/masthead.svg"
+
+3. Insert masthead-2200x440.png at the top of the Substack post where
+   the [IMAGE] placeholder sits. The assets are committed with the
+   weekly publish commit, so the Pages site serves the current ones.
+
 ## Sources
 
 - newsletteroperator.com/p/newsletter-design (structure, headers, TOC,

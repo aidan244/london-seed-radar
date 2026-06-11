@@ -7,8 +7,10 @@
 > from filings are best-effort: an SH01 proves a raise happened, not how
 > big it was.
 
-[IMAGE: masthead banner, 1100 x 220 px; reuse the Canva template and
-swap the issue numbers.]
+[IMAGE: this week's masthead. Edit the issue-line text (and blip
+count, if you care) in docs/assets/masthead.svg, export per "Weekly
+banner export" in reports/design/newsletter-design-notes.md, insert
+the PNG here.]
 
 [INTRO: two or three sentences in your own voice about the week.]
 
@@ -22,14 +24,14 @@ This week: 7 newly funded early-stage companies in London.
 
 1. **Marrowbone Robotics** · Series A · £8.5m · Robotic arms and workflow software that... · 🟢 6 roles
 2. **Quillstone AI** · Pre-seed · £750k · AI copilot that drafts and negotiates contract... · 🟢 2 roles
-3. **Hedgerow Labs** · Seed · £2.4m · Carbon accounting platform that lets SME... · 🟢 4 roles
+3. **Hedgerow Labs** · Seed · £2.4m · Carbon accounting platform that lets SME... · 🟢 4 roles · 🎓
 4. **Brockwell Health** · Seed · £3m · Menopause care platform pairing patients with... · 🟢 3 roles
 5. **Tansy Money** · Pre-seed · £600k · Savings app that builds automatic cash buffers... · 🔒
 6. **Pellwharf** · Seed · £1.8m · Port call optimisation software that cuts the... · ⚪
-7. **Foxglove Diagnostics** · Seed · £2m · At-home capillary blood testing kits with... · 🟢 2 roles
+7. **Foxglove Diagnostics** · Seed · £2m · At-home capillary blood testing kits with... · 🟢 2 roles · 🎓
 
 *🟢 hiring now · ⚪ no live roles found · 🔒 job board unverifiable ·
-🎓 a role a recent grad could apply for (added by hand while editing)*
+🎓 a role a recent grad could apply for, flagged from the title only*
 
 > **£8.5m for Marrowbone Robotics**, the week's largest disclosed round: Robotic arms and workflow software that...
 > [SUBSTACK: format this as a pull quote]
@@ -66,7 +68,7 @@ AI copilot that drafts and negotiates contract clauses for in-house legal teams.
 
 ---
 
-## 3 · Hedgerow Labs 🟢
+## 3 · Hedgerow Labs 🟢 🎓
 
 **Seed · £2.4m · Carbon accounting platform that lets SME...**
 
@@ -76,7 +78,7 @@ Carbon accounting platform that lets SME lenders measure and report the climate 
 
 - 👥 **Founders:** Priya Shah (CEO; previously led credit risk products at a London neobank), Tom Okafor (CTO; former quant engineer in commodities trading)
 - 📊 **Team:** est. 11-25 (company team page)
-- 📈 **Hiring:** 4 live role(s) on greenhouse, including Climate Data Analyst, Founding Account Executive, Product Designer
+- 📈 **Hiring:** 4 live role(s) on greenhouse, including Climate Data Analyst 🎓, Founding Account Executive, Product Designer
 - 🧾 **Evidence:** [Companies House](https://find-and-update.company-information.service.gov.uk/company/16012001/filing-history) · [UKTN](https://press.example.org/uktn/hedgerow-labs-seed)
 
 ---
@@ -126,7 +128,7 @@ Port call optimisation software that cuts the time cargo ships spend waiting at 
 
 ---
 
-## 7 · Foxglove Diagnostics 🟢
+## 7 · Foxglove Diagnostics 🟢 🎓
 
 **Seed · £2m · At-home capillary blood testing kits with...**
 
@@ -136,7 +138,7 @@ At-home capillary blood testing kits with results read in an accredited London l
 
 - 👥 **Founders:** Lena Vogt (CEO; former genomics postdoctoral researcher), Marcus Tan (CTO; previously built lab information systems)
 - 📊 **Team:** est. 1-10 (company team page)
-- 📈 **Hiring:** 2 live role(s) on greenhouse, including Lab Operations Associate, Regulatory Affairs Lead
+- 📈 **Hiring:** 2 live role(s) on greenhouse, including Lab Operations Associate 🎓, Regulatory Affairs Lead
 - 🧾 **Evidence:** [Sifted](https://press.example.org/sifted/foxglove-diagnostics-seed)
 
 ---
@@ -159,13 +161,15 @@ on the [archive site](https://aidan244.github.io/london-seed-radar/).
 ## 🛠️ PASTE CHECKLIST (python -m radar.paste strips this section)
 
 1. Edit the copy above; rewrite or cut every "Why it matters" line.
-2. Add 🎓 next to roles a recent grad could apply for, judged from the
-   posting itself, not just the title.
-3. Replace the [IMAGE] placeholder with the 1100 x 220 weekly banner.
-4. Run: python -m radar.paste
-5. Open the substack-paste.html it writes, select all, copy, and paste
-   into a new Substack post. Raw markdown does not paste; rendered
-   rich text does.
+2. Check every 🎓 against the live posting; the flag is guessed from
+   the title alone. Remove wrong ones, add missed ones.
+3. Replace the [IMAGE] placeholder with the exported weekly banner
+   (docs/assets/masthead-2200x440.png renders sharpest in email).
+4. Run: python -m radar.paste --copy (puts the rendered rich text on
+   the clipboard).
+5. Open a new Substack post and paste. If the clipboard route fails,
+   open the substack-paste.html it wrote, select all, copy, paste.
+   Raw markdown does not paste; rendered rich text does.
 6. Convert the "largest round" blockquote into a pull quote; insert
    Subscribe and Share buttons where marked.
 7. Subject line starts with 📡; preheader is the subtitle line.

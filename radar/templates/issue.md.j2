@@ -7,8 +7,10 @@
 > from filings are best-effort: an SH01 proves a raise happened, not how
 > big it was.
 
-[IMAGE: masthead banner, 1100 x 220 px; reuse the Canva template and
-swap the issue numbers.]
+[IMAGE: this week's masthead. Edit the issue-line text (and blip
+count, if you care) in docs/assets/masthead.svg, export per "Weekly
+banner export" in reports/design/newsletter-design-notes.md, insert
+the PNG here.]
 
 [INTRO: two or three sentences in your own voice about the week.]
 
@@ -27,7 +29,7 @@ This week: {{ entries|length }} newly funded early-stage companies in London.
 {% endfor %}
 
 *🟢 hiring now · ⚪ no live roles found · 🔒 job board unverifiable ·
-🎓 a role a recent grad could apply for (added by hand while editing)*
+🎓 a role a recent grad could apply for, flagged from the title only*
 
 {% if headline_label %}
 > {{ headline_label }}
@@ -73,9 +75,10 @@ on the [archive site](https://aidan244.github.io/london-seed-radar/).
 ## 🛠️ PASTE CHECKLIST (python -m radar.paste strips this section)
 
 1. Edit the copy above; rewrite or cut every "Why it matters" line.
-2. Add 🎓 next to roles a recent grad could apply for, judged from the
-   posting itself, not just the title.
-3. Replace the [IMAGE] placeholder with the 1100 x 220 weekly banner.
+2. Check every 🎓 against the live posting; the flag is guessed from
+   the title alone. Remove wrong ones, add missed ones.
+3. Replace the [IMAGE] placeholder with the exported weekly banner
+   (docs/assets/masthead-2200x440.png renders sharpest in email).
 4. Run: python -m radar.paste --copy (puts the rendered rich text on
    the clipboard).
 5. Open a new Substack post and paste. If the clipboard route fails,

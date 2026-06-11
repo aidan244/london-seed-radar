@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  London Seed Radar: masthead banner, broadsheet newspaper style.
+  Self-contained SVG: system font stacks only, no external assets.
+  To update each week, edit only the text inside the group id="issue-line".
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="220" viewBox="0 0 1100 220" role="img" aria-labelledby="lsr-title lsr-desc">
+  <title id="lsr-title">London Seed Radar</title>
+  <desc id="lsr-desc">Broadsheet style nameplate: serif wordmark between hairline rules, with a small radar ornament and a weekly issue line.</desc>
+
+  <!-- Background: near-white, sits inside a white email -->
+  <rect x="0" y="0" width="1100" height="220" fill="#fffefb"/>
+
+  <!-- Top Oxford rule: thick over thin -->
+  <rect x="40" y="12" width="1020" height="3" fill="#1a1a1a"/>
+  <rect x="40" y="19" width="1020" height="1" fill="#1a1a1a"/>
+
+  <!-- Dateline row, small caps set by uppercase and letterspacing -->
+  <text x="40" y="43" text-anchor="start" font-family="Georgia, 'Times New Roman', Times, serif" font-size="14" letter-spacing="2.5" fill="#4a4a4a">A WEEKLY BRIEFING</text>
+  <text x="1060" y="43" text-anchor="end" font-family="Georgia, 'Times New Roman', Times, serif" font-size="14" letter-spacing="2.5" fill="#4a4a4a">PRE-SEED <tspan fill="#8a1c1c">&#183;</tspan> SEED <tspan fill="#8a1c1c">&#183;</tspan> SERIES A</text>
+
+  <!-- Radar ornament, centred in the dateline row, drawn with primitives -->
+  <g transform="translate(550,37)" stroke="#8a1c1c" fill="none" stroke-width="1.2">
+    <circle cx="0" cy="0" r="12"/>
+    <circle cx="0" cy="0" r="7"/>
+    <line x1="0" y1="0" x2="8.6" y2="-8.6"/>
+    <circle cx="-4.6" cy="3.4" r="1.7" fill="#8a1c1c" stroke="none"/>
+    <circle cx="0" cy="0" r="1.2" fill="#8a1c1c" stroke="none"/>
+  </g>
+
+  <!-- Nameplate wordmark -->
+  <text x="550" y="133" text-anchor="middle" font-family="Georgia, 'Times New Roman', Times, serif" font-size="62" font-weight="normal" letter-spacing="8" fill="#111111">LONDON SEED RADAR</text>
+
+  <!-- Hairline under the nameplate -->
+  <rect x="40" y="152" width="1020" height="1" fill="#1a1a1a"/>
+
+  <!-- Issue line: swappable text, keep the middle dot separators -->
+  <g id="issue-line">
+    <text x="550" y="181" text-anchor="middle" font-family="Georgia, 'Times New Roman', Times, serif" font-size="18" letter-spacing="2" fill="#333333">7 new rounds <tspan fill="#8a1c1c">&#183;</tspan> week of 10 June 2026</text>
+  </g>
+
+  <!-- Bottom Oxford rule: thin over thick, mirroring the top -->
+  <rect x="40" y="200" width="1020" height="1" fill="#1a1a1a"/>
+  <rect x="40" y="205" width="1020" height="3" fill="#1a1a1a"/>
+</svg>
