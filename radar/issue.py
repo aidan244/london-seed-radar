@@ -67,10 +67,35 @@ def gather_featured(conn, limit=MAX_FEATURED):
             "amount_label": stages.format_amount(event["amount_gbp"]),
         }
         entry["score"] = score(event, {e["kind"] for e in evidence}, len(jobs))
+        entry.update(_display_labels(entry))
         scored.append(entry)
     scored.sort(key=lambda e: (e["score"], e["event"]["event_date"]),
                 reverse=True)
     return scored[:limit]
+
+
+def _display_labels(entry):
+    """Precomputed strings so the markdown template stays whitespace-safe."""
+    founders = []
+    for f in entry["founders"]:
+        detail = "; ".join(filter(None, [f["role"], f["background"]]))
+        founders.append("%s (%s)" % (f["name"], detail) if detail else f["name"])
+
+    company, jobs = entry["company"], entry["jobs"]
+    if jobs:
+        titles = ", ".join(sorted(j["title"] for j in jobs)[:3])
+        hiring = ("%d live role(s) on %s, including %s"
+                  % (len(jobs), company["ats_provider"], titles))
+    elif company["ats_status"] == "unverifiable":
+        hiring = ("job board exists but its public API is disabled; "
+                  "hiring unverifiable")
+    else:
+        hiring = "no public job board found"
+
+    evidence = ", ".join("[%s](%s)" % (e["source_name"], e["url"])
+                         for e in entry["evidence"])
+    return {"founders_label": ", ".join(founders),
+            "hiring_label": hiring, "evidence_label": evidence}
 
 
 def create_weekly_todos(conn, issue_date, issue_path):

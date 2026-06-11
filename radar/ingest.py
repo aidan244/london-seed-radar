@@ -24,12 +24,15 @@ CH_PUBLIC_URL = ("https://find-and-update.company-information.service.gov.uk"
 
 
 def find_or_create_event(conn, company_id, event_date, source_mode):
-    """Match an observation to an existing active event for the same
-    company within MERGE_WINDOW_DAYS, or create a new discovered event."""
+    """Match an observation to an existing event for the same company
+    within MERGE_WINDOW_DAYS, or create a new discovered event.
+
+    Dropped and published events match too: re-ingesting the same filing
+    or article must merge into the existing event, never duplicate it or
+    resurrect a dropped one (statuses only move forward)."""
     target = util.parse_iso(event_date)
     rows = conn.execute(
-        "SELECT * FROM funding_events WHERE company_id = ? AND status != 'dropped'",
-        (company_id,),
+        "SELECT * FROM funding_events WHERE company_id = ?", (company_id,),
     ).fetchall()
     for row in rows:
         delta = abs((util.parse_iso(row["event_date"]) - target).days)
@@ -111,6 +114,10 @@ def ingest_press(conn, items, profiles, source_mode):
             location_text=ch.registered_office_text(profile) if profile else None,
             incorporated_on=profile.get("date_of_creation") if profile else None,
         )
+        # The headline casing ("Quillstone AI") beats the title-cased
+        # register name ("Quillstone Ai Ltd") as a display name.
+        conn.execute("UPDATE companies SET name = ? WHERE id = ?",
+                     (item["company_name"], company_id))
         event_id, is_new = find_or_create_event(
             conn, company_id, item["published_date"], source_mode)
         created += is_new

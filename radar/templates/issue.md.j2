@@ -14,23 +14,13 @@ This week: {{ entries|length }} newly funded early-stage companies in London.
 
 {{ entry.company.one_liner or "[TODO: one-liner]" }}
 
-{% if entry.founders %}
-**Founders:** {% for f in entry.founders %}{{ f.name }}{% if f.role %} ({{ f.role }}{% if f.background %}; {{ f.background }}{% endif %}){% endif %}{% if not loop.last %}, {% endif %}{% endfor %}
-
+{% if entry.founders_label %}
+- **Founders:** {{ entry.founders_label }}
 {% endif %}
-**Team size:** est. {{ entry.company.headcount_estimate or "unknown" }}{% if entry.company.headcount_source %} ({{ entry.company.headcount_source }}){% endif %}
+- **Team size:** est. {{ entry.company.headcount_estimate or "unknown" }}{% if entry.company.headcount_source %} ({{ entry.company.headcount_source }}){% endif %}
 
-{% if entry.jobs %}
-**Hiring now:** {{ entry.jobs|length }} live role(s) on {{ entry.company.ats_provider }}, including {% for j in entry.jobs[:3] %}{{ j.title }}{% if not loop.last %}, {% endif %}{% endfor %}
-
-{% elif entry.company.ats_status == "unverifiable" %}
-**Hiring now:** job board exists but its public API is disabled; hiring unverifiable
-
-{% else %}
-**Hiring now:** no public job board found
-
-{% endif %}
-**Evidence:** {% for e in entry.evidence %}[{{ e.source_name }}]({{ e.url }}){% if not loop.last %}, {% endif %}{% endfor %}
+- **Hiring now:** {{ entry.hiring_label }}
+- **Evidence:** {{ entry.evidence_label }}
 
 {% endfor %}
 ---
