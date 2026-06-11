@@ -2,7 +2,7 @@
 # Edit freely; the pipeline reads this at the start of every run.
 
 # Funding events must fall inside this window to pass the recency gate.
-# Launch setting: 21 days so the first issue (2026-06-22) draws from a
+# Launch setting: 21 days so the first issue (2026-06-15) draws from a
 # deeper pool. Revert to 14 after that issue ships.
 lookback_days: 21
 

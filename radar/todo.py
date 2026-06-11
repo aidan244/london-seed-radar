@@ -58,7 +58,7 @@ def cmd_done(conn, todo_id):
     return 0
 
 
-def cmd_edit(conn, todo_id, task):
+def cmd_edit(conn, todo_id, task, due=None):
     """Reword a todo when the human redefines the step; marking it done
     when it was not done would be dishonest, and history stays in git
     and HANDOVER.md."""
@@ -67,12 +67,17 @@ def cmd_edit(conn, todo_id, task):
     if row is None:
         print("No todo #%s." % todo_id)
         return 2
-    conn.execute("UPDATE human_todos SET task = ? WHERE id = ?",
-                 (task, todo_id))
+    if due is not None:
+        conn.execute("UPDATE human_todos SET task = ?, due_hint = ? WHERE id = ?",
+                     (task, due, todo_id))
+    else:
+        conn.execute("UPDATE human_todos SET task = ? WHERE id = ?",
+                     (task, todo_id))
     conn.commit()
     print("Edited #%d:" % row["id"])
-    print("  was: %s" % row["task"])
-    print("  now: %s" % task)
+    print("  was: %s%s" % (row["task"],
+                           (" (due: %s)" % row["due_hint"]) if row["due_hint"] else ""))
+    print("  now: %s%s" % (task, (" (due: %s)" % due) if due else ""))
     return 0
 
 
@@ -103,6 +108,7 @@ def main(argv=None):
     p_edit = sub.add_parser("edit", help="reword a todo")
     p_edit.add_argument("id", type=int)
     p_edit.add_argument("task")
+    p_edit.add_argument("--due", default=None, help="updated due hint")
     args = parser.parse_args(argv)
 
     conn = db.connect(args.db)
@@ -110,7 +116,7 @@ def main(argv=None):
     if args.verb == "done":
         return cmd_done(conn, args.id)
     if args.verb == "edit":
-        return cmd_edit(conn, args.id, args.task)
+        return cmd_edit(conn, args.id, args.task, getattr(args, "due", None))
     if args.verb == "add":
         return cmd_add(conn, args.task, args.category, args.due)
     cmd_list(conn, getattr(args, "all", False))
