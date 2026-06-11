@@ -54,3 +54,8 @@ def load_sources():
 def lookback_days(sources=None):
     sources = sources if sources is not None else load_sources()
     return int(sources.get("lookback_days", 14))
+
+
+def companies_per_issue(sources=None):
+    sources = sources if sources is not None else load_sources()
+    return int(sources.get("companies_per_issue", 10))

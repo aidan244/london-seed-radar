@@ -4,6 +4,11 @@
 # Funding events must fall inside this window to pass the recency gate.
 lookback_days: 14
 
+# Number of companies to feature in each weekly issue. If fewer qualify
+# in a week, the issue features all of them and says so; it is never
+# padded with unverified companies.
+companies_per_issue: 10
+
 # Funding press feeds. Public RSS only; never scrape walled sites.
 rss_feeds:
   - name: UKTN
@@ -25,8 +30,9 @@ watchlist_company_numbers: []
 # name (lowercase, no Ltd/Limited suffix). The reality gate needs a live
 # website; if sieve --dry-run reports "no website found", add it here and
 # re-run sieve.
-website_overrides: {}
+website_overrides:
   # example company: https://example.com
+  capsa ai: https://capsa.ai
 
 # Manual ATS board mappings for live mode, same key as above.
 ats_overrides: {}

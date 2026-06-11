@@ -75,6 +75,13 @@ Every candidate passes all four or is dropped with a recorded reason:
 4. Reality: live web presence and a corroborated funding event, meaning
    a Companies House filing or at least one press source.
 
+## Issue composition
+
+Each issue targets 10 companies (companies_per_issue in sources.yaml,
+set 2026-06-11 at Aidan's request). If fewer qualify in a week, feature
+the real ones and say so in the issue; never pad with unverified
+companies or stretch the gates to hit the number.
+
 ## Status flow (forward-only)
 
 discovered -> sieved -> enriched -> featured -> published, with dropped

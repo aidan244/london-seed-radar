@@ -1,7 +1,10 @@
-"""Stage 4: issue. Select the top 6 to 8 enriched events for the week,
-render a per-company research brief plus a draft issue into
-issues/YYYY-MM-DD/, advance those events to 'featured', and create the
-week's human todos.
+"""Stage 4: issue. Select the top enriched events for the week (target
+set by companies_per_issue in sources.yaml, default 10), render a
+per-company research brief plus a draft issue into issues/YYYY-MM-DD/,
+advance those events to 'featured', and create the week's human todos.
+
+If fewer companies qualify than the target, the issue features all of
+them and says so; it is never padded with unverified entries.
 
 The draft is a DRAFT. The human edits it and owns the final voice;
 nothing in this repo can publish or send it.
@@ -13,8 +16,6 @@ import sys
 import jinja2
 
 from radar import config, db, stages, util
-
-MIN_FEATURED, MAX_FEATURED = 6, 8
 
 WEEKLY_TASKS = [
     ("Edit the draft issue at {path} and finalise the copy; the published "
@@ -44,7 +45,7 @@ def score(event, evidence_kinds, jobs_count):
     return s
 
 
-def gather_featured(conn, limit=MAX_FEATURED):
+def gather_featured(conn, limit):
     rows = conn.execute(
         "SELECT * FROM funding_events WHERE status = 'enriched' "
         "ORDER BY event_date DESC").fetchall()
@@ -143,13 +144,14 @@ def main(argv=None):
         print("issue %s is already published; refusing to rebuild it." % as_of)
         return 2
 
-    featured = gather_featured(conn)
+    target = config.companies_per_issue()
+    featured = gather_featured(conn, limit=target)
     if not featured:
         print("issue: nothing with status 'enriched'; run the earlier stages first.")
         return 2
-    if len(featured) < MIN_FEATURED:
+    if len(featured) < target:
         print("note: only %d enriched candidate(s); featuring all of them "
-              "(target is %d to %d)." % (len(featured), MIN_FEATURED, MAX_FEATURED))
+              "(target is %d, set in sources.yaml)." % (len(featured), target))
 
     warn_stale_weeklies(conn, as_of)
 
