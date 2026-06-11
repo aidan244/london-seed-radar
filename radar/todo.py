@@ -4,6 +4,7 @@ do. The pipeline gates on it; treat it as a first-class feature.
   python -m radar.todo list [--all]
   python -m radar.todo done <id>
   python -m radar.todo add "task" [--category setup|weekly|growth] [--due "hint"]
+  python -m radar.todo edit <id> "reworded task"
 """
 
 import argparse
@@ -57,6 +58,24 @@ def cmd_done(conn, todo_id):
     return 0
 
 
+def cmd_edit(conn, todo_id, task):
+    """Reword a todo when the human redefines the step; marking it done
+    when it was not done would be dishonest, and history stays in git
+    and HANDOVER.md."""
+    row = conn.execute("SELECT * FROM human_todos WHERE id = ?",
+                       (todo_id,)).fetchone()
+    if row is None:
+        print("No todo #%s." % todo_id)
+        return 2
+    conn.execute("UPDATE human_todos SET task = ? WHERE id = ?",
+                 (task, todo_id))
+    conn.commit()
+    print("Edited #%d:" % row["id"])
+    print("  was: %s" % row["task"])
+    print("  now: %s" % task)
+    return 0
+
+
 def cmd_add(conn, task, category, due):
     cur = conn.execute(
         "INSERT INTO human_todos (task, category, due_hint) VALUES (?, ?, ?)",
@@ -81,12 +100,17 @@ def main(argv=None):
     p_add.add_argument("--category", default="growth",
                        choices=["setup", "weekly", "growth"])
     p_add.add_argument("--due", default=None, help="free-text due hint")
+    p_edit = sub.add_parser("edit", help="reword a todo")
+    p_edit.add_argument("id", type=int)
+    p_edit.add_argument("task")
     args = parser.parse_args(argv)
 
     conn = db.connect(args.db)
     db.init_db(conn)
     if args.verb == "done":
         return cmd_done(conn, args.id)
+    if args.verb == "edit":
+        return cmd_edit(conn, args.id, args.task)
     if args.verb == "add":
         return cmd_add(conn, args.task, args.category, args.due)
     cmd_list(conn, getattr(args, "all", False))
