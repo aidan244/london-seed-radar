@@ -13,3 +13,6 @@ __pycache__/
 
 # OS
 .DS_Store
+
+# Local working notes, not for the public repo
+HANDOVER.md
