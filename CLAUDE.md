@@ -90,6 +90,13 @@ status backwards; radar/db.py raises StatusFlowError on any attempt.
 
 ## Data honesty
 
+Companies House name matches can collide: a foreign startup can share a
+name with an unrelated UK company, attaching a London registered office
+to the wrong funding event. Before adding a website_override to pass the
+reality gate, read the press evidence and confirm the company in the
+article is actually the London entity (seen live with TurnUp, Ghent,
+2026-06-11).
+
 An SH01 filing proves a raise happened and when, but the amount is often
 inside an attached PDF, so amount-raised is best-effort: prefer press
 figures, label filing-derived figures as statement of capital, and say

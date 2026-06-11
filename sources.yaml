@@ -2,7 +2,9 @@
 # Edit freely; the pipeline reads this at the start of every run.
 
 # Funding events must fall inside this window to pass the recency gate.
-lookback_days: 14
+# Launch setting: 21 days so the first issue (2026-06-22) draws from a
+# deeper pool. Revert to 14 after that issue ships.
+lookback_days: 21
 
 # Number of companies to feature in each weekly issue. If fewer qualify
 # in a week, the issue features all of them and says so; it is never
@@ -17,6 +19,20 @@ rss_feeds:
     url: https://sifted.eu/feed
   - name: TechCrunch
     url: https://techcrunch.com/feed/
+  - name: Tech.eu
+    url: https://tech.eu/feed/
+  - name: EU-Startups
+    url: https://www.eu-startups.com/feed/
+  - name: BusinessCloud
+    url: https://businesscloud.co.uk/feed/
+  - name: TechRound
+    url: https://techround.co.uk/feed/
+  - name: Maddyness UK
+    url: https://www.maddyness.com/uk/feed/
+  - name: Finextra
+    url: https://www.finextra.com/rss/headlines.aspx
+  - name: City AM
+    url: https://www.cityam.com/feed/
 
 # Extra London markers, merged with the built-in list in radar/geo.py.
 # Matched on word boundaries only; "uk" never matches Ukraine.
