@@ -16,3 +16,6 @@ __pycache__/
 
 # Local working notes, not for the public repo
 HANDOVER.md
+
+# Generated paste artifact, recreate with python -m radar.paste
+issues/*/substack-paste.html
