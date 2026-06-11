@@ -1,0 +1,15 @@
+# Secrets: never commit. The Companies House key lives here.
+.env
+
+# Working database: source of truth lives locally, public dataset is exported to docs/data/
+radar.db
+radar.db-journal
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.egg-info/
+
+# OS
+.DS_Store

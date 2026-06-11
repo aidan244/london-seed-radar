@@ -1,0 +1,35 @@
+# London Seed Radar source configuration.
+# Edit freely; the pipeline reads this at the start of every run.
+
+# Funding events must fall inside this window to pass the recency gate.
+lookback_days: 14
+
+# Funding press feeds. Public RSS only; never scrape walled sites.
+rss_feeds:
+  - name: UKTN
+    url: https://www.uktech.news/feed
+  - name: Sifted
+    url: https://sifted.eu/feed
+  - name: TechCrunch
+    url: https://techcrunch.com/feed/
+
+# Extra London markers, merged with the built-in list in radar/geo.py.
+# Matched on word boundaries only; "uk" never matches Ukraine.
+extra_london_markers: []
+
+# Companies House numbers to always check during live ingest,
+# for companies you already know about that press has not covered.
+watchlist_company_numbers: []
+
+# Manual website confirmations for live mode, keyed by normalized company
+# name (lowercase, no Ltd/Limited suffix). The reality gate needs a live
+# website; if sieve --dry-run reports "no website found", add it here and
+# re-run sieve.
+website_overrides: {}
+  # example company: https://example.com
+
+# Manual ATS board mappings for live mode, same key as above.
+ats_overrides: {}
+  # example company:
+  #   provider: greenhouse
+  #   token: examplecompany
