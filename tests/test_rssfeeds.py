@@ -2,6 +2,8 @@
 filters. No network; everything runs from tests/fixtures/rss/. This is the
 path the WebFetch-based cloud scout reuses via load_from_dir."""
 
+import urllib.parse
+
 from radar import config, rssfeeds
 
 
@@ -51,3 +53,18 @@ def test_entries_without_funding_verb_in_title_are_filtered():
     # Only the third entry has both a funding verb and a name-before-verb
     # structure in the title.
     assert names == ["Acme Labs"]
+
+
+def test_proxied_feeds_route_through_the_configured_proxy():
+    feeds = rssfeeds.proxied_feeds()
+    assert feeds, "expected feeds from sources.yaml"
+    template = (config.load_sources().get("feed_proxy") or {}).get("template")
+    for feed in feeds:
+        # The direct url is always preserved for the local authoritative path.
+        assert feed["url"].startswith("http")
+        if template:
+            # Origin percent-encoded into the proxy so the cloud routine's
+            # WebFetch hits a non-blocked IP, not the 403ing origin.
+            assert urllib.parse.quote(feed["url"], safe="") in feed["proxied_url"]
+        else:
+            assert feed["proxied_url"] == feed["url"]

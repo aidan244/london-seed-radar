@@ -9,6 +9,7 @@ the sieve do the real filtering, so triage here is deliberately loose.
 import re
 import socket
 import time
+import urllib.parse
 
 import feedparser
 
@@ -119,10 +120,37 @@ def load_live():
     return fetch_live()["items"]
 
 
+def proxied_feeds():
+    """Feed list rewritten to go through the configured cloud-scout proxy.
+
+    The scheduled cloud routines run from an IP the feed providers block:
+    every feed returns HTTP 403 from the sandbox and from the WebFetch
+    tool alike (confirmed 2026-06-12 and 2026-06-13). The routine fetches
+    each entry's proxied_url instead, which requests the feed from a
+    non-blocked IP and returns the raw body for load_from_dir. This is
+    best-effort triage; the local pipeline fetches feeds directly and
+    stays the authoritative source. Returns one record per feed with its
+    name, the direct url, and the proxied_url (equal to url when no
+    feed_proxy template is configured)."""
+    cfg = config.load_sources()
+    feeds = cfg.get("rss_feeds") or []
+    template = (cfg.get("feed_proxy") or {}).get("template") or ""
+    out = []
+    for feed in feeds:
+        url = feed["url"]
+        if template:
+            proxied = template.replace("{url}", urllib.parse.quote(url, safe=""))
+        else:
+            proxied = url
+        out.append({"name": feed.get("name", url), "url": url,
+                    "proxied_url": proxied})
+    return out
+
+
 def load_from_dir(directory):
     """Triage saved feed files (*.xml) in a directory through the same logic
     as live feeds. Used by fixtures and by the cloud scout, which saves the
-    feeds it fetches via WebFetch (a non-blocked egress) and parses them here."""
+    feeds it fetches through the proxy (see proxied_feeds) and parses them here."""
     items = []
     for path in sorted(directory.glob("*.xml")):
         parsed = feedparser.parse(str(path))

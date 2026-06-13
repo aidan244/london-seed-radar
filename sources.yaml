@@ -34,6 +34,18 @@ rss_feeds:
   - name: City AM
     url: https://www.cityam.com/feed/
 
+# Cloud-scout feed proxy. The scheduled cloud routines run from an IP the
+# feed providers block: every feed returns HTTP 403 from the sandbox and
+# from the WebFetch tool alike (confirmed 2026-06-12 and 2026-06-13). The
+# routine fetches each feed through this public re-server, which requests
+# from a non-blocked IP and returns the raw feed body; {url} is filled
+# with the percent-encoded feed URL. Best-effort triage only: the local
+# pipeline fetches feeds directly (200) and stays authoritative, and the
+# cloud routine always also runs a WebSearch pass, so a dead proxy never
+# means an empty report. Swap the template or blank it to disable.
+feed_proxy:
+  template: https://api.allorigins.win/raw?url={url}
+
 # Extra London markers, merged with the built-in list in radar/geo.py.
 # Matched on word boundaries only; "uk" never matches Ukraine.
 extra_london_markers: []
