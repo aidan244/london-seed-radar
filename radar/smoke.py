@@ -2,11 +2,12 @@
 Read-only; nothing is written to the database.
 
   python -m radar.smoke companies_house [--query monzo]
-  python -m radar.smoke rss
+  python -m radar.smoke rss [--from-dir PATH]
   python -m radar.smoke ats <greenhouse|ashby|lever> <token>
 """
 
 import argparse
+import pathlib
 import sys
 
 from radar import ats, ch, config, rssfeeds
@@ -36,9 +37,19 @@ def smoke_companies_house(query):
     return 0
 
 
-def smoke_rss():
-    items = rssfeeds.load_live()
-    print("Funding-shaped items across configured feeds: %d" % len(items))
+def smoke_rss(from_dir=None):
+    if from_dir:
+        items = rssfeeds.load_from_dir(pathlib.Path(from_dir))
+        print("Triaged saved feeds in %s" % from_dir)
+    else:
+        result = rssfeeds.fetch_live()
+        items = result["items"]
+        print("%-16s %-8s %8s %8s" % ("feed", "status", "entries", "funding"))
+        for f in result["feeds"]:
+            status = f["error"] or (f["status"] if f["status"] is not None else "ok")
+            print("  %-14s %-8s %8d %8d"
+                  % (f["name"][:14], status, f["entries"], f["funding_items"]))
+    print("Funding-shaped items: %d" % len(items))
     for item in items[:5]:
         print("  [%s] %s (%s, stage: %s)"
               % (item["source_name"], item["title"],
@@ -65,7 +76,10 @@ def main(argv=None):
     sub = parser.add_subparsers(dest="source", required=True)
     p_ch = sub.add_parser("companies_house")
     p_ch.add_argument("--query", default="monzo")
-    sub.add_parser("rss")
+    p_rss = sub.add_parser("rss")
+    p_rss.add_argument("--from-dir", default=None, metavar="PATH",
+                       help="triage saved feed files (*.xml) in PATH instead "
+                            "of fetching live; for the WebFetch-based scout")
     p_ats = sub.add_parser("ats")
     p_ats.add_argument("provider", choices=list(ats.PROVIDERS))
     p_ats.add_argument("token")
@@ -74,7 +88,7 @@ def main(argv=None):
     if args.source == "companies_house":
         return smoke_companies_house(args.query)
     if args.source == "rss":
-        return smoke_rss()
+        return smoke_rss(args.from_dir)
     return smoke_ats(args.provider, args.token)
 
 
