@@ -1,0 +1,22 @@
+{
+  "_note": "Curated live-mode enrichment. Public facts only; no contact data.",
+  "company_number": "16352550",
+  "one_liner": "Redesigns DNA therapeutics to evade cellular defence mechanisms so genetic medicines work at lower doses with better safety.",
+  "one_liner_source": "company site (verified 2026-06-29)",
+  "headcount_estimate": "1-10",
+  "headcount_source": "Clay (LinkedIn-derived), 2026-06-29",
+  "founders": [
+    {
+      "name": "Jonathan Cohen-Gold",
+      "role": "Co-Founder and CEO",
+      "background": null,
+      "source_url": "https://www.houdinibio.com"
+    },
+    {
+      "name": "Lee Dunham",
+      "role": "Co-Founder and CBO",
+      "background": null,
+      "source_url": "https://www.houdinibio.com"
+    }
+  ]
+}

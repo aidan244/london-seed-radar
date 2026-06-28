@@ -1,0 +1,14 @@
+{
+  "_note": "Curated live-mode enrichment. Public facts only; no contact data. Headcount omitted: Clay shows ~186 staff, above the bucket set; set it by hand if needed.",
+  "company_number": "13829439",
+  "one_liner": "Certification platform and public registry for carbon removal and other industrial climate projects, pairing AI agents with human verifiers.",
+  "one_liner_source": "company site (verified 2026-06-29)",
+  "founders": [
+    {
+      "name": "Eamon Jubbawy",
+      "role": "Founder and CEO",
+      "background": "previously co-founded the identity verification company Onfido",
+      "source_url": "https://techcrunch.com/2023/07/17/isometric-taps-25m-to-build-a-registry-and-science-platform-focused-on-carbon-removal/"
+    }
+  ]
+}

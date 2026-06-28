@@ -1,0 +1,28 @@
+{
+  "_note": "Curated live-mode enrichment. Public facts only; no contact data.",
+  "company_number": "15396489",
+  "one_liner": "Agentic AI that maps the business logic buried inside legacy enterprise software, starting with SAP, so teams can understand and change core systems faster.",
+  "one_liner_source": "company site (verified 2026-06-29)",
+  "headcount_estimate": "26-50",
+  "headcount_source": "company funding coverage (~38 staff, eu-startups), 2026-06-29",
+  "founders": [
+    {
+      "name": "Jan Philipp Haas",
+      "role": "Co-Founder",
+      "background": "former Palantir engineer and executive",
+      "source_url": "https://www.eu-startups.com/2026/06/ex-palantir-team-behind-conduct-raises-e51-million-to-make-enterprise-systems-ai-ready/"
+    },
+    {
+      "name": "Philipp Hoefer",
+      "role": "Co-Founder",
+      "background": "former Palantir engineer and executive",
+      "source_url": "https://www.eu-startups.com/2026/06/ex-palantir-team-behind-conduct-raises-e51-million-to-make-enterprise-systems-ai-ready/"
+    },
+    {
+      "name": "Henry Thompson",
+      "role": "Co-Founder and CTO",
+      "background": "former Palantir engineer and executive",
+      "source_url": "https://www.eu-startups.com/2026/06/ex-palantir-team-behind-conduct-raises-e51-million-to-make-enterprise-systems-ai-ready/"
+    }
+  ]
+}

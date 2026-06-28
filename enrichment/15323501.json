@@ -1,0 +1,22 @@
+{
+  "_note": "Curated live-mode enrichment. Public facts only; no contact data.",
+  "company_number": "15323501",
+  "one_liner": "AI operating system for private capital firms that automates deal sourcing, due diligence, and portfolio monitoring.",
+  "one_liner_source": "company site (verified 2026-06-29)",
+  "headcount_estimate": "11-25",
+  "headcount_source": "Clay (LinkedIn-derived), 2026-06-29",
+  "founders": [
+    {
+      "name": "Danyal Ozduzenciler",
+      "role": "Co-Founder and CEO",
+      "background": "previously spent 7+ years in private equity and investment banking at AEA Investors, Citi, and Deutsche Bank",
+      "source_url": "https://www.vestbee.com/insights/articles/capsa-ai-raises-1-7-m"
+    },
+    {
+      "name": "Callum Downie",
+      "role": "Co-Founder and CTO",
+      "background": "previously led machine learning teams and AI products at ThirdEye Labs and Standard AI",
+      "source_url": "https://www.vestbee.com/insights/articles/capsa-ai-raises-1-7-m"
+    }
+  ]
+}

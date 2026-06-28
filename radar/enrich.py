@@ -86,18 +86,24 @@ def _discover_ats(company, fixtures):
 
 
 def enrich_company(conn, company, evidence, fixtures):
+    # Two override sources feed the same shape: the recorded test fixtures
+    # (only under --fixtures) and the curated live-mode files under
+    # enrichment/. Curated wins on a shared key, so a hand- or Clay-verified
+    # fact beats both the fixture and the auto-derived fallback.
     fixture = _load_fixture(company["company_number"]) if fixtures else {}
+    curated = config.load_curated_enrichment(company["company_number"])
+    override = {**fixture, **curated}
     notes = []
 
-    one_liner = fixture.get("one_liner")
-    one_liner_source = fixture.get("one_liner_source")
+    one_liner = override.get("one_liner")
+    one_liner_source = override.get("one_liner_source")
     if not one_liner and not fixtures and company["website"]:
         one_liner, one_liner_source = _fetch_homepage_one_liner(company["website"])
     if not one_liner and evidence:
         one_liner = (evidence[-1]["snippet"] or "")[:200] or None
         one_liner_source = "press summary (rewrite before featuring)"
 
-    founders = fixture.get("founders") or _founders_from_press(evidence)
+    founders = override.get("founders") or _founders_from_press(evidence)
     for founder in founders:
         conn.execute(
             "INSERT OR IGNORE INTO founders "
@@ -107,14 +113,14 @@ def enrich_company(conn, company, evidence, fixtures):
              founder.get("background"), founder.get("source_url")))
     notes.append("%d founder(s)" % len(founders))
 
-    headcount = fixture.get("headcount_estimate") or "unknown"
-    headcount_source = fixture.get("headcount_source") or \
+    headcount = override.get("headcount_estimate") or "unknown"
+    headcount_source = override.get("headcount_source") or \
         ("not estimated; check the team page" if headcount == "unknown" else None)
 
-    if fixture.get("ats"):
-        provider, token = fixture["ats"]["provider"], fixture["ats"]["token"]
+    if override.get("ats"):
+        provider, token = override["ats"]["provider"], override["ats"]["token"]
         result = ats.fetch(provider, token, fixtures)
-    elif "ats" in fixture:
+    elif "ats" in override:
         provider = token = result = None
     else:
         provider, token, result = _discover_ats(company, fixtures)
