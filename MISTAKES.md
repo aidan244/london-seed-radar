@@ -122,3 +122,21 @@ Format:
 - Prevention: when changing brand copy, include hand-maintained assets
   (docs/assets/*.svg and their PNG exports) in the sweep, not just templates;
   a test that asserts an exact asset string can hide a stale asset.
+
+## 2026-06-30: pushed a merge commit to a linear-history-protected main
+- What happened: after landing the biweekly work to publish the archive, the
+  first `git push origin main` was rejected ("protected branch hook declined,
+  Found 1 violation"). main had just been branch-protected, and the push
+  contained a merge commit, which the protection forbids.
+- Why: I integrated the feature branch with `git merge --no-ff`, creating a
+  merge commit. main now has required_linear_history=true with
+  enforce_admins=true, so merge commits are rejected even for the owner.
+- Fix: re-landed the identical, already-verified tree as linear history by
+  cherry-picking the seven feature commits onto origin/main (c4190d3),
+  resolving the docs/ modify-delete conflicts in favour of the freshly
+  published site, then pushed a clean fast-forward (origin/main ee415bb).
+  Confirmed the linear tree was byte-identical to the merge tree first
+  (git diff f30cca5 HEAD was empty).
+- Prevention: main requires LINEAR history. Never `git merge` into main;
+  rebase or cherry-pick so the push is linear. Check protection first with
+  gh api repos/aidan244/london-seed-radar/branches/main/protection.
