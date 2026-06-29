@@ -4,6 +4,7 @@
 # Working database: source of truth lives locally, public dataset is exported to docs/data/
 radar.db
 radar.db-journal
+radar.db.bak-*
 
 # Python
 .venv/
@@ -16,6 +17,10 @@ __pycache__/
 
 # Local working notes, not for the public repo
 HANDOVER.md
+
+# Local progress dashboard; surfaces internal working state
+# (dropped candidates, drop reasons, todos). Never publish it.
+dashboard.html
 
 # Generated paste artifact, recreate with python -m radar.paste
 issues/*/substack-paste.html

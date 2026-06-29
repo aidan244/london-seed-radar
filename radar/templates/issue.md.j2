@@ -1,4 +1,4 @@
-# 📡 London Seed Radar · week of {{ week_label }}
+# 📡 London Seed Radar · UK, London first · issue of {{ issue_label }}
 
 **{{ subtitle }}**
 
@@ -7,29 +7,30 @@
 > from filings are best-effort: an SH01 proves a raise happened, not how
 > big it was.
 
-[IMAGE: this week's masthead. Edit the issue-line text (and blip
-count, if you care) in docs/assets/masthead.svg, export per "Weekly
-banner export" in reports/design/newsletter-design-notes.md, insert
+[IMAGE: this issue's masthead. Edit the issue-line text (and blip
+count, if you care) in docs/assets/masthead.svg, export per "Banner
+export" in reports/design/newsletter-design-notes.md, insert
 the PNG here.]
 
-[INTRO: two or three sentences in your own voice about the week.]
+[INTRO: two or three sentences in your own voice about the fortnight.]
 
 {% if shortfall_note %}
 {{ shortfall_note }}
 
 {% endif %}
-This week: {{ entries|length }} newly funded early-stage companies in London.
+This fortnight: {{ entries|length }} newly funded early-stage companies across the UK, London first.
 
 ---
 
-## ⚡ THE WEEK AT A GLANCE
+## ⚡ THE FORTNIGHT AT A GLANCE
 
 {% for entry in entries %}
 {{ loop.index }}. {{ entry.glance_label }}
 {% endfor %}
 
 *🟢 hiring now · ⚪ no live roles found · 🔒 job board unverifiable ·
-🎓 a role a recent grad could apply for, flagged from the title only*
+🎓 a role a recent grad could apply for · 🌐 a role that can be done
+remotely. 🎓 and 🌐 are flagged from the posting text only.*
 
 {% if headline_label %}
 > {{ headline_label }}
@@ -38,6 +39,10 @@ This week: {{ entries|length }} newly funded early-stage companies in London.
 {% endif %}
 {% for entry in entries %}
 ---
+{% if entry.section_heading %}
+
+# {{ entry.section_heading }}
+{% endif %}
 
 ## {{ loop.index }} · {{ entry.company.name }} {{ entry.badge }}
 
@@ -67,7 +72,7 @@ welcome.
 
 [SUBSTACK: insert Subscribe and Share buttons here]
 
-📂 **Dataset and archive:** every company, every week, as JSON and CSV
+📂 **Dataset and archive:** every company, every fortnight, as JSON and CSV
 on the [archive site](https://aidan244.github.io/london-seed-radar/).
 
 ---
@@ -75,9 +80,9 @@ on the [archive site](https://aidan244.github.io/london-seed-radar/).
 ## 🛠️ PASTE CHECKLIST (python -m radar.paste strips this section)
 
 1. Edit the copy above; rewrite or cut every "Why it matters" line.
-2. Check every 🎓 against the live posting; the flag is guessed from
-   the title alone. Remove wrong ones, add missed ones.
-3. Replace the [IMAGE] placeholder with the exported weekly banner
+2. Check every 🎓 and 🌐 against the live posting; both are guessed from
+   the posting text alone. Remove wrong ones, add missed ones.
+3. Replace the [IMAGE] placeholder with the exported banner
    (docs/assets/masthead-2200x440.png renders sharpest in email).
 4. Run: python -m radar.paste --copy (puts the rendered rich text on
    the clipboard).

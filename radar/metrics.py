@@ -50,7 +50,7 @@ def main(argv=None):
         formatter_class=argparse.RawDescriptionHelpFormatter)
     util.add_common_args(parser, fixtures=False, as_of=False)
     sub = parser.add_subparsers(dest="verb")
-    p_log = sub.add_parser("log", help="log this week's numbers")
+    p_log = sub.add_parser("log", help="log this issue's numbers")
     p_log.add_argument("--date", default=None)
     p_log.add_argument("--subscribers", type=int, default=None)
     p_log.add_argument("--open-rate", type=float, default=None,

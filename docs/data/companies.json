@@ -1,0 +1,76 @@
+{
+  "generated_at": "2026-06-30 00:15",
+  "count": 5,
+  "companies": [
+    {
+      "name": "Isometric",
+      "company_number": "13829439",
+      "domain": "isometric.com",
+      "website": "https://isometric.com",
+      "location_text": "Isometric Hq Ltd, 27 New Dover Road, Canterbury, Kent, CT1 3DN",
+      "incorporated_on": "2022-01-05",
+      "one_liner": "Isometric | Agentic certification for the industrial economy",
+      "headcount_estimate": "unknown",
+      "headcount_source": "not estimated; check the team page",
+      "ats_provider": "ashby",
+      "ats_status": "verified",
+      "founders": []
+    },
+    {
+      "name": "Houdini Bio",
+      "company_number": "16352550",
+      "domain": "houdinibio.com",
+      "website": "https://www.houdinibio.com",
+      "location_text": "Victoria House, Southampton Row, London, Greater London, WC1B 4DA",
+      "incorporated_on": "2025-03-31",
+      "one_liner": "HoudiniBio",
+      "headcount_estimate": "unknown",
+      "headcount_source": "not estimated; check the team page",
+      "ats_provider": null,
+      "ats_status": "none",
+      "founders": []
+    },
+    {
+      "name": "Conduct",
+      "company_number": "15396489",
+      "domain": "conduct.ai",
+      "website": "https://conduct.ai",
+      "location_text": "42 Berners Street, Floor 6, London, W1T 3ND",
+      "incorporated_on": "2024-01-08",
+      "one_liner": "Conduct lets IT teams understand, modernise, and run their enterprise systems with AI - fast and with confidence. Starting with SAP. Extending to the entire enterprise stack.",
+      "headcount_estimate": "unknown",
+      "headcount_source": "not estimated; check the team page",
+      "ats_provider": "ashby",
+      "ats_status": "verified",
+      "founders": []
+    },
+    {
+      "name": "Record OS",
+      "company_number": "16058953",
+      "domain": "record-os.com",
+      "website": "https://www.record-os.com",
+      "location_text": "128 City Road, London, EC1V 2NX",
+      "incorporated_on": "2024-11-04",
+      "one_liner": "UK Self Assessment from \u00a3125. Prepared with our technology, reviewed by a senior ex-HMRC and ex-BDO accountant. 5-day turnaround.",
+      "headcount_estimate": "unknown",
+      "headcount_source": "not estimated; check the team page",
+      "ats_provider": null,
+      "ats_status": "none",
+      "founders": []
+    },
+    {
+      "name": "Capsa AI",
+      "company_number": "15323501",
+      "domain": "capsa.ai",
+      "website": "https://capsa.ai",
+      "location_text": "International House, 101 King's Cross Road, London, WC1X 9LP",
+      "incorporated_on": "2023-12-02",
+      "one_liner": "Providing next-generation investors with a competitive edge.",
+      "headcount_estimate": "unknown",
+      "headcount_source": "not estimated; check the team page",
+      "ats_provider": "ashby",
+      "ats_status": "verified",
+      "founders": []
+    }
+  ]
+}

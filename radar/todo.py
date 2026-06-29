@@ -3,7 +3,7 @@ do. The pipeline gates on it; treat it as a first-class feature.
 
   python -m radar.todo list [--all]
   python -m radar.todo done <id>
-  python -m radar.todo add "task" [--category setup|weekly|growth] [--due "hint"]
+  python -m radar.todo add "task" [--category setup|issue|growth] [--due "hint"]
   python -m radar.todo edit <id> "reworded task"
 """
 
@@ -13,7 +13,7 @@ import sys
 
 from radar import db, util
 
-CATEGORY_ORDER = {"setup": 0, "weekly": 1, "growth": 2}
+CATEGORY_ORDER = {"setup": 0, "issue": 1, "growth": 2}
 
 
 def cmd_list(conn, show_all):
@@ -103,7 +103,7 @@ def main(argv=None):
     p_add = sub.add_parser("add", help="add a todo")
     p_add.add_argument("task")
     p_add.add_argument("--category", default="growth",
-                       choices=["setup", "weekly", "growth"])
+                       choices=["setup", "issue", "growth"])
     p_add.add_argument("--due", default=None, help="free-text due hint")
     p_edit = sub.add_parser("edit", help="reword a todo")
     p_edit.add_argument("id", type=int)

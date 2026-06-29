@@ -11,7 +11,7 @@ import argparse
 import datetime
 import sys
 
-from radar import ch, config, db, rssfeeds, util
+from radar import ch, config, db, leads, rssfeeds, util
 
 # A filing and a press item this many days apart still describe one round.
 MERGE_WINDOW_DAYS = 45
@@ -107,7 +107,11 @@ def ingest_press(conn, items, profiles, source_mode):
     for item in items:
         if not item.get("published_date"):
             continue
-        number = _match_company_number(item["company_name"], profiles)
+        # A lead's human-verified company_number wins over a name search,
+        # so a brand (Conduct) resolves to its real entity (CONDUCT AI LTD)
+        # rather than a same-name company at the wrong UK address.
+        number = item.get("company_number") or _match_company_number(
+            item["company_name"], profiles)
         profile = profiles.get(number)
         company_id = db.upsert_company(
             conn, item["company_name"], company_number=number,
@@ -115,9 +119,15 @@ def ingest_press(conn, items, profiles, source_mode):
             incorporated_on=profile.get("date_of_creation") if profile else None,
         )
         # The headline casing ("Quillstone AI") beats the title-cased
-        # register name ("Quillstone Ai Ltd") as a display name.
-        conn.execute("UPDATE companies SET name = ? WHERE id = ?",
-                     (item["company_name"], company_id))
+        # register name ("Quillstone Ai Ltd") as a display name. Move the
+        # normalized_name with it so brand-keyed lookups (website_overrides,
+        # ats_overrides) resolve: a company resolved by number can have been
+        # created under its register name (CONDUCT AI LTD -> "conduct ai")
+        # while the override is keyed by the brand ("conduct").
+        conn.execute("UPDATE companies SET name = ?, normalized_name = ? "
+                     "WHERE id = ?",
+                     (item["company_name"],
+                      db.normalize_name(item["company_name"]), company_id))
         event_id, is_new = find_or_create_event(
             conn, company_id, item["published_date"], source_mode)
         created += is_new
@@ -164,11 +174,16 @@ def main(argv=None):
 
     conn = db.connect(args.db)
     db.init_db(conn)
+    sources = config.load_sources()
+
+    # Scout shortlists and manual leads join the press candidates as
+    # ordinary items; the four gates verify them locally like any other.
+    lead_items = leads.load_leads(config.ROOT, sources)
 
     if args.fixtures:
         profiles = ch.fixture_profiles()
         filings_for = ch.fixture_capital_filings
-        items = rssfeeds.load_fixtures()
+        items = rssfeeds.load_fixtures() + lead_items
         mode = "fixture"
     else:
         key = config.companies_house_key()
@@ -185,9 +200,13 @@ def main(argv=None):
             return 2
         client = ch.CompaniesHouseClient(key)
         print("Fetching RSS feeds from sources.yaml ...")
-        items = rssfeeds.load_live()
-        watchlist = config.load_sources().get("watchlist_company_numbers") or []
-        print("Resolving %d press candidates against Companies House ..."
+        items = rssfeeds.load_live() + lead_items
+        # Watchlist plus any company numbers leads carry, so an explicitly
+        # resolved entity's profile (and its SH01 filings) is fetched too.
+        watchlist = list(dict.fromkeys(
+            (sources.get("watchlist_company_numbers") or [])
+            + [i["company_number"] for i in items if i.get("company_number")]))
+        print("Resolving %d candidates against Companies House ..."
               % len(items))
         profiles = _live_profiles_for_items(client, items, watchlist)
         filings_for = client.get_capital_filings
@@ -201,7 +220,8 @@ def main(argv=None):
         "SELECT COUNT(*) c FROM funding_events WHERE status = 'discovered'"
     ).fetchone()["c"]
     print("ingest (%s mode, as of %s):" % (mode, as_of))
-    print("  press candidates: %d" % len(items))
+    print("  press candidates: %d (incl. %d scout/manual leads)"
+          % (len(items), len(lead_items)))
     print("  companies with SH01 capital filings: %d" % filers)
     print("  events created: %d, corroborated/merged: %d"
           % (fc + pc, fu + pu))

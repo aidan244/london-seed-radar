@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>London Seed Radar: week of {{ issue.issue_date }}</title>
+<title>London Seed Radar: issue of {{ issue.issue_date }}</title>
 <style>
   body { font-family: Georgia, serif; max-width: 44rem; margin: 2rem auto;
          padding: 0 1rem; line-height: 1.6; color: #1a1a1a; }
@@ -19,15 +19,15 @@
 </head>
 <body>
 <p><a href="../index.html">&larr; London Seed Radar</a></p>
-<h1>Week of {{ issue.issue_date }}</h1>
+<h1>Issue of {{ issue.issue_date }}</h1>
 {% if sample_data %}
 <p class="banner">Sample data: generated from recorded test fixtures to
 demonstrate the pipeline. The companies are fictional.</p>
 {% endif %}
-<p>{{ entries|length }} newly funded early-stage companies in London this week.</p>
+<p>{{ entries|length }} newly funded early-stage companies across the UK this fortnight, London first.</p>
 
 {% for entry in entries %}
-<h2>{{ entry.company.name }} <span class="meta">({{ entry.event.stage }}, {{ entry.amount_label }})</span></h2>
+<h2>{{ entry.company.name }} <span class="meta">({{ entry.event.stage }}, {{ entry.amount_label }}, {{ entry.region_label }})</span></h2>
 <p>{{ entry.company.one_liner }}</p>
 <p class="meta">
 {% if entry.founders %}

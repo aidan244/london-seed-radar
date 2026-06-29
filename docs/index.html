@@ -10,6 +10,7 @@
   h1 { font-size: 1.8rem; }
   .banner { background: #fff3cd; border: 1px solid #e0c869; padding: .6rem 1rem;
             border-radius: 4px; font-size: .9rem; }
+  .issue { margin: 1rem 0; }
   .muted { color: #666; font-size: .9rem; }
   a { color: #0b5394; }
   footer { margin-top: 3rem; font-size: .85rem; color: #666;
@@ -20,18 +21,37 @@
 <h1>London Seed Radar</h1>
 <p>A biweekly briefing on every newly funded pre-seed, seed, and Series A
 company in the UK, London first: what they do, who founded them, how big
-the team is, and who is hiring right now. Built on Companies House
-filings, funding press, and public ATS job boards. For founders,
-operators, and angels in the UK early-stage scene, and for students
-hunting internships and first jobs at startups.</p>
-<p class="banner">The first issue is on its way. The archive, the live
-hiring list, and the public dataset all go live here with it.</p>
+the team is, and who is hiring right now, remote roles included. Built on
+Companies House filings, funding press, and public ATS job boards. For
+founders, operators, and angels in the UK early-stage scene, and for
+students hunting internships and first jobs at startups.</p>
+
+<h2>Issues</h2>
+<div class="issue">
+  <a href="issues/2026-06-29.html">Issue of 2026-06-29</a>
+  <span class="muted">5 companies</span>
+</div>
+
+<h2>Who is hiring</h2>
+<p><a href="jobs.html">Live roles at featured companies</a>, with
+grad-friendly titles flagged 🎓. The flag is guessed from the job title
+alone; read the posting before applying.</p>
+
+<h2>Public dataset</h2>
+<p>Every featured company, funding event, and live role, as
+<a href="data/companies.json">companies.json</a>,
+<a href="data/companies.csv">companies.csv</a>,
+<a href="data/funding_events.json">funding_events.json</a>,
+<a href="data/funding_events.csv">funding_events.csv</a>,
+<a href="data/jobs.json">jobs.json</a>,
+<a href="data/jobs.csv">jobs.csv</a>.
+Amounts from filings are best-effort: an SH01 proves a raise happened,
+not how big it was.</p>
 
 <footer>
+Generated 2026-06-30 by the London Seed Radar pipeline.
 Names, public roles, and public filings only; no personal contact data.
-The pipeline behind this is open source at
-github.com/aidan244/london-seed-radar. Corrections welcome via GitHub
-issues.
+Corrections welcome via GitHub issues.
 </footer>
 </body>
 </html>

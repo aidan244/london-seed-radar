@@ -24,8 +24,8 @@ Steps:
 1. Open my publication dashboard, then Settings.
 2. Basics: set the publication name to "London Seed Radar" and the
    short description to: "Every newly funded pre-seed, seed, and
-   Series A company in London, weekly: what they do, who founded them,
-   and who is hiring."
+   Series A company in the UK, London first, every fortnight: what they
+   do, who founded them, and who is hiring."
 3. Tell me the exact publication URL shown in settings; I need to
    record it.
 4. Branding: set the accent/theme colour to near-black #0A0A0A (the
@@ -38,34 +38,35 @@ Steps:
 
    Welcome to London Seed Radar.
 
-   Every Monday you get every newly funded pre-seed, seed, and
-   Series A company in London from the past week: what they do, who
-   founded them, roughly how big the team is, and who is hiring right
-   now, with roles a recent grad could apply for flagged.
+   Every other Monday you get every newly funded pre-seed, seed, and
+   Series A company in the UK, London first, from the past fortnight:
+   what they do, who founded them, roughly how big the team is, and who
+   is hiring right now, with roles a recent grad could apply for flagged.
 
    Everything is built from public sources: Companies House filings,
    funding press, and public job boards. The full dataset and archive
    are free at aidan244.github.io/london-seed-radar.
 
-   If you spot an error, reply to any issue; corrections run the
-   following week.
+   If you spot an error, reply to any issue; corrections run in the
+   next one.
 
    Aidan
 
 6. About page: set it to:
 
-   London Seed Radar is a weekly briefing on every newly funded
-   pre-seed, seed, and Series A company in London: what they do, who
-   founded them, how big the team is, and who is hiring right now.
+   London Seed Radar is a biweekly briefing on every newly funded
+   pre-seed, seed, and Series A company in the UK, London first: what
+   they do, who founded them, how big the team is, and who is hiring
+   right now.
 
    It is built from public sources only: Companies House filings,
    funding press, and public ATS job boards. Every company passes four
-   gates before it is featured: it is in London, it is early-stage,
-   the round happened inside the week, and the funding event is
+   gates before it is featured: it is in the UK, it is early-stage,
+   the round happened inside the fortnight, and the funding event is
    corroborated by a filing or a press source. When fewer companies
-   qualify in a week, the issue says so plainly; it is never padded.
+   qualify in a fortnight, the issue says so plainly; it is never padded.
 
-   It is for founders, operators, and angels in the London early-stage
+   It is for founders, operators, and angels in the UK early-stage
    scene, and for students hunting internships and first jobs at
    startups; grad-friendly roles are flagged in every issue.
 

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>London Seed Radar dashboard (local)</title>
+<style>
+  :root {
+    --bg: #0A0A0A; --panel: #141414; --line: #262626; --ink: #f5f5f5;
+    --muted: #9a9a9a; --accent: #CCFF00; --grey: #6b6b6b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font-family: system-ui, -apple-system, "Segoe UI", Helvetica, Arial,
+         sans-serif; line-height: 1.5; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px 64px; }
+  a { color: var(--accent); }
+
+  .topbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+            padding: 14px 0; }
+  .pill { background: var(--accent); color: #0A0A0A; font-weight: 800;
+          font-size: 12px; letter-spacing: 1px; padding: 4px 10px;
+          border-radius: 3px; }
+  .topbar .gen { color: var(--muted); font-size: 12px; margin-left: auto; }
+  .brandrow { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
+  .brandmark svg { width: 38px; height: 38px; display: block; border-radius: 6px; }
+  .masthead svg { display: block; width: 100%; height: auto;
+                  border-radius: 6px; border: 1px solid var(--line); }
+
+  h2.section { font-size: 13px; text-transform: uppercase; letter-spacing: 2px;
+               color: var(--ink); margin: 32px 0 12px; padding-left: 10px;
+               border-left: 3px solid var(--accent); }
+
+  .grid { display: grid; gap: 14px; }
+  .kpis { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+  .panel { background: var(--panel); border: 1px solid var(--line);
+           border-radius: 8px; padding: 16px; }
+
+  .tile .num { font-size: 2.4rem; font-weight: 800; color: var(--accent);
+               line-height: 1.1; }
+  .tile .lab { font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+               color: var(--muted); margin-bottom: 6px; }
+  .tile .sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  .two { grid-template-columns: 1.3fr 1fr; align-items: start; }
+  @media (max-width: 760px) { .two { grid-template-columns: 1fr; } }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .chip { font-size: 12px; background: #1e1e1e; border: 1px solid var(--line);
+          border-radius: 12px; padding: 3px 10px; color: var(--ink); }
+  .chip b { color: var(--accent); }
+
+  .steps { display: grid; gap: 8px;
+           grid-template-columns: repeat(auto-fit, minmax(176px, 1fr)); }
+  .step { min-width: 0; background: #161616; border: 1px solid var(--line);
+          border-radius: 8px; padding: 12px 10px; text-align: center;
+          display: flex; flex-direction: column; align-items: center; gap: 4px;
+          min-height: 104px; }
+  .step .dot { width: 26px; height: 26px; border-radius: 50%; flex: none;
+               display: flex; align-items: center; justify-content: center;
+               font-weight: 800; font-size: 13px; background: #222;
+               color: var(--muted); border: 1px solid var(--line); }
+  .step-done .dot { background: var(--accent); color: #0A0A0A; border-color: var(--accent); }
+  .step-active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent) inset; }
+  .step-active .dot { color: var(--accent); border-color: var(--accent); }
+  .step .lab { font-size: 12.5px; font-weight: 700; line-height: 1.25;
+               overflow-wrap: anywhere; }
+  .step .det { font-size: 11px; color: var(--muted); line-height: 1.3;
+               overflow-wrap: anywhere; }
+  .nextstep { margin-top: 14px; font-size: 14px; }
+  code { background: #1e1e1e; border: 1px solid var(--line); border-radius: 4px;
+         padding: 2px 6px; font-size: 12px; color: var(--accent); }
+
+  button.copy { background: transparent; border: 1px solid var(--accent);
+                color: var(--accent); border-radius: 4px; font-size: 11px;
+                padding: 2px 8px; cursor: pointer; margin-left: 6px; }
+  button.copy:hover { background: var(--accent); color: #0A0A0A; }
+  button.act, button.run { background: var(--accent); border: 1px solid var(--accent);
+                color: #0A0A0A; border-radius: 4px; font-size: 11px; font-weight: 700;
+                padding: 2px 8px; cursor: pointer; margin-left: 6px; }
+  button.act:hover, button.run:hover { filter: brightness(1.08); }
+  button[disabled] { opacity: 0.6; cursor: default; }
+  .serve-pill { background: #143000; border: 1px solid var(--accent);
+                color: var(--accent); font-weight: 700; font-size: 12px;
+                letter-spacing: 1px; padding: 4px 10px; border-radius: 3px; }
+  #toast { position: fixed; right: 16px; bottom: 16px; max-width: 380px;
+           display: none; background: #161616; border: 1px solid var(--accent);
+           color: var(--ink); border-radius: 8px; padding: 10px 12px;
+           font-size: 12px; white-space: pre-wrap; z-index: 50;
+           box-shadow: 0 8px 28px rgba(0,0,0,0.55); }
+
+  .routines { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .routine .rname { font-weight: 800; letter-spacing: 0.3px; }
+  .routine .rsched { font-size: 12px; color: var(--muted); margin: 2px 0 8px; }
+  .routine .rline { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .routine .rline b { color: var(--ink); font-weight: 600; }
+  .badge { font-size: 11px; font-weight: 700; text-transform: uppercase;
+           letter-spacing: 1px; border-radius: 4px; padding: 2px 8px;
+           display: inline-block; }
+  .badge-ok { background: rgba(204,255,0,0.18); color: var(--accent);
+              border: 1px solid var(--accent); }
+  .badge-overdue { background: #3a2f00; color: #ffe27a; border: 1px solid #7a6500; }
+  .badge-muted { background: #1e1e1e; color: var(--muted); border: 1px solid var(--line); }
+  .pr-row { display: flex; gap: 8px; align-items: baseline; padding: 5px 0;
+            border-top: 1px solid var(--line); font-size: 12px; }
+  .pr-row .pn { color: var(--muted); white-space: nowrap; }
+  .pr-row .pt { flex: 1; overflow-wrap: anywhere; }
+  .pr-state { font-size: 10px; font-weight: 700; letter-spacing: 1px;
+              padding: 1px 6px; border-radius: 3px; white-space: nowrap; }
+  .pr-OPEN { color: var(--accent); border: 1px solid var(--accent); }
+  .pr-MERGED { color: #c9a3ff; border: 1px solid #6f4fb0; }
+  .pr-CLOSED { color: var(--grey); border: 1px solid var(--line); }
+
+  .tasks { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .cat-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px;
+               color: var(--muted); margin-bottom: 8px; }
+  .todo { display: flex; gap: 8px; padding: 7px 0; border-top: 1px solid var(--line);
+          align-items: flex-start; }
+  .todo .box { color: var(--accent); font-weight: 800; }
+  .todo.done .txt { color: var(--muted); text-decoration: line-through; }
+  .todo .txt { font-size: 13px; flex: 1; }
+  .todo .due { font-size: 11px; color: var(--muted); }
+  .badge-warn { background: #3a2f00; border: 1px solid #7a6500; color: #ffe27a;
+                font-size: 12px; border-radius: 4px; padding: 4px 10px;
+                display: inline-block; margin-bottom: 10px; }
+
+  .sparkcard .num { font-size: 1.8rem; font-weight: 800; color: var(--accent); }
+  .sparkcard .lab { font-size: 11px; text-transform: uppercase;
+                    letter-spacing: 1px; color: var(--muted); }
+  .spark { width: 100%; height: 64px; }
+  .metricfoot { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .empty { color: var(--muted); font-size: 13px; padding: 8px 0; }
+
+  .filter { width: 100%; background: #161616; border: 1px solid var(--line);
+            color: var(--ink); border-radius: 6px; padding: 8px 10px;
+            margin-bottom: 10px; font-size: 13px; }
+  .tablewrap { max-height: 460px; overflow: auto; border: 1px solid var(--line);
+               border-radius: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { position: sticky; top: 0; background: #181818; text-align: left;
+       padding: 8px 10px; cursor: pointer; user-select: none; white-space: nowrap;
+       border-bottom: 1px solid var(--line); font-size: 11px;
+       text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+  th.nosort { cursor: default; }
+  td { padding: 7px 10px; border-bottom: 1px solid #1c1c1c; vertical-align: top; }
+  tr:hover td { background: #161616; }
+  .gate { display: inline-block; width: 18px; height: 18px; line-height: 18px;
+          text-align: center; border-radius: 3px; font-size: 11px; font-weight: 700;
+          margin-right: 2px; }
+  .gate.pass { background: rgba(204,255,0,0.18); color: var(--accent); }
+  .gate.fail { background: #2a2a2a; color: var(--grey); }
+  .st { font-weight: 700; }
+
+  .reports a { display: inline-block; margin-right: 4px; }
+  .report-row { padding: 6px 0; border-top: 1px solid var(--line); font-size: 13px; }
+  .report-row .when { color: var(--muted); font-size: 11px; margin-left: 6px; }
+  footer { margin-top: 40px; color: var(--muted); font-size: 12px;
+           border-top: 1px solid var(--line); padding-top: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <span class="pill">LOCAL ONLY</span>
+    <span id="serve-flag"></span>
+    <span style="color:var(--muted);font-size:13px;">not published, gitignored, internal working state</span>
+    <span class="gen">generated {{ generated }}</span>
+  </div>
+
+  <div class="brandrow">
+    <div class="brandmark">{{ logo_svg | safe }}</div>
+    <div style="font-weight:800;letter-spacing:1px;">London Seed Radar, control room</div>
+  </div>
+  <div class="masthead">{{ masthead_svg | safe }}</div>
+
+  <h2 class="section">At a glance</h2>
+  <div id="kpis" class="grid kpis"></div>
+
+  <h2 class="section">Pipeline</h2>
+  <div class="grid two">
+    <div class="panel"><div id="funnel"></div></div>
+    <div class="panel">
+      <div class="cat-title">Why candidates dropped</div>
+      <div id="drop-reasons"></div>
+    </div>
+  </div>
+
+  <h2 class="section">Issue operating loop</h2>
+  <div class="panel">
+    <div id="loop" class="steps"></div>
+    <div id="nextstep" class="nextstep"></div>
+    <div id="fillpool" class="nextstep"></div>
+  </div>
+
+  <h2 class="section">Tasks</h2>
+  <div id="stale" ></div>
+  <div id="tasks" class="grid tasks"></div>
+
+  <h2 class="section">Metrics over time</h2>
+  <div class="panel"><div id="metrics-chart" class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));"></div></div>
+
+  <h2 class="section">Candidates and near misses</h2>
+  <div class="panel">
+    <input id="cand-filter" class="filter" type="text"
+           placeholder="filter by company, status, stage, or drop reason">
+    <div class="tablewrap"><table id="cand-table">
+      <thead><tr id="cand-head"></tr></thead>
+      <tbody id="cand-body"></tbody>
+    </table></div>
+  </div>
+
+  <h2 class="section">Cloud routines</h2>
+  <div id="routines-meta" class="cat-title" style="margin-bottom:10px;"></div>
+  <div id="routines" class="grid routines"></div>
+  <div id="other-prs" class="panel" style="margin-top:14px;"></div>
+
+  <h2 class="section">Reports and draft</h2>
+  <div class="panel reports"><div id="reports"></div></div>
+
+  <footer>
+    Read only view of the working database; it never writes, posts, or
+    sends anything. Refresh with python -m radar.dashboard.
+  </footer>
+</div>
+<div id="toast"></div>
+
+<script id="dashboard-data" type="application/json">{{ data_json | safe }}</script>
+<script>
+(function () {
+  var DATA = JSON.parse(document.getElementById("dashboard-data").textContent);
+  var SERVE = {{ server | tojson }}, TOKEN = {{ token | tojson }};
+  var ACCENT = "#CCFF00", GREY = "#6b6b6b";
+  var STATUS_COLOR = {discovered:"#9a9a9a", sieved:"#cfcfcf", enriched:"#ffffff",
+                      featured:"#CCFF00", published:"#CCFF00", dropped:"#6b6b6b"};
+
+  function esc(s){ return String(s==null?"":s).replace(/[&<>]/g,
+    function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; }); }
+  function attr(s){ return String(s==null?"":s).replace(/[&<>"]/g,
+    function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]; }); }
+
+  // KPI tiles
+  (function renderKpis(){
+    var k = DATA.kpis;
+    var nextLabel = (k.first_issue_date && k.next_issue===k.first_issue_date)
+      ? "first issue "+k.next_issue : "Monday "+k.next_issue;
+    var tiles = [
+      {lab:"Days to next issue", num:k.days_to_next_issue, sub:nextLabel},
+      {lab:"Pool ready", num:k.enriched_count+" / "+k.target,
+       sub:k.pool_ready?"target met":"enriched vs target of "+k.target},
+      {lab:"Current issue", num:k.current_issue_status?k.current_issue_status.toUpperCase():"NONE",
+       sub:k.current_issue_date||"no issue drafted yet"},
+      {lab:"Subscribers", num:(k.subscribers!=null?k.subscribers:"?"),
+       sub:(k.open_rate!=null?(Number(k.open_rate).toFixed(1)+"% open rate"):"no metrics yet")}
+    ];
+    document.getElementById("kpis").innerHTML = tiles.map(function(t){
+      return '<div class="panel tile"><div class="lab">'+esc(t.lab)+'</div>'+
+             '<div class="num">'+esc(t.num)+'</div>'+
+             '<div class="sub">'+esc(t.sub)+'</div></div>';
+    }).join("");
+  })();
+
+  // Pipeline funnel as inline SVG bars
+  (function renderFunnel(){
+    var rows = DATA.pipeline.order.map(function(s){
+      return {label:s, count:(DATA.pipeline.counts[s]||0), color:ACCENT}; });
+    rows.push({label:"dropped", count:(DATA.pipeline.dropped||0), color:GREY});
+    var W=640, rowH=38, labelW=96, countW=46, barMax=W-labelW-countW-16;
+    var max=Math.max(1, Math.max.apply(null, rows.map(function(r){return r.count;})));
+    var H=rows.length*rowH+8, svg="";
+    rows.forEach(function(r,i){
+      var cy=i*rowH+rowH/2, barW=r.count>0?Math.max(2,r.count/max*barMax):0;
+      svg += '<text x="'+(labelW-8)+'" y="'+(cy+4)+'" text-anchor="end" '+
+             'font-size="12" fill="#9a9a9a">'+esc(r.label)+'</text>';
+      svg += '<rect x="'+labelW+'" y="'+(i*rowH+9)+'" width="'+barW.toFixed(1)+
+             '" height="'+(rowH-18)+'" rx="3" fill="'+r.color+'"/>';
+      svg += '<text x="'+(labelW+barW+6)+'" y="'+(cy+4)+'" font-size="12" '+
+             'font-weight="700" fill="#f5f5f5">'+r.count+'</text>';
+    });
+    document.getElementById("funnel").innerHTML =
+      '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;">'+svg+'</svg>';
+
+    var dr = DATA.pipeline.drop_reasons;
+    document.getElementById("drop-reasons").innerHTML = dr.length
+      ? '<div class="legend">'+dr.map(function(d){
+          return '<span class="chip">'+esc(d.reason)+' <b>'+d.count+'</b></span>'; }).join("")+'</div>'
+      : '<div class="empty">No drops recorded yet.</div>';
+  })();
+
+  // Issue operating loop stepper
+  (function renderLoop(){
+    var ACTIONABLE = {ingest:1, sieve:1, enrich:1, issue:1};
+    document.getElementById("loop").innerHTML = DATA.loop.map(function(s,i){
+      var dot = s.state==="done" ? "&#10003;" : (i+1);
+      var run = (SERVE && ACTIONABLE[s.key]) ?
+        '<button class="run" data-action="'+attr(s.key)+'">run</button>' : "";
+      return '<div class="step step-'+s.state+'"><div class="dot">'+dot+'</div>'+
+             '<div class="lab">'+esc(s.label)+'</div>'+
+             '<div class="det">'+esc(s.detail)+'</div>'+run+'</div>';
+    }).join("");
+    var ns = DATA.next_step, nbtn = "";
+    if (SERVE) {
+      var map = {"radar.ingest":"ingest", "radar.sieve":"sieve",
+                 "radar.enrich":"enrich", "radar.issue":"issue"};
+      for (var k in map) {
+        if (ns.indexOf(k) > -1) {
+          nbtn = '<button class="run" data-action="'+map[k]+'">run</button>'; break;
+        }
+      }
+    }
+    if (!nbtn) nbtn = '<button class="copy" data-copy="'+attr(ns)+'">copy</button>';
+    document.getElementById("nextstep").innerHTML =
+      'Next: <code>'+esc(ns)+'</code>'+nbtn;
+
+    var target = DATA.kpis.target, have = DATA.kpis.enriched_count;
+    var fbtn = SERVE
+      ? '<button class="run" data-action="fill_pool">fill to '+target+'</button>'
+      : '<button class="copy" data-copy="python -m radar.fillpool">copy</button>';
+    document.getElementById("fillpool").innerHTML =
+      'Fill the pool: run ingest, sieve, enrich until <b>'+target+'</b> companies '+
+      'are enriched (now '+have+'). Stops early if a round adds nothing new; '+
+      'never relaxes the gates. <code>python -m radar.fillpool</code>'+fbtn;
+  })();
+
+  // Tasks grouped by category
+  (function renderTasks(){
+    var t = DATA.tasks, order=["setup","issue","growth"];
+    if (t.stale_issue_count>0){
+      document.getElementById("stale").innerHTML =
+        '<div class="badge-warn">'+t.stale_issue_count+
+        ' issue task(s) from an earlier issue still pending.</div>';
+    }
+    document.getElementById("tasks").innerHTML = order.map(function(cat){
+      var items = (t.by_category[cat]||[]);
+      var body = items.length ? items.map(function(it){
+        var done = it.status==="done";
+        var due = it.due_hint ? '<div class="due">due: '+esc(it.due_hint)+'</div>' : "";
+        var btn = done ? "" : (SERVE
+          ? '<button class="act" data-action="todo_done" data-id="'+it.id+'">done</button>'
+          : '<button class="copy" data-copy="'+attr(it.done_command)+'">done</button>');
+        return '<div class="todo'+(done?" done":"")+'">'+
+               '<span class="box">'+(done?"&#9745;":"&#9744;")+'</span>'+
+               '<span class="txt">#'+it.id+' '+esc(it.task)+due+'</span>'+btn+'</div>';
+      }).join("") : '<div class="empty">none</div>';
+      return '<div class="panel"><div class="cat-title">'+cat+'</div>'+body+'</div>';
+    }).join("");
+  })();
+
+  // Metrics sparklines
+  (function renderMetrics(){
+    var s = DATA.metrics_series, mount = document.getElementById("metrics-chart");
+    if (!s.length){
+      mount.innerHTML = '<div class="empty">No metrics logged yet. After each '+
+        'issue: python -m radar.metrics log --subscribers N --open-rate N</div>';
+      return;
+    }
+    function spark(values, color){
+      var w=240,h=64,pad=6, pts=[];
+      values.forEach(function(v,i){ if(v!=null && !isNaN(v)) pts.push({i:i,v:Number(v)}); });
+      if(!pts.length) return '<div class="empty">no data</div>';
+      var xs=function(i){ return values.length<=1?w/2:pad+(i/(values.length-1))*(w-2*pad); };
+      var min=Math.min.apply(null,pts.map(function(p){return p.v;}));
+      var mx=Math.max.apply(null,pts.map(function(p){return p.v;}));
+      var ys=function(v){ return mx===min?h/2:(h-pad)-((v-min)/(mx-min))*(h-2*pad); };
+      var poly=pts.map(function(p){ return xs(p.i).toFixed(1)+","+ys(p.v).toFixed(1); }).join(" ");
+      var last=pts[pts.length-1];
+      return '<svg class="spark" viewBox="0 0 '+w+' '+h+'">'+
+             '<polyline fill="none" stroke="'+color+'" stroke-width="2" points="'+poly+'"/>'+
+             '<circle cx="'+xs(last.i).toFixed(1)+'" cy="'+ys(last.v).toFixed(1)+'" r="3" fill="'+color+'"/></svg>';
+    }
+    var latest = s[s.length-1];
+    var cards = [
+      {lab:"Subscribers", val:(latest.subscribers!=null?latest.subscribers:"?"),
+       svg:spark(s.map(function(r){return r.subscribers;}), ACCENT)},
+      {lab:"Open rate", val:(latest.open_rate!=null?Number(latest.open_rate).toFixed(1)+"%":"?"),
+       svg:spark(s.map(function(r){return r.open_rate;}), "#ffffff")}
+    ];
+    var foot = 'latest '+esc(latest.date)+': '+
+      (latest.replies_from_founders!=null?latest.replies_from_founders:0)+' founder repl(y/ies), '+
+      '£'+(latest.revenue_gbp!=null?Number(latest.revenue_gbp).toFixed(2):"0.00")+' revenue';
+    mount.innerHTML = cards.map(function(c){
+      return '<div class="sparkcard"><div class="lab">'+esc(c.lab)+'</div>'+
+             '<div class="num">'+esc(c.val)+'</div>'+c.svg+'</div>';
+    }).join("") + '<div class="metricfoot" style="grid-column:1/-1;">'+foot+'</div>';
+  })();
+
+  // Candidate table, filterable and sortable
+  (function renderCandidates(){
+    var COLS = [
+      {key:"company_name", label:"Company"},
+      {key:"event_date", label:"Event"},
+      {key:"stage", label:"Stage"},
+      {key:"amount_gbp", label:"Amount", num:true},
+      {key:"status", label:"Status"},
+      {key:"gates", label:"Gates", nosort:true},
+      {key:"drop_reason", label:"Drop reason"}
+    ];
+    var sortKey="event_date", sortDir="desc", filter="";
+    var head = document.getElementById("cand-head");
+    head.innerHTML = COLS.map(function(c){
+      return '<th class="'+(c.nosort?"nosort":"")+'" data-key="'+c.key+'">'+
+             esc(c.label)+'</th>'; }).join("");
+
+    function cmp(a,b){
+      var ka=a[sortKey], kb=b[sortKey];
+      if(ka==null && kb==null) return 0;
+      if(ka==null) return 1; if(kb==null) return -1;
+      var col = COLS.filter(function(c){return c.key===sortKey;})[0];
+      if(col && col.num) return sortDir==="asc"?ka-kb:kb-ka;
+      ka=String(ka).toLowerCase(); kb=String(kb).toLowerCase();
+      if(ka<kb) return sortDir==="asc"?-1:1;
+      if(ka>kb) return sortDir==="asc"?1:-1;
+      return 0;
+    }
+    function gatesHtml(gates){
+      if(!gates || !gates.length) return '<span class="empty">n/a</span>';
+      return gates.map(function(g){
+        var ch = g.gate ? g.gate.charAt(0).toUpperCase() : "?";
+        return '<span class="gate '+(g.passed?"pass":"fail")+'" title="'+
+               attr((g.gate||"")+": "+(g.detail||""))+'">'+esc(ch)+'</span>'; }).join("");
+    }
+    function draw(){
+      var rows = DATA.candidates.filter(function(r){
+        if(!filter) return true;
+        var hay=(r.company_name+" "+r.status+" "+(r.stage||"")+" "+
+                 (r.drop_reason||"")).toLowerCase();
+        return hay.indexOf(filter)>-1;
+      }).slice().sort(cmp);
+      document.getElementById("cand-body").innerHTML = rows.length ? rows.map(function(r){
+        var color = STATUS_COLOR[r.status]||"#f5f5f5";
+        return '<tr><td>'+esc(r.company_name)+'</td>'+
+               '<td>'+esc(r.event_date||"")+'</td>'+
+               '<td>'+esc(r.stage?r.stage.replace("-"," "):"")+'</td>'+
+               '<td>'+esc(r.amount_label)+'</td>'+
+               '<td class="st" style="color:'+color+'">'+esc(r.status)+'</td>'+
+               '<td>'+gatesHtml(r.gates)+'</td>'+
+               '<td>'+esc(r.drop_reason||"")+'</td></tr>';
+      }).join("") : '<tr><td colspan="7" class="empty">No candidates yet.</td></tr>';
+    }
+    head.addEventListener("click", function(e){
+      var th=e.target.closest("th"); if(!th || th.classList.contains("nosort")) return;
+      var key=th.getAttribute("data-key");
+      if(key===sortKey){ sortDir = sortDir==="asc"?"desc":"asc"; }
+      else { sortKey=key; sortDir="asc"; }
+      draw();
+    });
+    document.getElementById("cand-filter").addEventListener("input", function(e){
+      filter = e.target.value.trim().toLowerCase(); draw();
+    });
+    draw();
+  })();
+
+  // Reports and latest draft
+  (function renderReports(){
+    var out = "";
+    var d = DATA.latest_draft;
+    if(d){
+      out += '<div class="report-row"><a href="'+attr(d.path)+'">'+esc(d.path)+'</a>'+
+             '<span class="when">draft, '+d.briefs_count+' brief(s)'+
+             (d.mtime?(', '+esc(d.mtime)):'')+'</span></div>';
+    }
+    (DATA.reports||[]).forEach(function(r){
+      out += '<div class="report-row"><a href="'+attr(r.path)+'">'+esc(r.title)+'</a>'+
+             '<span class="when">'+esc(r.path)+', '+esc(r.mtime)+'</span></div>';
+    });
+    document.getElementById("reports").innerHTML = out ||
+      '<div class="empty">No reports or drafts found.</div>';
+  })();
+
+  // Cloud routines progress, from gh PR status fetched server side
+  (function renderRoutines(){
+    var r = DATA.routines;
+    var manage = '<a href="'+attr(r.manage_url)+'">manage at claude.ai/code/routines</a>';
+    var pullBtn = SERVE
+      ? '<button class="run" data-action="scout_pull">pull scout leads</button>'
+      : '<button class="copy" data-copy="python -m radar.scoutpull">copy</button>';
+    document.getElementById("routines-meta").innerHTML = (r.gh_ok
+      ? 'Checked via gh at '+esc(r.checked_at)+'. '+manage
+      : 'gh unavailable, showing schedule only. '+manage)+' '+pullBtn;
+
+    var BADGE = {"on time":"badge-ok", "overdue":"badge-overdue",
+                 "never":"badge-muted", "unknown":"badge-muted"};
+    function prRows(prs){
+      if(!prs.length) return '<div class="empty">no PRs</div>';
+      return prs.map(function(p){
+        var dr = p.draft ? ' <span class="pr-state pr-CLOSED">DRAFT</span>' : "";
+        return '<div class="pr-row"><span class="pn">#'+p.number+'</span>'+
+               '<span class="pt"><a href="'+attr(p.url)+'">'+esc(p.title)+'</a>'+
+               '<div class="rline">'+esc(p.branch)+', '+esc(p.created)+'</div></span>'+
+               '<span class="pr-state pr-'+esc(p.state)+'">'+esc(p.state)+'</span>'+dr+'</div>';
+      }).join("");
+    }
+    document.getElementById("routines").innerHTML = r.routines.map(function(rt){
+      var badge = '<span class="badge '+(BADGE[rt.status]||"badge-muted")+'">'+
+                  esc(rt.status)+'</span>';
+      return '<div class="panel routine">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;">'+
+          '<span class="rname">'+esc(rt.name)+'</span>'+badge+'</div>'+
+        '<div class="rsched">'+esc(rt.schedule_human)+'</div>'+
+        '<div class="rline">'+esc(rt.status_detail)+'</div>'+
+        '<div class="rline">next run: <b>'+esc(rt.next_run||"unknown")+'</b></div>'+
+        '<div class="rline">writes <b>'+esc(rt.writes)+'</b></div>'+
+        '<div style="margin-top:8px;">'+prRows(rt.prs)+'</div></div>';
+    }).join("");
+
+    var op = document.getElementById("other-prs");
+    if(r.other_prs && r.other_prs.length){
+      op.innerHTML = '<div class="cat-title">Other open work</div>'+prRows(r.other_prs);
+    } else { op.style.display = "none"; }
+  })();
+
+  // Repoint the masthead issue line to a dashboard caption
+  (function captionMasthead(){
+    var il = document.getElementById("issue-line"), k = DATA.kpis;
+    if(il){ il.textContent = "pool " + k.enriched_count + "/" + k.target +
+            " candidates · next issue " + k.next_issue; }
+  })();
+
+  // Copy to clipboard, with a file:// safe fallback
+  document.addEventListener("click", function(e){
+    var btn = e.target.closest("[data-copy]"); if(!btn) return;
+    var text = btn.getAttribute("data-copy"), label = btn.textContent;
+    function flash(){ btn.textContent="copied"; setTimeout(function(){ btn.textContent=label; }, 1200); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(flash, fallback);
+    } else { fallback(); }
+    function fallback(){
+      var ta=document.createElement("textarea"); ta.value=text;
+      ta.style.position="fixed"; ta.style.opacity="0"; document.body.appendChild(ta);
+      ta.select(); try{ document.execCommand("copy"); flash(); }catch(err){}
+      document.body.removeChild(ta);
+    }
+  });
+
+{% if server %}
+  // Live action mode: buttons POST to the localhost server, which runs the
+  // allowlisted command in process and returns its output; the page then
+  // reloads so it reflects the new state.
+  (function serveUi(){
+    var sf = document.getElementById("serve-flag");
+    if(sf){ sf.className = "serve-pill"; sf.textContent = "LIVE · buttons run here"; }
+    var f = document.querySelector("footer");
+    if(f){ f.textContent = "Live server on 127.0.0.1, token gated. Buttons run "+
+      "allowlisted local actions (todo done, ingest, sieve, enrich, issue). It "+
+      "never publishes, posts, or sends. Press Ctrl-C in the terminal to stop."; }
+  })();
+  function toast(msg, ok){
+    var t = document.getElementById("toast");
+    t.textContent = msg; t.style.borderColor = ok ? ACCENT : "#7a6500";
+    t.style.display = "block";
+  }
+  function postAction(action, args, btn){
+    var label = btn ? btn.textContent : "";
+    if(btn){ btn.disabled = true; btn.textContent = "running..."; }
+    fetch("/action", {method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({token:TOKEN, action:action, args:args||{}})})
+      .then(function(res){ return res.json(); })
+      .then(function(out){
+        toast(out.ok ? (out.output||"done") : ("failed: "+(out.output||"")), out.ok);
+        if(out.ok){ setTimeout(function(){ location.reload(); }, 900); }
+        else if(btn){ btn.disabled = false; btn.textContent = label; }
+      })
+      .catch(function(err){
+        toast("error: "+err, false);
+        if(btn){ btn.disabled = false; btn.textContent = label; }
+      });
+  }
+  document.addEventListener("click", function(e){
+    var b = e.target.closest("[data-action]"); if(!b) return;
+    var id = b.getAttribute("data-id");
+    postAction(b.getAttribute("data-action"), id ? {id:Number(id)} : {}, b);
+  });
+{% endif %}
+})();
+</script>
+</body>
+</html>

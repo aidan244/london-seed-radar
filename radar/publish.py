@@ -15,7 +15,7 @@ import sys
 
 import jinja2
 
-from radar import config, db, juniors, stages, util
+from radar import config, db, geo, juniors, remote, stages, util
 
 PUBLIC_COMPANY_FIELDS = [
     "name", "company_number", "domain", "website", "location_text",
@@ -106,9 +106,12 @@ def _issue_entries(conn, issue_date):
     entries = []
     for event in rows:
         company = db.get_company(conn, event["company_id"])
+        evidence = [dict(e) for e in db.event_evidence(conn, event["id"])]
+        region, _ = geo.locate(
+            geo.combine_evidence_text(company["location_text"], evidence))
         entries.append({
             "event": dict(event), "company": dict(company),
-            "evidence": [dict(e) for e in db.event_evidence(conn, event["id"])],
+            "evidence": evidence,
             "founders": [dict(f) for f in conn.execute(
                 "SELECT * FROM founders WHERE company_id = ? ORDER BY name",
                 (company["id"],))],
@@ -116,6 +119,8 @@ def _issue_entries(conn, issue_date):
                 "SELECT * FROM jobs WHERE company_id = ? ORDER BY title",
                 (company["id"],))],
             "amount_label": stages.format_amount(event["amount_gbp"]),
+            "region": region or "uk",
+            "region_label": "London" if region == "london" else "UK",
         })
     return entries
 
@@ -137,8 +142,10 @@ def gather_hiring(conn):
             continue
         roles = sorted(
             ({"title": j["title"], "url": j["url"], "location": j["location"],
-              "junior": juniors.looks_junior(j["title"])} for j in jobs),
-            key=lambda r: (not r["junior"], r["title"]))
+              "junior": juniors.looks_junior(j["title"]),
+              "remote": remote.looks_remote(j["location"], j["title"])}
+             for j in jobs),
+            key=lambda r: (not (r["junior"] or r["remote"]), r["title"]))
         groups.append({
             "company": dict(row),
             "stage_label": stages.display_stage(row["stage"]),

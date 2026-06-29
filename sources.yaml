@@ -2,37 +2,61 @@
 # Edit freely; the pipeline reads this at the start of every run.
 
 # Funding events must fall inside this window to pass the recency gate.
-# Launch setting: 21 days so the first issue (2026-06-15) draws from a
-# deeper pool. Revert to 14 after that issue ships.
-lookback_days: 21
+# Steady state is 14 (= issue_cadence_days: one window per fortnight, no
+# gaps or overlap). The launch issue (2026-06-29) used a 21-day window to
+# draw from the accumulated verified pool; reverted to 14 once it shipped.
+lookback_days: 14
 
-# Number of companies to feature in each weekly issue. If fewer qualify
-# in a week, the issue features all of them and says so; it is never
-# padded with unverified companies.
-companies_per_issue: 10
+# Days between issues. The briefing is biweekly (fortnightly), so the
+# dashboard steps the next-issue countdown by this from first_issue_date,
+# and the steady-state lookback window matches it.
+issue_cadence_days: 14
+
+# Number of companies to feature in each issue. If fewer qualify in a
+# fortnight, the issue features all of them and says so; it is never
+# padded with unverified companies. Set to 5 on 2026-06-28 alongside the
+# move to a biweekly cadence.
+companies_per_issue: 5
+
+# Target date for the first biweekly issue (Mondays are publication day).
+# The dashboard counts down to this, then steps forward by
+# issue_cadence_days. Set to 2026-06-29 on 2026-06-28: the verified pool
+# reached five companies and the earlier launch dates had passed.
+first_issue_date: 2026-06-29
 
 # Funding press feeds. Public RSS only; never scrape walled sites.
+# Audited live 2026-06-21 by per-feed funding-item yield and UK density,
+# measured through the sieve's own triage. Dropped TechCrunch, EU-Startups,
+# Finextra, and City AM: high entry volume but ~zero UK early-stage raises,
+# and City AM/Finextra also false-trigger the funding regex on markets and
+# banking headlines. RSS is corroboration, not the main funnel; Companies
+# House SH01 filings and the cloud scout do the primary discovery.
 rss_feeds:
+  # UK-native core.
   - name: UKTN
     url: https://www.uktech.news/feed
-  - name: Sifted
-    url: https://sifted.eu/feed
-  - name: TechCrunch
-    url: https://techcrunch.com/feed/
-  - name: Tech.eu
-    url: https://tech.eu/feed/
-  - name: EU-Startups
-    url: https://www.eu-startups.com/feed/
+  - name: UKTN Funding
+    url: https://www.uktech.news/funding/feed
   - name: BusinessCloud
     url: https://businesscloud.co.uk/feed/
   - name: TechRound
     url: https://techround.co.uk/feed/
   - name: Maddyness UK
     url: https://www.maddyness.com/uk/feed/
-  - name: Finextra
-    url: https://www.finextra.com/rss/headlines.aspx
-  - name: City AM
-    url: https://www.cityam.com/feed/
+  - name: Startups.co.uk
+    url: https://startups.co.uk/feed/
+  # Pan-European, retained because they catch London deep-tech raises the
+  # UK-native feeds miss; the geography gate drops their non-UK items.
+  - name: Sifted
+    url: https://sifted.eu/feed
+  - name: Tech.eu
+    url: https://tech.eu/feed/
+  # Added 2026-06-21 after live vetting (200; each surfaced a real UK raise,
+  # a Cambridge seed and a UK Series A respectively):
+  - name: Tech Funding News
+    url: https://techfundingnews.com/feed/
+  - name: Startups Magazine
+    url: https://startupsmagazine.co.uk/rss
 
 # Cloud-scout feed proxy. The scheduled cloud routines run from an IP the
 # feed providers block: every feed returns HTTP 403 from the sandbox and
@@ -46,13 +70,99 @@ rss_feeds:
 feed_proxy:
   template: https://api.allorigins.win/raw?url={url}
 
-# Extra London markers, merged with the built-in list in radar/geo.py.
-# Matched on word boundaries only; "uk" never matches Ukraine.
+# Geography is UK-wide, London first: a candidate passes the geography
+# gate on a London marker or any other UK marker, and issues lead with
+# the London raises. Both lists below merge with the built-in markers in
+# radar/geo.py and match on word boundaries only; "uk" never matches
+# Ukraine, and UK cities that collide with US cities (Cambridge, MA and
+# the like) are masked out.
 extra_london_markers: []
+# Extra non-London UK markers (towns, regions) to also accept.
+extra_uk_markers: []
 
 # Companies House numbers to always check during live ingest,
 # for companies you already know about that press has not covered.
 watchlist_company_numbers: []
+
+# Manual leads: UK companies you already know raised but press missed.
+# Each becomes a candidate that ingest resolves against Companies House and
+# the four gates verify locally; nothing here is featured unverified. A
+# date is required (the recency gate uses it); amount_gbp is optional.
+# company_number is the human-verified Companies House number for the exact
+# entity: ingest resolves the lead straight to that profile, so a brand whose
+# registered name differs (Conduct -> CONDUCT AI LTD) gets the right London
+# office and not a same-name company elsewhere in the UK.
+leads:
+  # All six verified live 2026-06-28 against each company's own site and the
+  # Companies House public register (founder/director cross-checks recorded
+  # in this session). Brand name kept for display; company_number pins the
+  # real entity.
+  - name: Monument Technology
+    stage: seed
+    url: https://www.monument.tech
+    date: 2026-06-17
+    amount_gbp: 18000000
+    company_number: "15281121"     # MONUMENT TECHNOLOGY LIMITED, 33 Cavendish Sq, London
+    source: UKTN
+  - name: Conduct
+    stage: series-a
+    url: https://www.uktech.news/ai/ai-operating-system-startup-conduct-closes-45m-round-20260617
+    date: 2026-06-17
+    amount_gbp: 45000000           # press $60m / ~£45m; statement figures vary
+    company_number: "15396489"     # CONDUCT AI LTD, 42 Berners St, London; ex-Palantir founders
+    source: UKTN
+  - name: Isometric
+    stage: series-a
+    url: https://www.uktech.news/ai/isometric-raises-over-30m-to-expand-ai-certification-platform-20260622
+    date: 2026-06-23
+    amount_gbp: 30000000           # press $40m / ~£30m
+    company_number: "13829439"     # ISOMETRIC HQ LTD; name search picks the wrong entity, number is essential
+    source: UKTN
+  - name: 01Health
+    stage: series-a
+    url: https://01health.ai
+    date: 2026-06-10
+    amount_gbp: 11200000
+    company_number: "13279603"     # BBLHD LTD (t/a 32Co/01Health), Cremer St, London; founder Szamocki
+    source: UKTN
+  - name: Houdini Bio
+    stage: pre-seed
+    url: https://www.uktech.news/medtech/houdini-bio-secures-1-5m-to-improve-gene-and-cell-therapies-20260622
+    date: 2026-06-22
+    amount_gbp: 1500000
+    company_number: "16352550"     # HOUDINI BIO LTD, Victoria House, London (Cambridge lab)
+    source: UKTN
+  - name: Record OS
+    stage: pre-seed
+    url: https://www.record-os.com
+    date: 2026-06-12
+    amount_gbp: 1490000            # press $2m
+    company_number: "16058953"     # COUNT LTD, 128 City Rd, London; ex-Wise founders
+    source: UKTN
+  - name: Capsa AI
+    stage: series-a
+    url: https://www.uktech.news/ai/capsa-ai-secures-13-4m-to-build-ai-platform-for-private-capital-20260611
+    date: 2026-06-11
+    amount_gbp: 13400000
+    company_number: "15323501"     # already enriched previously; kept in the pool across rebuilds
+    source: UKTN
+  # Held for human sign-off, deliberately NOT added (see this session's notes):
+  #   Zaro (zaro.ai, London, real, but CH entity not identifiable from the register)
+  #   Flagright (raise belongs to the distributed YC parent; UK Ltd is a GBP1 subsidiary)
+  #   Airspeed (3 days outside the recency window)
+
+# Public accelerator/investor portfolio pages for the candidate-mapping
+# tool (python -m radar.accelerators). It writes a reviewable list to
+# reports/accelerators/; it never touches the database or auto-resolves
+# against Companies House. You skim it and copy recent, relevant UK
+# companies into the leads list above.
+accelerators:
+  - name: Seedcamp
+    url: https://seedcamp.com/companies/
+  - name: Entrepreneur First
+    url: https://www.joinef.com/companies/
+  - name: Antler
+    url: https://www.antler.co/portfolio
 
 # Manual website confirmations for live mode, keyed by normalized company
 # name (lowercase, no Ltd/Limited suffix). The reality gate needs a live
@@ -61,6 +171,15 @@ watchlist_company_numbers: []
 website_overrides:
   # example company: https://example.com
   capsa ai: https://capsa.ai
+  # Verified live 2026-06-28 (keyed by brand normalized name):
+  monument technology: https://www.monument.tech
+  conduct: https://conduct.ai
+  isometric: https://isometric.com
+  01health: https://01health.ai
+  houdini bio: https://www.houdinibio.com
+  record os: https://www.record-os.com
+  # Verified live 2026-06-29 (Bristol UK; Clay + press confirm the entity):
+  astral systems: https://astralsystems.com
 
 # Manual ATS board mappings for live mode, same key as above.
 ats_overrides: {}

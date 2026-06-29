@@ -82,10 +82,10 @@ CREATE TABLE IF NOT EXISTS jobs (
 CREATE TABLE IF NOT EXISTS human_todos (
     id INTEGER PRIMARY KEY,
     task TEXT NOT NULL,
-    category TEXT NOT NULL CHECK (category IN ('setup','weekly','growth')),
+    category TEXT NOT NULL CHECK (category IN ('setup','issue','growth')),
     due_hint TEXT,
     status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','done')),
-    issue_date TEXT,                 -- weekly tasks are tied to an issue
+    issue_date TEXT,                 -- issue tasks are tied to an issue
     created_at TEXT NOT NULL DEFAULT (datetime('now')),
     done_at TEXT
 );

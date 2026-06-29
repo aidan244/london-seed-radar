@@ -14,8 +14,10 @@ run a WebSearch pass; either leg alone can carry the report.
 How to use: paste the Discovery block below into both routines' prompts,
 replacing the current feed-fetch instructions. The only per-routine
 difference is the output path and the Sunday merge step, both noted.
-After editing, re-check that no MCP connectors are attached (the API has
-auto-attached Gmail and others before; strip them, no-send rule).
+Both routines need WebSearch and WebFetch in their allowed_tools, or the
+WebSearch leg silently cannot run; add them when editing. After editing,
+re-check that no MCP connectors are attached (the API has auto-attached
+Gmail and others before; strip them, no-send rule).
 
 ## Hard rules for the routine (keep in the prompt)
 
@@ -63,8 +65,33 @@ Write a markdown report with, in order:
   the proxy worked from the cloud this run.
 - The shortlist: company, stage, amount or "undisclosed", date, source
   URL, and which leg found it (feed or websearch).
+- A machine-readable shortlist block (see below), so the local pipeline
+  can ingest the leads deterministically.
 - Dropped candidates with reasons.
 - A line stating nothing is CH-verified; the local pipeline does that.
+
+### Machine-readable shortlist block (required)
+
+Immediately after the prose shortlist, emit the same companies as a
+fenced CSV block exactly like this (the local radar.leads parser reads
+it):
+
+```radar-leads (csv)
+name,stage,amount_gbp,date,url,source
+RevEng.AI,series-a,,2026-05-27,https://www.example.com/article,SecurityWeek
+Acme Bio,seed,1500000,2026-06-02,https://www.example.com/acme,UKTN
+```
+
+Rules for the block:
+- One row per shortlisted company, header line exactly as shown.
+- stage is one of pre-seed, seed, series-a (lowercase, hyphenated).
+- amount_gbp is the round size in whole pounds, or blank if the figure
+  is not in GBP or is undisclosed. Never convert a currency; leave it
+  blank rather than guess.
+- date is the YYYY-MM-DD the round was announced.
+- url is the single best public source link; source is the outlet name.
+- Include only companies in the shortlist (London, in-scope stage, in
+  window). The local pipeline still re-verifies every row.
 
 Output path:
 - Radar scout (Tue/Fri): `reports/scout/<date>.md`.

@@ -19,12 +19,12 @@
 </head>
 <body>
 <h1>London Seed Radar</h1>
-<p>A weekly briefing on every newly funded pre-seed, seed, and Series A
-company in London: what they do, who founded them, how big the team is,
-and who is hiring right now. Built on Companies House filings, funding
-press, and public ATS job boards. For founders, operators, and angels in
-the London early-stage scene, and for students hunting internships and
-first jobs at startups.</p>
+<p>A biweekly briefing on every newly funded pre-seed, seed, and Series A
+company in the UK, London first: what they do, who founded them, how big
+the team is, and who is hiring right now, remote roles included. Built on
+Companies House filings, funding press, and public ATS job boards. For
+founders, operators, and angels in the UK early-stage scene, and for
+students hunting internships and first jobs at startups.</p>
 {% if sample_data %}
 <p class="banner">Sample data: the entries below were generated from
 recorded test fixtures to demonstrate the pipeline. The companies are
@@ -34,7 +34,7 @@ fictional. Live data replaces this after the first real issue.</p>
 <h2>Issues</h2>
 {% for item in issues %}
 <div class="issue">
-  <a href="issues/{{ item.issue.issue_date }}.html">Week of {{ item.issue.issue_date }}</a>
+  <a href="issues/{{ item.issue.issue_date }}.html">Issue of {{ item.issue.issue_date }}</a>
   <span class="muted">{{ item.count }} companies{% if item.issue.status != "published" %}, draft{% endif %}</span>
 </div>
 {% else %}

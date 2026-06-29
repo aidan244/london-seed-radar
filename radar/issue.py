@@ -1,7 +1,7 @@
-"""Stage 4: issue. Select the top enriched events for the week (target
-set by companies_per_issue in sources.yaml, default 10), render a
+"""Stage 4: issue. Select the top enriched events for the fortnight (target
+set by companies_per_issue in sources.yaml, default 5), render a
 per-company research brief plus a draft issue into issues/YYYY-MM-DD/,
-advance those events to 'featured', and create the week's human todos.
+advance those events to 'featured', and create the issue's human todos.
 
 If fewer companies qualify than the target, the issue features all of
 them and says so; it is never padded with unverified entries.
@@ -15,9 +15,9 @@ import sys
 
 import jinja2
 
-from radar import config, db, juniors, stages, util
+from radar import config, db, geo, juniors, remote, stages, util
 
-WEEKLY_TASKS = [
+ISSUE_TASKS = [
     ("Edit the draft issue at {path} and finalise the copy; the published "
      "voice must be yours", "before sending"),
     ("Run python -m radar.paste --copy, paste into a new post on the "
@@ -45,6 +45,38 @@ def score(event, evidence_kinds, jobs_count):
     return s
 
 
+_UK_GENERIC_MARKERS = {
+    "uk", "u.k.", "united kingdom", "great britain", "britain", "british",
+    "england", "scotland", "scottish", "wales", "welsh", "northern ireland",
+    "uk postcode",
+}
+
+
+def _region_label(region, marker):
+    """Short location label for the strapline and glance line. A specific
+    city marker is shown as-is; nation-level matches show as 'UK'."""
+    if region == "london":
+        return "London"
+    if marker and marker not in _UK_GENERIC_MARKERS:
+        return marker.title()
+    return "UK"
+
+
+def _mark_section_heads(featured):
+    """Tag the first entry of each region with a section heading, but only
+    when the issue actually mixes London and the rest of the UK."""
+    mixed = len({e["region"] for e in featured}) > 1
+    seen = set()
+    for entry in featured:
+        region = entry["region"]
+        if mixed and region not in seen:
+            entry["section_heading"] = ("London" if region == "london"
+                                        else "Across the rest of the UK")
+        else:
+            entry["section_heading"] = None
+        seen.add(region)
+
+
 def gather_featured(conn, limit):
     rows = conn.execute(
         "SELECT * FROM funding_events WHERE status = 'enriched' "
@@ -59,6 +91,8 @@ def gather_featured(conn, limit):
         jobs = conn.execute(
             "SELECT * FROM jobs WHERE company_id = ? ORDER BY title",
             (company["id"],)).fetchall()
+        region, marker = geo.locate(
+            geo.combine_evidence_text(company["location_text"], evidence))
         entry = {
             "event": dict(event), "company": dict(company),
             "evidence": [dict(e) for e in evidence],
@@ -66,13 +100,21 @@ def gather_featured(conn, limit):
             "jobs": [dict(j) for j in jobs],
             "slug": util.slugify(company["name"]),
             "amount_label": stages.format_amount(event["amount_gbp"]),
+            "region": region or "uk",
+            "region_label": _region_label(region, marker),
         }
         entry["score"] = score(event, {e["kind"] for e in evidence}, len(jobs))
         entry.update(_display_labels(entry))
         scored.append(entry)
+    # Most corroborated and most recent first, then London ahead of the rest
+    # of the UK. The region sort is stable, so it preserves the score order
+    # within each region.
     scored.sort(key=lambda e: (e["score"], e["event"]["event_date"]),
                 reverse=True)
-    return scored[:limit]
+    scored.sort(key=lambda e: 0 if e["region"] == "london" else 1)
+    featured = scored[:limit]
+    _mark_section_heads(featured)
+    return featured
 
 
 GLANCE_PITCH_CHARS = 48
@@ -92,8 +134,9 @@ def _short_pitch(one_liner):
 def _display_labels(entry):
     """Precomputed strings so the markdown template stays whitespace-safe.
     Badge legend: 🟢 hiring now, ⚪ no live roles found, 🔒 job board
-    unverifiable. 🎓 is flagged from the job title only; the draft says
-    so and the human verifies against the posting while editing."""
+    unverifiable. 🎓 (grad-friendly) and 🌐 (remote) are flagged from the
+    posting text only; the draft says so and the human verifies against the
+    live posting while editing."""
     founders = []
     for f in entry["founders"]:
         detail = "; ".join(filter(None, [f["role"], f["background"]]))
@@ -101,17 +144,29 @@ def _display_labels(entry):
 
     company, jobs = entry["company"], entry["jobs"]
     if jobs:
-        any_junior = any(juniors.looks_junior(j["title"]) for j in jobs)
-        badge = "🟢 🎓" if any_junior else "🟢"
+        def is_junior(j):
+            return juniors.looks_junior(j["title"])
+
+        def is_remote(j):
+            return remote.looks_remote(j["location"], j["title"])
+
+        def tag(j):
+            return (j["title"].strip() + (" 🎓" if is_junior(j) else "")
+                    + (" 🌐" if is_remote(j) else ""))
+
+        any_junior = any(is_junior(j) for j in jobs)
+        any_remote = any(is_remote(j) for j in jobs)
+        badge = "🟢" + (" 🎓" if any_junior else "") + (" 🌐" if any_remote else "")
         chip = "🟢 %d role%s" % (len(jobs), "" if len(jobs) == 1 else "s")
         if any_junior:
             chip += " · 🎓"
-        # Grad-friendly titles surface first so the skim reader sees them.
-        ordered = sorted(jobs, key=lambda j: (not juniors.looks_junior(j["title"]),
+        if any_remote:
+            chip += " · 🌐"
+        # Grad-friendly and remote titles surface first so the skim reader
+        # sees them.
+        ordered = sorted(jobs, key=lambda j: (not (is_junior(j) or is_remote(j)),
                                               j["title"]))
-        titles = ", ".join(
-            j["title"] + (" 🎓" if juniors.looks_junior(j["title"]) else "")
-            for j in ordered[:3])
+        titles = ", ".join(tag(j) for j in ordered[:3])
         hiring = ("%d live role(s) on %s, including %s"
                   % (len(jobs), company["ats_provider"], titles))
     elif company["ats_status"] == "unverifiable":
@@ -128,8 +183,10 @@ def _display_labels(entry):
     if company["headcount_source"]:
         team += " (%s)" % company["headcount_source"]
 
-    evidence = " · ".join("[%s](%s)" % (e["source_name"], e["url"])
-                          for e in entry["evidence"])
+    evidence = " · ".join(
+        "[%s](%s)" % (e["source_name"], e["url"]) if e["url"]
+        else e["source_name"]
+        for e in entry["evidence"])
     return {
         "founders_label": ", ".join(founders),
         "hiring_label": hiring,
@@ -137,9 +194,11 @@ def _display_labels(entry):
         "badge": badge,
         "stage_label": stage_label,
         "team_label": team,
-        "strapline": "%s · %s · %s" % (stage_label, entry["amount_label"], pitch),
-        "glance_label": "**%s** · %s · %s · %s · %s" % (
-            company["name"], stage_label, entry["amount_label"], pitch, chip),
+        "strapline": "%s · %s · %s · %s" % (
+            stage_label, entry["amount_label"], entry["region_label"], pitch),
+        "glance_label": "**%s** · %s · %s · %s · %s · %s" % (
+            company["name"], stage_label, entry["amount_label"],
+            entry["region_label"], pitch, chip),
     }
 
 
@@ -148,6 +207,11 @@ def _issue_header(featured, target):
     disclosed = [e for e in featured if e["event"]["amount_gbp"]]
     n = len(featured)
     bits = ["%d new round%s" % (n, "" if n == 1 else "s")]
+    london = sum(1 for e in featured if e["region"] == "london")
+    if london and london != n:
+        bits.append("%d London, %d elsewhere in the UK" % (london, n - london))
+    elif london == 0 and n:
+        bits.append("across the UK")
     if disclosed:
         total = sum(e["event"]["amount_gbp"] for e in disclosed)
         bits.append("%s disclosed" % stages.format_amount(total))
@@ -156,14 +220,14 @@ def _issue_header(featured, target):
     headline_label = None
     if disclosed:
         top = max(disclosed, key=lambda e: e["event"]["amount_gbp"])
-        headline_label = ("**%s for %s**, the week's largest disclosed "
+        headline_label = ("**%s for %s**, this issue's largest disclosed "
                           "round: %s" % (top["amount_label"],
                                          top["company"]["name"],
                                          _short_pitch(top["company"]["one_liner"])))
 
     shortfall_note = None
     if n < target:
-        shortfall_note = ("[NOTE: only %d compan%s qualified this week "
+        shortfall_note = ("[NOTE: only %d compan%s qualified this fortnight "
                           "against a target of %d; say so plainly in the "
                           "intro, never pad.]"
                           % (n, "y" if n == 1 else "ies", target))
@@ -171,27 +235,27 @@ def _issue_header(featured, target):
             "shortfall_note": shortfall_note}
 
 
-def create_weekly_todos(conn, issue_date, issue_path):
+def create_issue_todos(conn, issue_date, issue_path):
     existing = conn.execute(
         "SELECT COUNT(*) c FROM human_todos WHERE issue_date = ?",
         (str(issue_date),)).fetchone()["c"]
     if existing:
         return 0
-    for task, due in WEEKLY_TASKS:
+    for task, due in ISSUE_TASKS:
         conn.execute(
             "INSERT INTO human_todos (task, category, due_hint, issue_date) "
-            "VALUES (?, 'weekly', ?, ?)",
+            "VALUES (?, 'issue', ?, ?)",
             (task.format(path=issue_path), due, str(issue_date)))
-    return len(WEEKLY_TASKS)
+    return len(ISSUE_TASKS)
 
 
-def warn_stale_weeklies(conn, issue_date):
+def warn_stale_issue_todos(conn, issue_date):
     stale = conn.execute(
-        "SELECT * FROM human_todos WHERE category = 'weekly' AND "
+        "SELECT * FROM human_todos WHERE category = 'issue' AND "
         "status = 'pending' AND issue_date < ? ORDER BY issue_date",
         (str(issue_date),)).fetchall()
     if stale:
-        print("WARNING: %d weekly todo(s) from previous issues still pending:"
+        print("WARNING: %d issue todo(s) from previous issues still pending:"
               % len(stale))
         for todo in stale:
             print("  #%d (%s) %s" % (todo["id"], todo["issue_date"],
@@ -225,7 +289,7 @@ def main(argv=None):
         print("note: only %d enriched candidate(s); featuring all of them "
               "(target is %d, set in sources.yaml)." % (len(featured), target))
 
-    warn_stale_weeklies(conn, as_of)
+    warn_stale_issue_todos(conn, as_of)
 
     issue_dir = config.ISSUES_DIR / str(as_of)
     briefs_dir = issue_dir / "briefs"
@@ -239,7 +303,7 @@ def main(argv=None):
 
     draft = env.get_template("issue.md.j2").render(
         entries=featured, issue_date=as_of,
-        week_label=as_of.strftime("%-d %B %Y"),
+        issue_label=as_of.strftime("%-d %B %Y"),
         **_issue_header(featured, target))
     draft_path = issue_dir / "draft-issue.md"
     draft_path.write_text(draft)
@@ -255,7 +319,7 @@ def main(argv=None):
         db.advance_status(conn, entry["event"]["id"], "featured")
         conn.execute("UPDATE funding_events SET issue_date = ? WHERE id = ?",
                      (str(as_of), entry["event"]["id"]))
-    created = create_weekly_todos(conn, as_of, rel_path)
+    created = create_issue_todos(conn, as_of, rel_path)
     conn.commit()
 
     print("issue %s: featured %d compan%s" %
@@ -263,7 +327,7 @@ def main(argv=None):
     print("  draft:  %s" % rel_path)
     print("  briefs: %s/" % briefs_dir.relative_to(config.ROOT))
     if created:
-        print("  created %d weekly human todos (python -m radar.todo list)"
+        print("  created %d issue human todos (python -m radar.todo list)"
               % created)
     print("The draft is a starting point. Edit it; the published voice is yours.")
     print("Next: python -m radar.publish")

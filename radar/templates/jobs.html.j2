@@ -26,9 +26,10 @@
 <p><a href="index.html">London Seed Radar</a> / who is hiring</p>
 <h1>Who is hiring</h1>
 <p>Live roles on public job boards at companies featured in the radar.
-🎓 marks a role a recent grad could apply for, guessed from the job
-title alone; read the posting before applying. Job boards change daily,
-so treat this page as a snapshot from when it was generated.</p>
+🎓 marks a role a recent grad could apply for; 🌐 marks a role that can
+be done remotely. Both are guessed from the posting text alone, so read
+the posting before applying. Job boards change daily, so treat this page
+as a snapshot from when it was generated.</p>
 {% if sample_data %}
 <p class="banner">Sample data: the entries below were generated from
 recorded test fixtures to demonstrate the pipeline. The companies are
@@ -43,7 +44,7 @@ fictional. Live data replaces this after the first real issue.</p>
   <p>{{ group.company.one_liner }}</p>
   <ul>
   {% for role in group.roles %}
-    <li><a href="{{ role.url }}">{{ role.title }}</a>{% if role.junior %} <span class="grad">🎓 grad-friendly title</span>{% endif %}{% if role.location %} <span class="muted">· {{ role.location }}</span>{% endif %}</li>
+    <li><a href="{{ role.url }}">{{ role.title }}</a>{% if role.junior %} <span class="grad">🎓 grad-friendly title</span>{% endif %}{% if role.remote %} <span class="grad">🌐 remote</span>{% endif %}{% if role.location %} <span class="muted">· {{ role.location }}</span>{% endif %}</li>
   {% endfor %}
   </ul>
 </div>

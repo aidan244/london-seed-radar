@@ -6,10 +6,11 @@ Then read HANDOVER.md for the current state and open threads.
 ## What this project is
 
 A public weekly briefing: every newly funded pre-seed, seed, or Series A
-company in London that week, with what they do, founder backgrounds, a
-headcount estimate, and live hiring signals from public ATS job boards.
-Readers are founders, operators, and angels in the London early-stage
-scene. The output is a markdown draft the human pastes into a newsletter
+company in the UK that week, London first, with what they do, founder
+backgrounds, a headcount estimate, and live hiring signals from public
+ATS job boards (remote-friendly roles flagged). Readers are founders,
+operators, and angels in the UK early-stage scene, with London at its
+heart. The output is a markdown draft the human pastes into a newsletter
 platform, plus a static archive site and public dataset served from this
 repo via GitHub Pages.
 
@@ -67,9 +68,13 @@ human from the human's own accounts.
 
 Every candidate passes all four or is dropped with a recorded reason:
 
-1. Geography: London. Location markers match on word boundaries, never
-   substrings; "uk" must not match Ukraine, "england" must not match
-   New England. See radar/geo.py and tests/test_geo.py.
+1. Geography: the UK, London first. A candidate passes on a London
+   marker or any other UK marker (a nation, a major city, or a UK
+   postcode); issues lead with London and group the rest of the UK
+   after it. Markers match on word boundaries, never substrings; "uk"
+   must not match Ukraine, "england" must not match New England, and UK
+   cities that collide with US cities ("Cambridge, MA") are masked out.
+   See radar/geo.py and tests/test_geo.py.
 2. Stage: pre-seed, seed, or Series A.
 3. Recency: funding event inside the lookback window (default 14 days,
    set in sources.yaml).

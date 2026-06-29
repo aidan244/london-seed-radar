@@ -1,9 +1,11 @@
 # London Seed Radar
 
-A weekly briefing on every newly funded pre-seed, seed, and Series A
-company in London: what they do, who founded them, a headcount estimate,
-and live hiring signals from public ATS job boards. For founders,
-operators, and angels in the London early-stage scene.
+A biweekly briefing on every newly funded pre-seed, seed, and Series A
+company in the UK, London first: what they do, who founded them, a
+headcount estimate, and live hiring signals from public ATS job boards,
+with remote-friendly and grad-friendly roles flagged. For founders,
+operators, and angels in the UK early-stage scene, and for students
+hunting internships and first jobs at startups.
 
 The pipeline produces drafts and files; a human edits, publishes, and
 sends. Nothing in this repo can post or send anything. Built on public
@@ -27,20 +29,20 @@ sieve, enriches, builds a draft issue in `issues/2026-06-10/`, and
 publishes the static site into `docs/`. It is deterministic and safe to
 re-run; it refuses to touch a database that holds live data.
 
-## The weekly cycle
+## The biweekly cycle
 
 ```bash
 python -m radar.ingest            # Companies House + RSS -> candidates
 python -m radar.sieve --dry-run   # preview gate outcomes (drops are final)
 python -m radar.sieve             # apply the four gates
 python -m radar.enrich            # one-liner, founders, headcount, ATS check
-python -m radar.issue             # draft issue + research briefs + weekly todos
+python -m radar.issue             # draft issue + research briefs + issue todos
 # you: edit issues/<date>/draft-issue.md, the voice must be yours
 python -m radar.publish           # export dataset, regenerate docs/ site
 # you: commit and push (Pages serves docs/), paste into the newsletter,
 #      post, message founders, then:
 python -m radar.metrics log --subscribers N --open-rate N
-python -m radar.todo list         # nothing pending? week done
+python -m radar.todo list         # nothing pending? this issue is done
 ```
 
 `python -m radar` lists every command. `python -m radar.status` is the
@@ -50,8 +52,8 @@ one-screen overview.
 
 Every candidate passes all four or is dropped with a recorded reason:
 
-1. Geography: London, matched on word boundaries only ("uk" never
-   matches Ukraine, "england" never matches New England).
+1. Geography: the UK, London first, matched on word boundaries only
+   ("uk" never matches Ukraine, "england" never matches New England).
 2. Stage: pre-seed, seed, or Series A.
 3. Recency: inside the lookback window (default 14 days, sources.yaml).
 4. Reality: a live website plus a corroborated funding event (Companies
@@ -96,7 +98,7 @@ sieve gates, the forward-only status guard, and DB-level dedup.
 radar/            the pipeline, one module per command
 radar/templates/  jinja2 templates for briefs, the issue, and the site
 tests/fixtures/   recorded API responses (fictional companies)
-issues/           weekly drafts and research briefs
+issues/           issue drafts and research briefs
 docs/             GitHub Pages site and public dataset (committed)
 schema.sql        the SQLite schema; radar.db itself is gitignored
 sources.yaml      feeds, lookback window, manual overrides
