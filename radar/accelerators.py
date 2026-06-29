@@ -26,7 +26,7 @@ import datetime
 import re
 import sys
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 import requests
 
@@ -118,13 +118,65 @@ def write_report(root, mapping, today=None):
     return str(path.relative_to(Path(root)))
 
 
+# Anchor text that is a place, a sector tag, or site furniture, never a
+# portfolio company. extract_candidates is deliberately permissive for the
+# human review report; the resolve path needs precision, because a generic
+# word exact-matches an unrelated UK company ("London" -> LONDON LIMITED,
+# "Insurance" -> INSURANCE LTD) and wastes a human confirmation. Entries are
+# stored normalized (db.normalize_name), so "News & Views" -> "news views".
+_NOT_A_COMPANY = {
+    # places
+    "london", "paris", "berlin", "tokyo", "toronto", "japan", "india",
+    "france", "vietnam", "netherlands", "menap", "singapore", "new york",
+    "amsterdam", "stockholm", "munich", "dubai", "bangalore", "tel aviv",
+    "germany", "spain", "europe", "americas", "asia",
+    # sectors
+    "insurance", "logistics", "climate", "food", "hr", "pharmaceuticals",
+    "enterprise services", "sustainability", "fintech", "healthcare",
+    "energy", "retail", "manufacturing", "biotech", "deeptech", "saas",
+    "consumer", "marketplace", "hardware", "robotics", "gaming", "edtech",
+    # site furniture missed by _STOP
+    "our team", "news views", "complaints", "start", "menu",
+}
+_SOCIAL_HOST = re.compile(
+    r"(^|\.)(linkedin|twitter|x|facebook|instagram|youtube|github|medium|"
+    r"substack)\.com$", re.IGNORECASE)
+_NAV_PATH = re.compile(
+    r"^/?(our-team|team|about|views|complaints|location|locations|industry|"
+    r"industries|sector|sectors|sustainability|apply|welcome|contact|privacy|"
+    r"terms|careers|jobs|blog|news|people|press|faq|resources|events|podcast|"
+    r"stories|insights)(/|$)", re.IGNORECASE)
+
+
+def _resolvable(name, link):
+    """True when a candidate could plausibly be a portfolio company worth
+    searching Companies House for. Filters an accelerator's own nav, a
+    location or sector tag, and social/profile links, each of which can
+    exact-match an unrelated UK company in the resolve step."""
+    norm = db.normalize_name(name)
+    if not norm or norm in _NOT_A_COMPANY:
+        return False
+    if name.strip().startswith("["):
+        return False
+    parsed = urlparse(link or "")
+    if _SOCIAL_HOST.search(parsed.netloc or ""):
+        return False
+    path = parsed.path or ""
+    if path in ("", "/") or _NAV_PATH.match(path):
+        return False
+    return True
+
+
 def _unique_candidates(mapping):
-    """Flatten the per-accelerator (name, link) pairs, deduped by normalized
-    name, so a company listed by two accelerators is searched once."""
+    """Flatten the per-accelerator (name, link) pairs, filtered to plausible
+    companies and deduped by normalized name, so a company listed by two
+    accelerators is searched once and nav/boilerplate is never searched."""
     out = []
     seen = set()
     for acc in mapping:
         for name, link in acc["companies"]:
+            if not _resolvable(name, link):
+                continue
             key = db.normalize_name(name)
             if key and key not in seen:
                 seen.add(key)

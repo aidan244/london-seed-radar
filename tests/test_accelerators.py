@@ -105,6 +105,21 @@ class TestResolve(unittest.TestCase):
         self.assertEqual(row["confidence"], "unresolved")
         self.assertIsNone(row["company_number"])
 
+    def test_unique_candidates_filters_nav(self):
+        """The resolve path skips nav, locations, sectors, and social links so
+        a generic word never gets searched against Companies House."""
+        mapping = [{"companies": [
+            ("Acme AI", "https://seedcamp.com/company/acme/"),     # real
+            ("London", "https://www.joinef.com/location/london/"),  # location
+            ("Insurance", "https://www.joinef.com/industry/insurance/"),  # sector
+            ("Our Team", "https://seedcamp.com/our-team/"),         # nav
+            ("David Sutton", "https://www.linkedin.com/in/david/"),  # social
+            ("[MENU]", "https://www.joinef.com/"),                  # root + bracket
+            ("Brixton Bio", "https://seedcamp.com/company/brixton/"),  # real
+        ]}]
+        names = [n for n, _ in accelerators._unique_candidates(mapping)]
+        self.assertEqual(names, ["Acme AI", "Brixton Bio"])
+
     def test_write_proposed_watchlist(self):
         tmp = tempfile.mkdtemp()
         self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
