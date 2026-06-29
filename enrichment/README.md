@@ -21,6 +21,12 @@ founders' names with public-record backgrounds.
   derived from Clay (which aggregates LinkedIn data), say so, for example
   `"Clay (LinkedIn-derived), 2026-06-29"`, so the provenance shows in the
   issue and the public dataset.
+- `hq_country` is the verified ISO country of the company's real
+  headquarters (`"GB"` for the UK). Set it when a candidate's Companies
+  House office might belong to a same-name UK entity (the TurnUp lesson): if
+  it is set and is not `GB`, the sieve geography gate drops the candidate,
+  even though a London office is attached. See
+  `reports/verify-routine-prompt.md`.
 - Amount and stage are not set here; those live on the funding event and
   prefer press figures. Do not restate or guess them.
 - Re-fetch the live company source before writing anything here; never trust
@@ -36,6 +42,7 @@ founders' names with public-record backgrounds.
   "one_liner_source": "company site (verified 2026-06-29)",
   "headcount_estimate": "11-25",
   "headcount_source": "Clay (LinkedIn-derived), 2026-06-29",
+  "hq_country": "GB",
   "founders": [
     {
       "name": "Jane Doe",

@@ -2,8 +2,13 @@
 enrichment fixtures (for the reality gate's website lookup)."""
 
 import datetime
+import json
+import shutil
+import tempfile
 import unittest
+from pathlib import Path
 
+from radar import config
 from radar.sieve import evaluate_gates
 
 AS_OF = datetime.date(2026, 6, 10)
@@ -86,6 +91,41 @@ class TestGates(unittest.TestCase):
                           press("somewhere in Ohio"))
         self.assertEqual(len(gates), 1)
         self.assertEqual(gates[0]["gate"], "geography")
+
+    def test_geography_vetoes_foreign_hq_despite_uk_office(self):
+        # London office attached, but the press calls it foreign: a same-name
+        # match (the TurnUp lesson) must drop on geography.
+        ok, _, reason = run(
+            company(), event(stage="series-a"),
+            press("the Swedish developer of water infrastructure",
+                  title="Wayout raises a round"))
+        self.assertFalse(ok)
+        self.assertTrue(reason.startswith("geography:"))
+        self.assertIn("non-UK HQ", reason)
+
+    def test_geography_vetoes_place_based_foreign(self):
+        ok, _, reason = run(company(), event(stage="series-a"),
+                            press("Berlin-based manufacturing intelligence"))
+        self.assertFalse(ok)
+        self.assertIn("non-UK HQ", reason)
+
+    def test_geography_vetoes_non_gb_curated_hq_country(self):
+        # press is silent on location; a Clay-verified hq_country drops it.
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
+        orig = config.ENRICHMENT_DIR
+        config.ENRICHMENT_DIR = Path(tmp)
+        self.addCleanup(setattr, config, "ENRICHMENT_DIR", orig)
+        (Path(tmp) / "16012001.json").write_text(json.dumps({"hq_country": "US"}))
+        ok, _, reason = run(company(), event(stage="series-a"),
+                            press("Flagright funding lead"))
+        self.assertFalse(ok)
+        self.assertIn("HQ country US", reason)
+
+    def test_genuine_london_company_still_passes(self):
+        ok, _, _ = run(company(), event(),
+                       press("a London seed round from a UK fintech"))
+        self.assertTrue(ok)
 
 
 if __name__ == "__main__":

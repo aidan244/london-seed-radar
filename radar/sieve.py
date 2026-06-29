@@ -2,7 +2,7 @@
 Every candidate passes or is dropped with a recorded reason.
 
 Gates, in order:
-  1. geography: a London marker, matched on word boundaries only.
+  1. geography: a UK marker (London first), matched on word boundaries only.
   2. stage: pre-seed, seed, or Series A.
   3. recency: event date inside the lookback window (default 14 days).
   4. reality: live web presence plus a corroborated funding event
@@ -43,14 +43,17 @@ def _check_website_live(url):
 
 def resolve_website(company, fixtures):
     """Return (url, reachable) for the reality gate.
-    Fixture mode reads the recorded enrichment file; live mode uses the
-    company row or website_overrides in sources.yaml, then fetches it."""
+    Fixture mode reads the recorded enrichment file; live mode uses
+    website_overrides in sources.yaml, then the company row, then fetches it."""
     if fixtures:
         fixture = _load_enrichment_fixture(company["company_number"])
         url = fixture.get("website")
         return url, bool(url and fixture.get("website_reachable"))
+    # A human-curated override wins over the row's website: the row can hold
+    # an auto-resolved guess (radar.domains), and a person who added an
+    # override is correcting it, so the override is authoritative.
     overrides = config.load_sources().get("website_overrides") or {}
-    url = company["website"] or overrides.get(company["normalized_name"])
+    url = overrides.get(company["normalized_name"]) or company["website"]
     if not url:
         return None, False
     return url, _check_website_live(url)
@@ -65,15 +68,30 @@ def evaluate_gates(company, event, evidence, as_of, window_days, fixtures):
         gates.append({"gate": gate, "passed": passed, "detail": detail})
         return passed
 
-    # 1. Geography. Registered office plus press text, word boundaries only.
-    text = " ".join(filter(None, [company["location_text"]]
-                           + [e["title"] for e in evidence]
-                           + [e["snippet"] for e in evidence]))
-    marker = geo.find_london_marker(text)
-    if not record("geography", marker is not None,
-                  "London marker: %s" % marker if marker
-                  else "no London marker found in registered office or press"):
-        return False, gates, "geography: " + gates[-1]["detail"]
+    # 1. Geography. UK-wide, London first. Registered office plus press
+    # text, word boundaries only. A same-name UK entity can attach a London
+    # office to a foreign funding event (the TurnUp lesson), so a London
+    # marker is vetoed when the press asserts a non-UK HQ, or a curated
+    # hq_country (Clay-verified) is set and is not GB.
+    text = geo.combine_evidence_text(company["location_text"], evidence)
+    region, marker = geo.locate(text)
+    foreign = geo.find_foreign_hq(geo.combine_evidence_text(None, evidence))
+    hq = (config.load_curated_enrichment(company["company_number"]).get(
+        "hq_country") or "").strip().upper()
+    if region is None:
+        detail = "no UK or London marker found in registered office or press"
+    elif foreign:
+        detail = ("press names a non-UK HQ (%s); the UK office is likely a "
+                  "same-name match" % foreign)
+        region = None
+    elif hq and hq != "GB":
+        detail = ("verified HQ country %s; the UK office is likely a "
+                  "same-name match" % hq)
+        region = None
+    else:
+        detail = "%s marker: %s" % (region, marker)
+    if not record("geography", region is not None, detail):
+        return False, gates, "geography: " + detail
 
     # 2. Stage.
     stage = event["stage"]
