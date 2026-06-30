@@ -140,3 +140,25 @@ Format:
 - Prevention: main requires LINEAR history. Never `git merge` into main;
   rebase or cherry-pick so the push is linear. Check protection first with
   gh api repos/aidan244/london-seed-radar/branches/main/protection.
+
+## 2026-06-30: a personal absolute path got committed to the public repo
+- What happened: a safety audit of the public repo found
+  reports/substack-setup-prompt.md line 20 carried a hardcoded local path,
+  /Users/aidantang/Desktop/job_hunt/docs/assets/., exposing the macOS
+  username and Desktop layout. It was the only personal/dangerous item the
+  audit surfaced (no secrets, no founder contact data, no dangerous code).
+- Why: the prompt was written with the real local asset path so the human
+  could find the files, then committed as working scaffolding without a
+  pass for machine-specific paths. Hard Rule 1 forbids personal machine
+  detail in the public repo, but nothing checked for it before commit.
+- Fix: untracked the file (git rm --cached, kept the local copy) along with
+  two other standalone internal prompts, and gitignored all three; the rest
+  of reports/ stays tracked because the pipeline reads it. Severity was low
+  (no credential; the username is already public via the Substack and
+  GitHub handles), so no history rewrite. Pushed linear (origin/main
+  b72285b).
+- Prevention: before committing anything under reports/ or any prose with
+  file paths, grep the staged tree for home paths:
+  git grep --cached -nE "/Users/|/home/[a-z]" returns nothing. Use relative
+  paths in prompts/notes that will be tracked; keep absolute local paths in
+  gitignored files only.
