@@ -24,3 +24,9 @@ dashboard.html
 
 # Generated paste artifact, recreate with python -m radar.paste
 issues/*/substack-paste.html
+
+# Standalone internal prompt scaffolding: working notes, not for the public
+# repo. The rest of reports/ stays tracked (pipeline data, design assets).
+reports/substack-setup-prompt.md
+reports/scout-routine-prompt.md
+reports/github-branch-protection-prompt.md
