@@ -14,9 +14,14 @@ _STAGE_PATTERNS = [
     ("seed", re.compile(r"\bseed\b", re.IGNORECASE)),
 ]
 
+# Keep this verb list in sync with rssfeeds._NAME_FROM_TITLE, which uses
+# the same verbs to split the company name out of a headline. Recall-first:
+# the sieve's four gates are the precision filter, so a colloquial verb
+# ("bags", "scoops") belongs here even if it also appears in other copy.
 FUNDING_WORDS = re.compile(
     r"\b(raises?|raised|secures?|secured|lands?|landed|closes?|closed|"
-    r"banks?|nets|funding|round|investment)\b",
+    r"banks?|nets|bags?|bagged|scoops?|scooped|pockets?|pocketed|"
+    r"grabs?|grabbed|snags?|snagged|funding|round|investment)\b",
     re.IGNORECASE,
 )
 

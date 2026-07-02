@@ -55,6 +55,26 @@ def test_entries_without_funding_verb_in_title_are_filtered():
     assert names == ["Acme Labs"]
 
 
+def test_colloquial_uk_press_verbs_are_triaged():
+    # regression: 'bags', 'scoops', 'pockets', 'grabs', 'snags' headlines
+    # were silently dropped before name extraction ever ran
+    entries = [
+        {"title": "Acme Labs bags £2m to build lab tools",
+         "summary": "London seed round."},
+        {"title": "Brixton Bio scoops £1.5m pre-seed",
+         "summary": "South London biotech."},
+        {"title": "Camden AI pockets £3m seed",
+         "summary": "AI startup in Camden."},
+        {"title": "Dalston Data grabs £4m", "summary": "seed round"},
+        {"title": "Exmoor Energy snags £900k pre-seed",
+         "summary": "climate tech."},
+    ]
+    names = [item["company_name"]
+             for item in rssfeeds._entries_to_items(entries, "Test")]
+    assert names == ["Acme Labs", "Brixton Bio", "Camden AI",
+                     "Dalston Data", "Exmoor Energy"]
+
+
 def test_proxied_feeds_route_through_the_configured_proxy():
     feeds = rssfeeds.proxied_feeds()
     assert feeds, "expected feeds from sources.yaml"

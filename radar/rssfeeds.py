@@ -25,9 +25,12 @@ REQUEST_HEADERS = {"Accept": "application/rss+xml, application/xml;q=0.9, */*;q=
 FEED_TIMEOUT = 15
 
 # "Acme Labs raises £2m seed round ..." -> "Acme Labs"
+# Keep the verb list in sync with stages.FUNDING_WORDS (minus the bare
+# nouns, which never follow a company name this way).
 _NAME_FROM_TITLE = re.compile(
     r"^(?P<name>.+?)\s+(?:raises?|raised|secures?|secured|lands?|landed|"
-    r"closes?|closed|banks?|nets)\b",
+    r"closes?|closed|banks?|nets|bags?|bagged|scoops?|scooped|"
+    r"pockets?|pocketed|grabs?|grabbed|snags?|snagged)\b",
     re.IGNORECASE,
 )
 
