@@ -62,11 +62,17 @@ def export_dataset(conn, data_dir):
                 (row["company_id"],))]
         companies.append(company)
 
+    # Only postings seen by each company's latest ATS fetch: a role absent
+    # from the newest fetch has closed, and a stale listing on a public
+    # dataset is a data-honesty decay (run enrich --refresh-jobs first).
     job_rows = conn.execute(
         "SELECT j.*, c.name AS company_name FROM jobs j "
         "JOIN companies c ON c.id = j.company_id "
         "WHERE j.company_id IN (SELECT company_id FROM funding_events "
         "WHERE status IN ('featured','published')) "
+        "AND COALESCE(j.last_seen, j.first_seen) = "
+        "(SELECT MAX(COALESCE(j2.last_seen, j2.first_seen)) FROM jobs j2 "
+        "WHERE j2.company_id = j.company_id) "
         "ORDER BY c.name, j.title").fetchall()
     job_items = []
     for j in job_rows:
@@ -116,8 +122,11 @@ def _issue_entries(conn, issue_date):
                 "SELECT * FROM founders WHERE company_id = ? ORDER BY name",
                 (company["id"],))],
             "jobs": [dict(j) for j in conn.execute(
-                "SELECT * FROM jobs WHERE company_id = ? ORDER BY title",
-                (company["id"],))],
+                "SELECT * FROM jobs WHERE company_id = ? "
+                "AND COALESCE(last_seen, first_seen) = "
+                "(SELECT MAX(COALESCE(last_seen, first_seen)) FROM jobs "
+                "WHERE company_id = ?) ORDER BY title",
+                (company["id"], company["id"]))],
             "amount_label": stages.format_amount(event["amount_gbp"]),
             "region": region or "uk",
             "region_label": "London" if region == "london" else "UK",
@@ -136,8 +145,11 @@ def gather_hiring(conn):
     groups = []
     for row in companies:
         jobs = conn.execute(
-            "SELECT * FROM jobs WHERE company_id = ? ORDER BY title",
-            (row["id"],)).fetchall()
+            "SELECT * FROM jobs WHERE company_id = ? "
+            "AND COALESCE(last_seen, first_seen) = "
+            "(SELECT MAX(COALESCE(last_seen, first_seen)) FROM jobs "
+            "WHERE company_id = ?) ORDER BY title",
+            (row["id"], row["id"])).fetchall()
         if not jobs:
             continue
         roles = sorted(

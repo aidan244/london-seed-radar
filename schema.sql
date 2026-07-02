@@ -76,6 +76,10 @@ CREATE TABLE IF NOT EXISTS jobs (
     url TEXT,
     ats_provider TEXT,
     first_seen TEXT NOT NULL DEFAULT (datetime('now')),
+    last_seen TEXT,                  -- stamped by every ATS fetch; the site
+                                     -- and dataset export only postings seen
+                                     -- by a company's latest fetch, so
+                                     -- closed roles age out honestly
     UNIQUE (company_id, url)
 );
 

@@ -8,6 +8,7 @@ backgrounds only.
 """
 
 import argparse
+import datetime
 import json
 import re
 import sys
@@ -111,6 +112,50 @@ def _discover_ats(company, fixtures, page_fetch=None):
     return None, None, None
 
 
+def _record_jobs(conn, company_id, provider, jobs, seen_at=None):
+    """Insert new postings and stamp last_seen on every posting this fetch
+    returned. Postings absent from the latest fetch keep their older
+    last_seen, which is how publish ages closed roles out of the site and
+    dataset without deleting the history."""
+    seen_at = seen_at or datetime.datetime.now().isoformat(timespec="seconds")
+    for job in jobs:
+        conn.execute(
+            "INSERT OR IGNORE INTO jobs "
+            "(company_id, title, location, url, ats_provider) "
+            "VALUES (?, ?, ?, ?, ?)",
+            (company_id, job["title"], job["location"], job["url"], provider))
+        conn.execute(
+            "UPDATE jobs SET last_seen = ? WHERE company_id = ? AND url = ?",
+            (seen_at, company_id, job["url"]))
+
+
+def refresh_jobs(conn, fixtures=False):
+    """Re-fetch the verified ATS boards of featured and published companies
+    and stamp what is live now, so a later publish exports current hiring
+    rather than launch-day postings. On-demand only; a fetch error leaves
+    the stored postings untouched rather than wiping them."""
+    companies = conn.execute(
+        "SELECT DISTINCT c.* FROM companies c "
+        "JOIN funding_events fe ON fe.company_id = c.id "
+        "WHERE fe.status IN ('featured','published') "
+        "AND c.ats_status = 'verified' AND c.ats_provider IS NOT NULL "
+        "ORDER BY c.name").fetchall()
+    refreshed = 0
+    for company in companies:
+        result = ats.fetch(company["ats_provider"], company["ats_token"],
+                           fixtures)
+        if result["status"] != "verified":
+            print("  %-28s board not verifiable right now (%s); postings "
+                  "left as they were" % (company["name"], result["status"]))
+            continue
+        _record_jobs(conn, company["id"], company["ats_provider"],
+                     result["jobs"])
+        refreshed += 1
+        print("  %-28s %d live role(s)" % (company["name"],
+                                           len(result["jobs"])))
+    return refreshed
+
+
 def enrich_company(conn, company, evidence, fixtures):
     # Two override sources feed the same shape: the recorded test fixtures
     # (only under --fixtures) and the curated live-mode files under
@@ -157,13 +202,7 @@ def enrich_company(conn, company, evidence, fixtures):
         notes.append("no ATS board found")
     elif result["status"] == "verified":
         ats_status = "verified"
-        for job in result["jobs"]:
-            conn.execute(
-                "INSERT OR IGNORE INTO jobs "
-                "(company_id, title, location, url, ats_provider) "
-                "VALUES (?, ?, ?, ?, ?)",
-                (company["id"], job["title"], job["location"], job["url"],
-                 provider))
+        _record_jobs(conn, company["id"], provider, result["jobs"])
         jobs_count = len(result["jobs"])
         notes.append("%d live role(s) on %s" % (jobs_count, provider))
     else:
@@ -185,10 +224,25 @@ def main(argv=None):
         prog="python -m radar.enrich", description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
     util.add_common_args(parser, as_of=False)
+    parser.add_argument("--refresh-jobs", action="store_true",
+                        help="re-fetch the verified ATS boards of featured "
+                             "and published companies so publish exports "
+                             "current hiring, then exit")
     args = parser.parse_args(argv)
 
     conn = db.connect(args.db)
     db.init_db(conn)
+
+    if args.refresh_jobs:
+        refreshed = refresh_jobs(conn, args.fixtures)
+        conn.commit()
+        print("enrich: refreshed job postings for %d compan%s"
+              % (refreshed, "y" if refreshed == 1 else "ies"))
+        if refreshed:
+            print("Next: python -m radar.publish (exports only postings "
+                  "seen by each company's latest fetch)")
+        return 0
+
     events = conn.execute(
         "SELECT * FROM funding_events WHERE status = 'sieved' "
         "ORDER BY event_date").fetchall()

@@ -157,5 +157,70 @@ class TestAtsOwnershipCorroboration(unittest.TestCase):
         self.assertEqual(provider, "greenhouse")
 
 
+class TestJobExpiry(unittest.TestCase):
+    """Postings age out honestly: every fetch stamps last_seen on what it
+    saw, and publish exports only each company's latest-fetch postings, so
+    a closed role disappears from the site without deleting its history."""
+
+    def setUp(self):
+        self.conn = db.connect(":memory:")
+        db.init_db(self.conn)
+        self.addCleanup(self.conn.close)
+        self.cid = db.upsert_company(self.conn, "Acme Analytics")
+
+    def job(self, url):
+        return {"title": "Engineer", "location": "London", "url": url}
+
+    def test_second_fetch_stamps_survivors_only(self):
+        enrich._record_jobs(self.conn, self.cid, "ashby",
+                            [self.job("u1"), self.job("u2")],
+                            seen_at="2026-07-01T10:00:00")
+        enrich._record_jobs(self.conn, self.cid, "ashby",
+                            [self.job("u1")],
+                            seen_at="2026-07-03T10:00:00")
+        rows = {r["url"]: r["last_seen"] for r in self.conn.execute(
+            "SELECT url, last_seen FROM jobs")}
+        self.assertEqual(rows["u1"], "2026-07-03T10:00:00")
+        self.assertEqual(rows["u2"], "2026-07-01T10:00:00")
+        current = self.conn.execute(
+            "SELECT url FROM jobs WHERE last_seen = (SELECT MAX(last_seen) "
+            "FROM jobs WHERE company_id = ?)", (self.cid,)).fetchall()
+        self.assertEqual([r["url"] for r in current], ["u1"])
+
+    def test_refresh_leaves_postings_on_fetch_error(self):
+        enrich._record_jobs(self.conn, self.cid, "ashby", [self.job("u1")],
+                            seen_at="2026-07-01T10:00:00")
+        self.conn.execute(
+            "UPDATE companies SET ats_status = 'verified', "
+            "ats_provider = 'ashby', ats_token = 'acme' WHERE id = ?",
+            (self.cid,))
+        event, _ = __import__("radar.ingest", fromlist=["ingest"]).\
+            find_or_create_event(self.conn, self.cid, "2026-06-20", "fixture")
+        for status in ("sieved", "enriched", "featured"):
+            db.advance_status(self.conn, event, status)
+        orig = enrich.ats.fetch
+        enrich.ats.fetch = lambda p, t, fixtures=False: {
+            "status": "error", "jobs": []}
+        self.addCleanup(setattr, enrich.ats, "fetch", orig)
+        self.assertEqual(enrich.refresh_jobs(self.conn), 0)
+        row = self.conn.execute("SELECT last_seen FROM jobs").fetchone()
+        self.assertEqual(row["last_seen"], "2026-07-01T10:00:00")
+
+    def test_init_db_migrates_an_old_jobs_table(self):
+        import sqlite3
+        old = sqlite3.connect(":memory:")
+        old.row_factory = sqlite3.Row
+        old.executescript(
+            "CREATE TABLE jobs (id INTEGER PRIMARY KEY, company_id INTEGER "
+            "NOT NULL, title TEXT NOT NULL, location TEXT, url TEXT, "
+            "ats_provider TEXT, first_seen TEXT NOT NULL DEFAULT "
+            "(datetime('now')), UNIQUE (company_id, url));"
+            "INSERT INTO jobs (company_id, title, url, first_seen) "
+            "VALUES (1, 'Engineer', 'u1', '2026-06-01T09:00:00');")
+        db.init_db(old)
+        row = old.execute("SELECT last_seen FROM jobs").fetchone()
+        self.assertEqual(row["last_seen"], "2026-06-01T09:00:00")
+
+
 if __name__ == "__main__":
     unittest.main()

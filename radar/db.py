@@ -30,6 +30,13 @@ def connect(db_path=None):
 
 def init_db(conn):
     conn.executescript(config.SCHEMA_PATH.read_text())
+    # CREATE TABLE IF NOT EXISTS does not add new columns to an existing
+    # database; migrate the ones schema.sql has grown since a DB was made.
+    jobs_cols = {r["name"] for r in conn.execute("PRAGMA table_info(jobs)")}
+    if "last_seen" not in jobs_cols:
+        conn.execute("ALTER TABLE jobs ADD COLUMN last_seen TEXT")
+        conn.execute("UPDATE jobs SET last_seen = first_seen "
+                     "WHERE last_seen IS NULL")
     conn.commit()
 
 
