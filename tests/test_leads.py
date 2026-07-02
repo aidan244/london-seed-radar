@@ -82,6 +82,11 @@ class TestDateNormalisation(unittest.TestCase):
         self.assertIsNone(leads._iso_date(""))
         self.assertIsNone(leads._iso_date(None))
 
+    def test_ordinal_suffixes(self):
+        self.assertEqual(leads._iso_date("10th June 2026"), "2026-06-10")
+        self.assertEqual(leads._iso_date("1st July 2026"), "2026-07-01")
+        self.assertEqual(leads._iso_date("June 3rd, 2026"), "2026-06-03")
+
     def test_prose_human_date_makes_dated_item(self):
         report = ("## Shortlist\n\n"
                   "### 1. Conduct\n"
@@ -152,6 +157,38 @@ class TestManualAndCombine(unittest.TestCase):
             f.write(WITH_BLOCK)
         names = {i["company_name"] for i in leads.load_scout_leads(tmp)}
         self.assertEqual(names, {"RevEng.AI", "Brixton Bio"})
+
+    def test_grouped_amount_in_machine_block(self):
+        self.assertEqual(leads._amount("1,500,000"), 1_500_000)
+        self.assertEqual(leads._amount("750000"), 750_000)
+        self.assertIsNone(leads._amount("TBC"))
+
+    def test_multiple_machine_blocks_all_parse(self):
+        report = ("Section A\n```radar-leads (csv)\n"
+                  "name,stage,amount_gbp,date,url,source\n"
+                  "Alphaco,seed,,2026-06-20,https://a.example/x,UKTN\n"
+                  "```\nSection B\n```radar-leads (csv)\n"
+                  "name,stage,amount_gbp,date,url,source\n"
+                  "Betaco,pre-seed,,2026-06-21,https://b.example/y,Sifted\n"
+                  "```\n")
+        names = {i["company_name"] for i in leads.parse_scout_report(report)}
+        self.assertEqual(names, {"Alphaco", "Betaco"})
+
+    def test_malformed_manual_lead_is_skipped(self):
+        items = leads.load_manual_leads({"leads": [
+            "just a string",
+            {"name": "Goodco", "stage": "seed", "date": "2026-06-20",
+             "url": "https://g.example/z"},
+        ]})
+        self.assertEqual([i["company_name"] for i in items], ["Goodco"])
+
+    def test_merge_sticky_keeps_explicit_zero(self):
+        keep = {"amount_gbp": 0, "url": None, "company_number": None}
+        other = {"amount_gbp": 999, "url": "https://u.example",
+                 "company_number": None}
+        merged = leads._merge_sticky(keep, other)
+        self.assertEqual(merged["amount_gbp"], 0)
+        self.assertEqual(merged["url"], "https://u.example")
 
     def test_one_unreadable_report_does_not_abort_the_load(self):
         # regression: a single badly-encoded cloud-written file used to

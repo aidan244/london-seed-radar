@@ -25,9 +25,10 @@ from radar import config, db, stages
 # with no usable date is filtered out like any other dateless lead.
 _HUMAN_DATE_FORMATS = ("%d %B %Y", "%d %b %Y", "%B %d %Y", "%b %d %Y")
 _DATE_IN_PROSE = re.compile(
-    r"\d{4}-\d{2}-\d{2}"                       # ISO, e.g. 2026-06-17
-    r"|\d{1,2}\s+[A-Za-z]{3,}\s+\d{4}"         # 17 June 2026
-    r"|[A-Za-z]{3,}\s+\d{1,2},?\s+\d{4}")      # June 17, 2026
+    r"\d{4}-\d{2}-\d{2}"                                   # ISO, 2026-06-17
+    r"|\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]{3,}\s+\d{4}"     # 17(th) June 2026
+    r"|[A-Za-z]{3,}\s+\d{1,2}(?:st|nd|rd|th)?,?\s+\d{4}")  # June 17(th), 2026
+_ORDINAL_SUFFIX = re.compile(r"(?<=\d)(st|nd|rd|th)\b", re.IGNORECASE)
 
 
 def _iso_date(value):
@@ -43,7 +44,7 @@ def _iso_date(value):
     m = _DATE_IN_PROSE.search(text)
     if not m:
         return None
-    found = m.group(0).replace(",", "")
+    found = _ORDINAL_SUFFIX.sub("", m.group(0).replace(",", ""))
     try:
         return datetime.date.fromisoformat(found).isoformat()
     except ValueError:
@@ -88,6 +89,8 @@ def _amount(text):
         return None
     if re.fullmatch(r"\d+", s):          # plain pounds in the machine block
         return int(s)
+    if re.fullmatch(r"\d{1,3}(?:,\d{3})+", s):   # grouped pounds: 1,500,000
+        return int(s.replace(",", ""))
     return stages.parse_amount_gbp(s)    # prose like "£1.5m"; non-GBP -> None
 
 
@@ -119,11 +122,14 @@ def _item(name, stage_text, amount_text, date, url, source, company_number=None)
 
 
 def parse_scout_report(text):
-    """Items from one scout/predraft report: the machine block if present,
-    else a best-effort parse of the prose shortlist."""
-    m = _SCOUT_BLOCK.search(text or "")
-    if m:
-        return _parse_block(m.group(1))
+    """Items from one scout/predraft report: every machine block if any is
+    present (a long report may carry one per section), else a best-effort
+    parse of the prose shortlist."""
+    items = []
+    for m in _SCOUT_BLOCK.finditer(text or ""):
+        items.extend(_parse_block(m.group(1)))
+    if items:
+        return items
     return _parse_prose(text or "")
 
 
@@ -195,6 +201,11 @@ def load_manual_leads(sources=None):
     sources = sources if sources is not None else config.load_sources()
     out = []
     for lead in (sources.get("leads") or []):
+        if not isinstance(lead, dict):
+            # A malformed sources.yaml entry (a bare string, a stray list
+            # item) must not crash ingest; skip it and say so.
+            print("  warn: skipping malformed lead entry %r" % (lead,))
+            continue
         item = _item(lead.get("name"), lead.get("stage"),
                      lead.get("amount_gbp"), lead.get("date"),
                      lead.get("url"), lead.get("source") or "manual lead",
@@ -217,8 +228,10 @@ _STICKY_FIELDS = ("company_number", "url", "amount_gbp")
 
 
 def _merge_sticky(keep, other):
+    # "is None" rather than truthiness: an explicit amount of 0 is a value,
+    # not a gap for a duplicate's amount to overwrite.
     for field in _STICKY_FIELDS:
-        if not keep.get(field) and other.get(field):
+        if keep.get(field) is None and other.get(field) is not None:
             keep[field] = other[field]
     return keep
 
