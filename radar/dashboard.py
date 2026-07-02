@@ -27,6 +27,7 @@ import datetime
 import hmac
 import io
 import json
+import os
 import re
 import secrets
 import subprocess
@@ -49,17 +50,19 @@ SERVE_ACTIONS = ("todo_done", "ingest", "sieve", "enrich", "issue",
 # The two scheduled cloud scout routines (claude.ai/code/routines). They
 # deliver GitHub PRs on these branch prefixes; weekdays use Python's
 # Monday=0 numbering (cron Sun=0 is converted: Tue,Fri -> 1,4; Sun -> 6).
+# Trigger IDs are account-specific identifiers, so they live in the
+# gitignored .env (see .env.example), never in tracked source.
 ROUTINES = [
     {"key": "scout", "name": "Radar scout", "branch_prefix": "scout/",
      "weekdays": (1, 4), "hour": 17, "cron": "0 17 * * 2,5",
      "schedule_human": "Tue and Fri, 17:00 UTC (18:00 London in summer)",
-     "trigger_id": "trig_0186Q1yuvKW63ukqW5Qyf43L",
+     "trigger_env": "RADAR_SCOUT_TRIGGER_ID",
      "writes": "reports/scout/<date>.md"},
     {"key": "predraft", "name": "Radar Sunday pre-draft",
      "branch_prefix": "predraft/", "weekdays": (6,), "hour": 7,
      "cron": "0 7 * * 0",
      "schedule_human": "Sundays, 07:00 UTC (08:00 London in summer)",
-     "trigger_id": "trig_01KPDi3PunEJ6SuLGdPxBbHM",
+     "trigger_env": "RADAR_PREDRAFT_TRIGGER_ID",
      "writes": "reports/predraft/<date>.md"},
 ]
 ROUTINES_MANAGE_URL = "https://claude.ai/code/routines"
@@ -392,6 +395,7 @@ def routine_panel(prs, now=None):
     last-expected run from the cron schedule, and derives an on-time,
     overdue, never, or unknown status per routine."""
     now = now or datetime.datetime.now(datetime.timezone.utc)
+    config.load_env()   # trigger IDs live in the gitignored .env
     matched = set()
     out = []
     for spec in ROUTINES:
@@ -407,7 +411,9 @@ def routine_panel(prs, now=None):
         out.append({
             "key": spec["key"], "name": spec["name"],
             "schedule_human": spec["schedule_human"], "cron": spec["cron"],
-            "trigger_id": spec["trigger_id"], "writes": spec["writes"],
+            "trigger_id": os.environ.get(spec["trigger_env"], "").strip()
+            or "not configured (set %s in .env)" % spec["trigger_env"],
+            "writes": spec["writes"],
             "next_run": _fmt_dt(_cron_next(now, spec["weekdays"], spec["hour"])),
             "last_expected": _fmt_dt(last_expected),
             "status": status, "status_detail": detail,
