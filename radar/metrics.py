@@ -14,14 +14,38 @@ from radar import db, util
 
 
 def cmd_log(conn, args):
-    date = args.date or datetime.date.today().isoformat()
-    conn.execute(
-        "INSERT INTO metrics (date, subscribers, open_rate, "
-        "replies_from_founders, revenue_gbp, notes) VALUES (?, ?, ?, ?, ?, ?)",
-        (date, args.subscribers, args.open_rate, args.replies,
-         args.revenue, args.notes))
+    if args.date:
+        try:
+            date = util.parse_iso(args.date).isoformat()
+        except ValueError:
+            print("metrics: --date must be ISO (YYYY-MM-DD), got %r"
+                  % args.date)
+            return 2
+    else:
+        date = datetime.date.today().isoformat()
+    existing = conn.execute(
+        "SELECT id FROM metrics WHERE date = ?", (date,)).fetchone()
+    if existing and not args.amend:
+        print("metrics: %s is already logged; correcting a number is an "
+              "explicit act, re-run with --amend to overwrite." % date)
+        return 2
+    if existing:
+        conn.execute(
+            "UPDATE metrics SET subscribers = ?, open_rate = ?, "
+            "replies_from_founders = ?, revenue_gbp = ?, notes = ? "
+            "WHERE id = ?",
+            (args.subscribers, args.open_rate, args.replies,
+             args.revenue, args.notes, existing["id"]))
+        verb = "Amended"
+    else:
+        conn.execute(
+            "INSERT INTO metrics (date, subscribers, open_rate, "
+            "replies_from_founders, revenue_gbp, notes) VALUES (?, ?, ?, ?, ?, ?)",
+            (date, args.subscribers, args.open_rate, args.replies,
+             args.revenue, args.notes))
+        verb = "Logged"
     conn.commit()
-    print("Logged metrics for %s." % date)
+    print("%s metrics for %s." % (verb, date))
     return 0
 
 
@@ -60,6 +84,8 @@ def main(argv=None):
     p_log.add_argument("--revenue", type=float, default=None,
                        help="revenue in GBP")
     p_log.add_argument("--notes", default=None)
+    p_log.add_argument("--amend", action="store_true",
+                       help="overwrite an already-logged date")
     sub.add_parser("show", help="show all logged metrics")
     args = parser.parse_args(argv)
 

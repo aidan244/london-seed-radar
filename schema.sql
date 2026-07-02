@@ -100,6 +100,10 @@ CREATE TABLE IF NOT EXISTS metrics (
     revenue_gbp REAL,
     notes TEXT
 );
+-- One row per date, enforced as an index so existing databases pick the
+-- constraint up on the next init_db. Correcting a logged number is an
+-- explicit act: python -m radar.metrics log --amend.
+CREATE UNIQUE INDEX IF NOT EXISTS idx_metrics_date ON metrics(date);
 
 CREATE TABLE IF NOT EXISTS issues (
     id INTEGER PRIMARY KEY,
