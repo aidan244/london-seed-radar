@@ -280,6 +280,28 @@ def main(argv=None):
         print("issue %s is already published; refusing to rebuild it." % as_of)
         return 2
 
+    # A previous run already featured companies for this date. Statuses
+    # only move forward, so those events can never return to 'enriched':
+    # re-drafting would gather only newly-enriched companies, silently
+    # strand the first batch as 'featured', and publish would export both
+    # sets while the draft describes only one (audit finding M5).
+    stranded = conn.execute(
+        "SELECT fe.id, c.name FROM funding_events fe "
+        "JOIN companies c ON c.id = fe.company_id "
+        "WHERE fe.issue_date = ? AND fe.status = 'featured'",
+        (str(as_of),)).fetchall()
+    if stranded:
+        print("issue %s was already drafted with %d featured compan%s:"
+              % (as_of, len(stranded),
+                 "y" if len(stranded) == 1 else "ies"))
+        for row in stranded:
+            print("  event #%d %s" % (row["id"], row["name"]))
+        print("Refusing to re-draft: statuses only move forward, so a new "
+              "draft would strand the batch above while publish exports it "
+              "anyway. Publish the existing draft first, or resolve the "
+              "featured set by hand before drafting again.")
+        return 2
+
     target = config.companies_per_issue()
     featured = gather_featured(conn, limit=target)
     if not featured:
