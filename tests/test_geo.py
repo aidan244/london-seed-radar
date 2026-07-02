@@ -193,5 +193,30 @@ class TestCommonwealthCollisions(unittest.TestCase):
                          ("uk", "british"))
 
 
+class TestConfigurableExclusions(unittest.TestCase):
+    """sources.yaml extra_exclusion_phrases is the subtractive twin of the
+    extra marker lists: a user-added marker's foreign collision can be
+    masked without editing geo.py."""
+
+    def setUp(self):
+        import tempfile, shutil, os
+        from pathlib import Path
+        from radar import config
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
+        (tmp / "sources.yaml").write_text(
+            "extra_uk_markers: [richmond]\n"
+            "extra_exclusion_phrases: [\"richmond, virginia\"]\n")
+        self.orig = config.SOURCES_PATH
+        config.SOURCES_PATH = tmp / "sources.yaml"
+        self.addCleanup(setattr, config, "SOURCES_PATH", self.orig)
+
+    def test_extra_marker_with_masked_collision(self):
+        self.assertEqual(geo.locate("offices in Richmond upon opening"),
+                         ("uk", "richmond"))
+        self.assertEqual(geo.locate("offices in Richmond, Virginia"),
+                         (None, None))
+
+
 if __name__ == "__main__":
     unittest.main()

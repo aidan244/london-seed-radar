@@ -83,9 +83,18 @@ EXCLUSION_PHRASES = [
 ]
 
 
+def _exclusion_phrases():
+    """Built-in exclusions plus sources.yaml extra_exclusion_phrases, the
+    subtractive twin of extra_london_markers/extra_uk_markers: a user who
+    adds a marker that collides somewhere can mask the collision without
+    editing code."""
+    extra = config.load_sources().get("extra_exclusion_phrases") or []
+    return EXCLUSION_PHRASES + [str(p).lower() for p in extra]
+
+
 def _mask_exclusions(text):
     masked = text
-    for phrase in EXCLUSION_PHRASES:
+    for phrase in _exclusion_phrases():
         masked = re.sub(re.escape(phrase), " " * len(phrase), masked,
                         flags=re.IGNORECASE)
     return masked

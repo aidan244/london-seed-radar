@@ -79,6 +79,11 @@ feed_proxy:
 extra_london_markers: []
 # Extra non-London UK markers (towns, regions) to also accept.
 extra_uk_markers: []
+# Phrases masked out of the text before any marker matching, the
+# subtractive twin of the two lists above: if a marker you add collides
+# with a foreign place name ("richmond" vs "Richmond, Virginia"), mask
+# the foreign phrase here instead of editing radar/geo.py.
+extra_exclusion_phrases: []
 
 # Companies House numbers to always check during live ingest,
 # for companies you already know about that press has not covered.
