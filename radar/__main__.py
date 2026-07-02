@@ -8,6 +8,7 @@ COMMANDS = [
     ("fillpool", "loop ingest, sieve, enrich until the pool hits the target"),
     ("scoutpull", "fetch the latest cloud-scout reports onto disk for ingest"),
     ("accelerators", "map accelerator portfolios to a review list (no DB writes)"),
+    ("chsweep", "sample the CH register for recent SH01s (review list, no DB)"),
     ("domains", "resolve likely websites for discovered companies"),
     ("issue", "render research briefs and the biweekly draft issue"),
     ("publish", "export the dataset and regenerate the docs/ site"),

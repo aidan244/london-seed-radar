@@ -41,6 +41,22 @@ class CompaniesHouseClient:
                          category="capital", items_per_page=50)
         return data.get("items", [])
 
+    def advanced_search(self, incorporated_from=None, sic_codes=None,
+                        location=None, size=100, start_index=0):
+        """One page of the advanced company search. Used by chsweep to
+        sample young companies; the location filter matches the registered
+        office."""
+        params = {"company_status": "active", "size": size,
+                  "start_index": start_index}
+        if incorporated_from:
+            params["incorporated_from"] = incorporated_from
+        if sic_codes:
+            params["sic_codes"] = ",".join(sic_codes)
+        if location:
+            params["location"] = location
+        return self._get("/advanced-search/companies", **params).get(
+            "items", [])
+
 
 def fixture_profiles():
     """All recorded company profiles, keyed by company number."""
