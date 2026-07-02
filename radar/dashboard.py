@@ -225,14 +225,17 @@ def _issue_loop(conn, counts, issue):
 
 
 def _issue_key(task):
-    """Map an issue todo's task text back to its loop step key."""
+    """Map an issue todo's task text back to its loop step key. The founder
+    check runs before the LinkedIn one: the founder-note task text ends
+    "from your own email or LinkedIn", so a bare 'linkedin' check first
+    would show the post step done when only the notes were sent."""
     low = (task or "").lower()
     if "edit the draft" in low:
         return "edit"
-    if "linkedin" in low:
-        return "post"
     if "personal note" in low or "founder" in low:
         return "message"
+    if "linkedin" in low:
+        return "post"
     if "subscriber" in low or "metrics" in low or "open rate" in low:
         return "metrics"
     return "other"

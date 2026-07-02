@@ -313,5 +313,22 @@ class TestRoutinePanel(unittest.TestCase):
         self.assertIn(prev.weekday(), (1, 4))
 
 
+class TestIssueKeyMapping(unittest.TestCase):
+    """Regression: the founder-note task text ends 'from your own email or
+    LinkedIn', so a bare 'linkedin' check first misfiled it as the post
+    step, showing 'Post to LinkedIn: done' when only the notes were sent."""
+
+    def test_every_real_issue_task_maps_to_its_own_step(self):
+        from radar.issue import ISSUE_TASKS
+        keys = [dashboard._issue_key(task) for task, _ in ISSUE_TASKS]
+        self.assertEqual(keys, ["edit", "other", "post", "message",
+                                "metrics"])
+
+    def test_founder_note_is_message_not_post(self):
+        self.assertEqual(dashboard._issue_key(
+            "Send a personal note to each featured founder from your own "
+            "email or LinkedIn"), "message")
+
+
 if __name__ == "__main__":
     unittest.main()
