@@ -182,6 +182,14 @@ class TestManualAndCombine(unittest.TestCase):
         ]})
         self.assertEqual([i["company_name"] for i in items], ["Goodco"])
 
+    def test_evidence_label_is_one_outlet(self):
+        # regression: a prose outlet list as a lead's source attributed the
+        # single evidence URL to five outlets on the live issue page
+        item = leads._item("Goodco", "seed", None, "2026-06-20",
+                           "https://g.example/z",
+                           "UKTN, The SaaS News, finsmes.com")
+        self.assertEqual(item["source_name"], "UKTN (lead)")
+
     def test_merge_sticky_keeps_explicit_zero(self):
         keep = {"amount_gbp": 0, "url": None, "company_number": None}
         other = {"amount_gbp": 999, "url": "https://u.example",

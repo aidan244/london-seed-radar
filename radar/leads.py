@@ -105,7 +105,10 @@ def _item(name, stage_text, amount_text, date, url, source, company_number=None)
     name = re.sub(r"[*`\[\]]", "", (name or "")).strip()
     if not name:
         return None
-    src = (source or "scout").strip() or "scout"
+    # One evidence row carries one URL, so its label must be one outlet: a
+    # prose list ("UKTN, The SaaS News, finsmes.com") would attribute the
+    # single link to all of them (seen live on the 2026-06-29 issue page).
+    src = (source or "scout").split(",")[0].strip() or "scout"
     number = str(company_number).strip() if company_number else None
     return {
         "company_name": name,

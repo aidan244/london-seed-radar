@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-30 00:15",
+  "generated_at": "2026-07-03 00:27",
   "count": 5,
   "companies": [
     {
@@ -14,7 +14,13 @@
       "headcount_source": "not estimated; check the team page",
       "ats_provider": "ashby",
       "ats_status": "verified",
-      "founders": []
+      "founders": [
+        {
+          "name": "Eamon Jubbawy",
+          "role": "Founder and CEO",
+          "background": "Previously co-founded Onfido, the digital identity verification company acquired by Entrust for $650m."
+        }
+      ]
     },
     {
       "name": "Houdini Bio",
@@ -28,7 +34,18 @@
       "headcount_source": "not estimated; check the team page",
       "ats_provider": null,
       "ats_status": "none",
-      "founders": []
+      "founders": [
+        {
+          "name": "Jonathan Cohen-Gold",
+          "role": "Co-Founder and CEO",
+          "background": "Discovered the company's core molecular approach to DNA silencing during his PhD at the University of Cambridge."
+        },
+        {
+          "name": "Lee Dunham",
+          "role": "Co-Founder and CBO",
+          "background": "Spent over ten years working with more than 100 cell and gene therapy companies as a director at the Cell and Gene Therapy Catapult."
+        }
+      ]
     },
     {
       "name": "Conduct",
@@ -42,7 +59,23 @@
       "headcount_source": "not estimated; check the team page",
       "ats_provider": "ashby",
       "ats_status": "verified",
-      "founders": []
+      "founders": [
+        {
+          "name": "Henry Thompson",
+          "role": "Co-Founder and CTO",
+          "background": "Former Palantir engineer."
+        },
+        {
+          "name": "Jan Philipp Haas",
+          "role": "Co-Founder and CEO",
+          "background": "Former Palantir engineer."
+        },
+        {
+          "name": "Philipp Hoefer",
+          "role": "Co-Founder and Chief Product Officer",
+          "background": "Former Palantir engineer."
+        }
+      ]
     },
     {
       "name": "Record OS",
@@ -56,7 +89,18 @@
       "headcount_source": "not estimated; check the team page",
       "ats_provider": null,
       "ats_status": "none",
-      "founders": []
+      "founders": [
+        {
+          "name": "Dhruv Chadha",
+          "role": "Co-Founder",
+          "background": "Previously worked in finance at Google, Wise, and Nansen."
+        },
+        {
+          "name": "Jose Luis de la Pena",
+          "role": "Co-Founder",
+          "background": "Former Wise operator."
+        }
+      ]
     },
     {
       "name": "Capsa AI",
@@ -70,7 +114,18 @@
       "headcount_source": "not estimated; check the team page",
       "ats_provider": "ashby",
       "ats_status": "verified",
-      "founders": []
+      "founders": [
+        {
+          "name": "Callum Downie",
+          "role": "Co-Founder",
+          "background": "Previously led machine learning teams and AI products at ThirdEye Labs and Standard AI."
+        },
+        {
+          "name": "Danyal \u00d6zd\u00fczenciler",
+          "role": "Co-Founder and CEO",
+          "background": "Spent 7+ years in private equity and investment banking at AEA Investors, Citi, and Deutsche Bank before co-founding Capsa AI."
+        }
+      ]
     }
   ]
 }
