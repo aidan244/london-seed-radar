@@ -46,32 +46,38 @@ def _fetch(url, parser):
         return _result("error")
     try:
         return _result("verified", parser(resp.json()))
-    except (ValueError, KeyError, TypeError):
+    except Exception:
+        # A 200 with any unexpected payload shape degrades to "error";
+        # one malformed job entry must never crash the enrich run.
         return _result("error")
 
 
+def _job(title, location, url):
+    return {
+        "title": title.strip() if isinstance(title, str) else title,
+        "location": location.strip() if isinstance(location, str) else location,
+        "url": url,
+    }
+
+
 def _parse_greenhouse(data):
-    return [{
-        "title": j.get("title"),
-        "location": (j.get("location") or {}).get("name"),
-        "url": j.get("absolute_url"),
-    } for j in data.get("jobs", [])]
+    return [_job(j.get("title"), (j.get("location") or {}).get("name"),
+                 j.get("absolute_url"))
+            for j in data.get("jobs", []) if isinstance(j, dict)]
 
 
 def _parse_ashby(data):
-    return [{
-        "title": j.get("title"),
-        "location": j.get("location"),
-        "url": j.get("jobUrl") or j.get("applyUrl"),
-    } for j in data.get("jobs", [])]
+    return [_job(j.get("title"), j.get("location"),
+                 j.get("jobUrl") or j.get("applyUrl"))
+            for j in data.get("jobs", []) if isinstance(j, dict)]
 
 
 def _parse_lever(data):
-    return [{
-        "title": j.get("text"),
-        "location": (j.get("categories") or {}).get("location"),
-        "url": j.get("hostedUrl"),
-    } for j in data]
+    if not isinstance(data, list):
+        raise ValueError("lever payload is not a list")
+    return [_job(j.get("text"), (j.get("categories") or {}).get("location"),
+                 j.get("hostedUrl"))
+            for j in data if isinstance(j, dict)]
 
 
 _LIVE_FETCHERS = {
