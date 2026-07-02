@@ -8,7 +8,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from radar import config
+import yaml
+
+from radar import config, sieve
 from radar.sieve import evaluate_gates
 
 AS_OF = datetime.date(2026, 6, 10)
@@ -126,6 +128,105 @@ class TestGates(unittest.TestCase):
         ok, _, _ = run(company(), event(),
                        press("a London seed round from a UK fintech"))
         self.assertTrue(ok)
+
+
+class TestResolveWebsiteLiveMode(unittest.TestCase):
+    """radar.sieve.resolve_website's live-mode branch (fixtures=False), never
+    covered before. Pins the precedence its docstring promises: 'a human-
+    curated override wins over the row's website: the row can hold an
+    auto-resolved guess (radar.domains), and a person who added an override
+    is correcting it, so the override is authoritative.' Offline: liveness
+    is driven by an injected stub for _check_website_live, never real
+    requests, and sources.yaml itself is a temp file so nothing here touches
+    the repo's real config."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
+        self.orig_sources_path = config.SOURCES_PATH
+        self.addCleanup(setattr, config, "SOURCES_PATH", self.orig_sources_path)
+        self.orig_check = sieve._check_website_live
+        self.addCleanup(setattr, sieve, "_check_website_live", self.orig_check)
+        self.calls = []
+
+    def _write_sources(self, data):
+        path = Path(self.tmp) / "sources.yaml"
+        path.write_text(yaml.safe_dump(data))
+        config.SOURCES_PATH = path
+
+    def _stub_check(self, result):
+        def fake(url):
+            self.calls.append(url)
+            return result
+        sieve._check_website_live = fake
+
+    def test_override_wins_over_row_website(self):
+        # The row holds an auto-resolved guess; a human added an override to
+        # correct it. The override must be the one checked and returned.
+        self._write_sources(
+            {"website_overrides": {"testco": "https://override.example.com"}})
+        self._stub_check(True)
+        c = company()
+        c["website"] = "https://row-guess.example.com"
+
+        url, reachable = sieve.resolve_website(c, fixtures=False)
+
+        self.assertEqual(url, "https://override.example.com")
+        self.assertTrue(reachable)
+        self.assertEqual(self.calls, ["https://override.example.com"])
+
+    def test_no_override_uses_row_website_liveness_from_checker(self):
+        self._write_sources({})
+        self._stub_check(True)
+        c = company()
+        c["website"] = "https://row.example.com"
+
+        url, reachable = sieve.resolve_website(c, fixtures=False)
+
+        self.assertEqual(url, "https://row.example.com")
+        self.assertTrue(reachable)
+        self.assertEqual(self.calls, ["https://row.example.com"])
+
+    def test_no_override_row_website_unreachable_marks_dead(self):
+        # Same row website as above, but the injected fetcher says it is
+        # down: reachable must follow the checker, not just presence of a url.
+        self._write_sources({})
+        self._stub_check(False)
+        c = company()
+        c["website"] = "https://row.example.com"
+
+        url, reachable = sieve.resolve_website(c, fixtures=False)
+
+        self.assertEqual(url, "https://row.example.com")
+        self.assertFalse(reachable)
+
+    def test_no_override_no_website_fails_closed(self):
+        # No override, no row website: nothing to check, so the checker is
+        # never even called and the gate must fail closed.
+        self._write_sources({})
+        self._stub_check(True)
+        c = company()
+        c["website"] = None
+
+        url, reachable = sieve.resolve_website(c, fixtures=False)
+
+        self.assertIsNone(url)
+        self.assertFalse(reachable)
+        self.assertEqual(self.calls, [])
+
+    def test_override_key_is_normalized_name_not_website(self):
+        # Overrides are keyed by the company's normalized_name, not by a
+        # website value; an unrelated key must not leak in.
+        self._write_sources(
+            {"website_overrides": {"someone-else": "https://wrong.example.com"}})
+        self._stub_check(True)
+        c = company()
+        c["website"] = "https://row.example.com"
+
+        url, reachable = sieve.resolve_website(c, fixtures=False)
+
+        self.assertEqual(url, "https://row.example.com")
+        self.assertTrue(reachable)
 
 
 if __name__ == "__main__":

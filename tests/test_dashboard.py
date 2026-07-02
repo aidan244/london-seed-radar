@@ -1,12 +1,20 @@
 """The local progress dashboard: data gathering against the working
 database, and a self-contained, offline, em-dash-free render."""
 
+import argparse
 import datetime
+import http.client
 import json
 import os
 import shutil
+import socket
 import tempfile
+import threading
+import time
 import unittest
+import urllib.error
+import urllib.request
+from http.server import HTTPServer
 from pathlib import Path
 
 from radar import config, dashboard, db
@@ -241,6 +249,175 @@ class TestRenderModes(unittest.TestCase):
     def test_static_mode_has_no_fetch(self):
         html = dashboard._render_html(self.data, server=False, token="")
         self.assertNotIn("fetch(", html)     # the static file stays offline
+
+
+def _free_port():
+    """Ask the OS for a currently-unused localhost port, then release it.
+    There is a small, accepted TOCTOU window between this and the real
+    bind in dashboard.serve(); nothing else in this test run competes for
+    ports on 127.0.0.1."""
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.bind(("127.0.0.1", 0))
+    port = s.getsockname()[1]
+    s.close()
+    return port
+
+
+class TestServeHttpLockdown(unittest.TestCase):
+    """python -m radar.dashboard --serve's real HTTPServer/Handler wiring,
+    started on an ephemeral 127.0.0.1 port in a background thread and driven
+    with urllib/http.client over real sockets, offline. Pins the lockdown
+    described in serve()'s docstring: a per-session token gate, the
+    SERVE_ACTIONS allowlist (via run_action), and a Host-header allowlist.
+
+    This calls the real dashboard.serve(args) (not a hand-rebuilt copy of
+    its Handler), so the wiring is exactly what --serve runs. To make it
+    testable from a foreground thread we: (1) swap in a HTTPServer subclass
+    that records the instance serve() creates, so we get a handle to call
+    .shutdown() on (serve_forever() blocks and only .shutdown() from another
+    thread stops it cleanly); (2) pre-seed secrets.token_urlsafe so the
+    session token is known instead of scraped from the page; (3) neutralise
+    the "open a browser" side effect. All three are restored via
+    addCleanup before the test ends.
+    """
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
+        self.db_path = os.path.join(self.tmp, "radar.db")
+        conn = db.connect(self.db_path)
+        db.init_db(conn)
+        conn.execute(
+            "INSERT INTO human_todos (task, category, status) VALUES (?, ?, ?)",
+            ("Do a thing", "growth", "pending"))
+        conn.commit()
+        conn.close()
+
+        created = []
+        real_http_server = dashboard.HTTPServer
+
+        class RecordingHTTPServer(real_http_server):
+            def __init__(self, *a, **kw):
+                super().__init__(*a, **kw)
+                created.append(self)
+
+        orig_http_server = dashboard.HTTPServer
+        dashboard.HTTPServer = RecordingHTTPServer
+        self.addCleanup(setattr, dashboard, "HTTPServer", orig_http_server)
+
+        orig_subprocess_run = dashboard.subprocess.run
+        dashboard.subprocess.run = lambda *a, **kw: None
+        self.addCleanup(setattr, dashboard.subprocess, "run", orig_subprocess_run)
+
+        orig_webbrowser_open = dashboard.webbrowser.open
+        dashboard.webbrowser.open = lambda *a, **kw: None
+        self.addCleanup(setattr, dashboard.webbrowser, "open", orig_webbrowser_open)
+
+        orig_token_urlsafe = dashboard.secrets.token_urlsafe
+        self.token = "test-session-token-0123456789abcdef"
+        dashboard.secrets.token_urlsafe = lambda *a, **kw: self.token
+        self.addCleanup(setattr, dashboard.secrets, "token_urlsafe",
+                        orig_token_urlsafe)
+
+        self.port = _free_port()
+        args = argparse.Namespace(db=self.db_path, port=self.port, no_prs=True)
+        self.thread = threading.Thread(target=dashboard.serve, args=(args,),
+                                       daemon=True)
+        self.thread.start()
+
+        deadline = time.time() + 5
+        while not created and time.time() < deadline:
+            time.sleep(0.02)
+        self.assertTrue(created, "dashboard --serve did not start in time")
+        self.httpd = created[0]
+        # The token has been generated (it happens before HTTPServer(...)
+        # is constructed inside serve()); restore the real generator
+        # immediately rather than holding the monkeypatch for the test body.
+        dashboard.secrets.token_urlsafe = orig_token_urlsafe
+
+        self.base = "http://127.0.0.1:%d" % self.port
+        self.action_url = self.base + "/action"
+        self._wait_until_ready()
+
+        def _shutdown():
+            self.httpd.shutdown()   # thread-safe stop for serve_forever()
+            self.thread.join(timeout=5)
+        self.addCleanup(_shutdown)
+
+    def _wait_until_ready(self):
+        deadline = time.time() + 5
+        last_exc = None
+        while time.time() < deadline:
+            try:
+                urllib.request.urlopen(self.base + "/", timeout=1).close()
+                return
+            except Exception as exc:            # connection refused, etc.
+                last_exc = exc
+                time.sleep(0.02)
+        raise RuntimeError("dashboard --serve never became ready: %r" % last_exc)
+
+    def _post(self, payload):
+        body = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            self.action_url, data=body, method="POST",
+            headers={"Content-Type": "application/json"})
+        try:
+            resp = urllib.request.urlopen(req, timeout=5)
+            return resp.getcode(), json.loads(resp.read())
+        except urllib.error.HTTPError as exc:
+            return exc.code, json.loads(exc.read())
+
+    def test_post_action_without_token_is_403(self):
+        code, payload = self._post(
+            {"action": "todo_done", "args": {"id": 1}})
+        self.assertEqual(code, 403)
+        self.assertFalse(payload["ok"])
+        self.assertIn("token", payload["output"])
+
+    def test_post_action_with_token_but_disallowed_action_is_400(self):
+        code, payload = self._post({"token": self.token, "action": "rm_rf"})
+        self.assertEqual(code, 400)
+        self.assertFalse(payload["ok"])
+        self.assertIn("not allowed", payload["output"])
+
+    def test_post_action_with_wrong_host_header_is_rejected(self):
+        body = json.dumps(
+            {"token": self.token, "action": "todo_done", "args": {"id": 1}}
+        ).encode("utf-8")
+        conn = http.client.HTTPConnection("127.0.0.1", self.port, timeout=5)
+        try:
+            conn.putrequest("POST", "/action", skip_host=True)
+            conn.putheader("Host", "evil.example.com")
+            conn.putheader("Content-Type", "application/json")
+            conn.putheader("Content-Length", str(len(body)))
+            conn.endheaders(body)
+            resp = conn.getresponse()
+            code = resp.status
+            raw = resp.read()
+        finally:
+            conn.close()
+        self.assertEqual(code, 403)
+        self.assertIn(b"bad host", raw)
+        # the real Host header would have let it through as a valid action
+        conn2 = http.client.HTTPConnection("127.0.0.1", self.port, timeout=5)
+        try:
+            conn2.request("POST", "/action", body=body,
+                          headers={"Content-Type": "application/json",
+                                   "Host": "127.0.0.1:%d" % self.port})
+            resp2 = conn2.getresponse()
+            self.assertEqual(resp2.status, 200)
+            resp2.read()
+        finally:
+            conn2.close()
+
+    def test_get_root_returns_dashboard_html(self):
+        resp = urllib.request.urlopen(self.base + "/", timeout=5)
+        self.assertEqual(resp.getcode(), 200)
+        self.assertIn("text/html", resp.headers.get("Content-Type", ""))
+        body = resp.read().decode("utf-8")
+        self.assertIn('id="dashboard-data"', body)
+        self.assertIn("fetch(", body)          # server mode: live buttons
+        self.assertIn(self.token, body)        # session token embedded
 
 
 class TestServeActions(unittest.TestCase):
