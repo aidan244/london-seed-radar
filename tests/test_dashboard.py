@@ -216,7 +216,7 @@ class TestRenderDashboard(unittest.TestCase):
         out = os.path.join(self.tmp, "dashboard.html")
         dashboard.render_dashboard(self.data, out)
         html = Path(out).read_text()
-        self.assertNotIn("—", html)   # em dash
+        self.assertNotIn("\u2014", html)   # em dash
         self.assertNotIn("–", html)   # en dash
         self.assertIn('id="dashboard-data"', html)
         self.assertNotIn("<script src", html)
@@ -253,7 +253,7 @@ class TestRenderModes(unittest.TestCase):
         self.assertIn("fetch(", html)        # live action call present
         self.assertIn("tok123", html)        # session token embedded
         self.assertIn("data-action", html)
-        self.assertNotIn("—", html)
+        self.assertNotIn("\u2014", html)   # em dash
         self.assertNotIn("–", html)
 
     def test_static_mode_has_no_fetch(self):

@@ -16,7 +16,7 @@ from radar import paste
 DRAFT_TEXT = """> DRAFT. Do not publish outside the team.
 > Everything here is scaffolding until edited.
 
-# London Seed Radar — 2026-06-29
+# London Seed Radar · issue of 29 June 2026
 
 [INTRO: write a short intro paragraph here]
 

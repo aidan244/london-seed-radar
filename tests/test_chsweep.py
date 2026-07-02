@@ -99,7 +99,7 @@ class TestSweep(unittest.TestCase):
         self.assertIn("NOT the amount raised", report)
         self.assertIn("company_number", report)   # the add-a-lead recipe
         self.assertIn("Soho Ai Ltd (1002)", report)
-        self.assertNotIn("—", report)
+        self.assertNotIn("\u2014", report)   # no em dashes, ever
 
     def test_module_never_touches_the_database(self):
         import radar.chsweep as mod
