@@ -143,10 +143,11 @@ Format:
 
 ## 2026-06-30: a personal absolute path got committed to the public repo
 - What happened: a safety audit of the public repo found
-  reports/substack-setup-prompt.md line 20 carried a hardcoded local path,
-  /Users/aidantang/Desktop/job_hunt/docs/assets/., exposing the macOS
-  username and Desktop layout. It was the only personal/dangerous item the
-  audit surfaced (no secrets, no founder contact data, no dangerous code).
+  reports/substack-setup-prompt.md line 20 carried a hardcoded local path
+  (the absolute macOS home-directory path to the repo's docs/assets/
+  folder), exposing the machine username and Desktop layout. It was the
+  only personal/dangerous item the audit surfaced (no secrets, no founder
+  contact data, no dangerous code).
 - Why: the prompt was written with the real local asset path so the human
   could find the files, then committed as working scaffolding without a
   pass for machine-specific paths. Hard Rule 1 forbids personal machine
@@ -159,6 +160,27 @@ Format:
   b72285b).
 - Prevention: before committing anything under reports/ or any prose with
   file paths, grep the staged tree for home paths:
-  git grep --cached -nE "/Users/|/home/[a-z]" returns nothing. Use relative
+  git grep --cached -nE '/(Users|home)/[a-z]+' returns nothing (the grouped
+  pattern is deliberate: it cannot match its own recipe text). Use relative
   paths in prompts/notes that will be tracked; keep absolute local paths in
   gitignored files only.
+
+## 2026-07-02: the leak fix quoted the leaked path verbatim
+- What happened: the 2026-06-30 MISTAKES entry documenting the personal
+  path leak reproduced the exact absolute path in its own text, so the
+  string the fix removed from reports/ was re-published on public main in
+  this tracked file. Found by the 2026-07-02 repo audit. The same audit
+  found the untracked-on-main prompt file still tracked on 11 stale remote
+  PR branches.
+- Why: the entry was written to be precise about what leaked, and nothing
+  in the convention said to describe a leaked value by location rather than
+  by value. The prevention grep in that entry also could not pass again,
+  because the entry itself matched it, which made the check useless.
+- Fix: reworded the 2026-06-30 entry to describe the path without quoting
+  it (entries are never deleted; the meaning is preserved); switched the
+  prevention pattern to a grouped regex that cannot match its own recipe;
+  closed the 12 stale PRs, preserved their seven scout/predraft reports on
+  main, and deleted the 11 branches that served the old file.
+- Prevention: when logging a leak in this file, describe it by file, line,
+  and kind, never by value; a remediation is not complete until every
+  public ref stops serving the string, not just HEAD of main.
