@@ -47,8 +47,17 @@ def find_or_create_event(conn, company_id, event_date, source_mode):
 
 
 def _update_event(conn, event_id, **fields):
+    """Set non-None fields on an event, unless it is terminal. A published
+    or dropped event still absorbs repeat observations (the merge in
+    find_or_create_event matched it, and evidence may still be recorded),
+    but its stage, amount, and date are locked: the published record must
+    never silently change under a routine re-ingest."""
     updates = {k: v for k, v in fields.items() if v is not None}
     if not updates:
+        return
+    row = conn.execute("SELECT status FROM funding_events WHERE id = ?",
+                       (event_id,)).fetchone()
+    if row is None or row["status"] in db.TERMINAL_STATUSES:
         return
     assignments = ", ".join("%s = ?" % k for k in updates)
     conn.execute("UPDATE funding_events SET %s WHERE id = ?" % assignments,
@@ -76,11 +85,16 @@ def ingest_filings(conn, profiles, filings_for, as_of, source_mode):
                 conn, company_id, filing["date"], source_mode)
             created += is_new
             updated += not is_new
-            # Prefer the filing's allotment date as the event date.
+            # Prefer the filing's allotment date as the event date, but
+            # never rewrite a terminal event's record (same lock as
+            # _update_event).
             conn.execute(
                 "UPDATE funding_events SET filing_id = ?, event_date = ? "
-                "WHERE id = ? AND filing_id IS NULL",
-                (filing["transaction_id"], filing["date"], event_id),
+                "WHERE id = ? AND filing_id IS NULL "
+                "AND status NOT IN (%s)"
+                % ",".join("?" * len(db.TERMINAL_STATUSES)),
+                [filing["transaction_id"], filing["date"], event_id]
+                + sorted(db.TERMINAL_STATUSES),
             )
             snippet = "SH01 allotment of shares"
             if filing.get("capital_figure"):
