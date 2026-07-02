@@ -75,6 +75,37 @@ def test_colloquial_uk_press_verbs_are_triaged():
                      "Dalston Data", "Exmoor Energy"]
 
 
+def test_headline_fragments_are_not_company_names():
+    # regression: the live DB accumulated rows like "UK fintech's
+    # stablecoin clash with the" and "VivaTech: A Record 10th Edition
+    # Comes to a" because everything before a funding verb became a name
+    entries = [
+        {"title": "UK fintech's stablecoin clash with the raises questions",
+         "summary": "an opinion piece, seed funding mentioned"},
+        {"title": "VivaTech: A Record 10th Edition Comes to a closes big",
+         "summary": "conference wrap, investment roundup"},
+        {"title": "Exclusive: Acme Labs raises £2m seed round",
+         "summary": "London startup Acme Labs."},
+        {"title": "Meet the team behind Acme as it raises questions",
+         "summary": "profile piece about funding"},
+    ]
+    items = rssfeeds._entries_to_items(entries, "Test")
+    names = [item["company_name"] for item in items]
+    # the fragments are skipped; the Exclusive: prefix is stripped from a
+    # real name rather than kept
+    assert names == ["Acme Labs"]
+
+
+def test_plausible_company_name_keeps_odd_real_names():
+    assert rssfeeds._plausible_company_name("Record OS")
+    assert rssfeeds._plausible_company_name("01Health")
+    assert rssfeeds._plausible_company_name("Marks & Spencer Ventures")
+    assert not rssfeeds._plausible_company_name("UK Finance and")
+    assert not rssfeeds._plausible_company_name("")
+    assert not rssfeeds._plausible_company_name(
+        "A very long headline fragment that keeps going and going forever")
+
+
 def test_proxied_feeds_route_through_the_configured_proxy():
     feeds = rssfeeds.proxied_feeds()
     assert feeds, "expected feeds from sources.yaml"

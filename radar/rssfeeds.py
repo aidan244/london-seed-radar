@@ -34,6 +34,33 @@ _NAME_FROM_TITLE = re.compile(
     re.IGNORECASE,
 )
 
+# Editorial lead-ins that are not part of a company name.
+_NAME_PREFIX = re.compile(
+    r"^(?:exclusive|breaking|report|revealed|watch|meet the|meet)[:,]?\s+",
+    re.IGNORECASE)
+# A name ending in a grammar word is a truncated headline fragment, not a
+# company ("UK fintech's stablecoin clash with the").
+_TRAILING_STOPWORD = re.compile(
+    r"\b(?:the|a|an|and|to|of|with|for|in|on|it|its|his|her|their|is|are|"
+    r"has|have|comes|as|at|by)$", re.IGNORECASE)
+
+
+def _plausible_company_name(name):
+    """False for headline fragments masquerading as company names. The
+    live DB accumulated rows like 'VivaTech: A Record 10th Edition Comes
+    to a' because everything before a funding verb was taken as the name;
+    those rows re-seed themselves on every ingest. Deliberately loose:
+    real companies with odd names must still pass, and the four gates
+    remain the actual filter."""
+    name = (name or "").strip()
+    if not name or len(name) > 60 or len(name.split()) > 6:
+        return False
+    if ":" in name:
+        return False
+    if _TRAILING_STOPWORD.search(name):
+        return False
+    return True
+
 
 def _entry_date(entry):
     parsed = entry.get("published_parsed") or entry.get("updated_parsed")
@@ -53,8 +80,11 @@ def _entries_to_items(entries, source_name):
         m = _NAME_FROM_TITLE.match(title)
         if not m:
             continue
+        name = _NAME_PREFIX.sub("", m.group("name").strip()).strip()
+        if not _plausible_company_name(name):
+            continue
         items.append({
-            "company_name": m.group("name").strip(),
+            "company_name": name,
             "title": title,
             "summary": summary.strip(),
             "url": entry.get("link"),
