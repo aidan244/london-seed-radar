@@ -5,6 +5,7 @@ discovered -> sieved -> enriched -> featured -> published,
 with dropped as a terminal branch. Statuses never move backwards.
 """
 
+import datetime
 import re
 import sqlite3
 
@@ -74,6 +75,25 @@ def advance_status(conn, event_id, new_status, drop_reason=None):
     conn.execute(
         "UPDATE funding_events SET status = ? WHERE id = ?", (new_status, event_id)
     )
+
+
+def publish_issue(conn, issue_id):
+    """Move an issue draft -> published, the only legal transition, and
+    stamp published_at. Idempotent: an already-published issue is left
+    untouched and False is returned. The raw-SQL version of this lived in
+    publish.py, outside any guard; issues now go through here so the
+    forward-only rule has a single owner for both tables."""
+    row = conn.execute(
+        "SELECT status FROM issues WHERE id = ?", (issue_id,)).fetchone()
+    if row is None:
+        raise ValueError("no issue with id %s" % issue_id)
+    if row["status"] == "published":
+        return False
+    conn.execute(
+        "UPDATE issues SET status = 'published', published_at = ? "
+        "WHERE id = ?",
+        (datetime.datetime.now().isoformat(timespec="seconds"), issue_id))
+    return True
 
 
 def upsert_company(conn, name, company_number=None, domain=None, **fields):

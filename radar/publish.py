@@ -194,6 +194,7 @@ def main(argv=None):
     conn = db.connect(args.db)
     db.init_db(conn)
 
+    regen_only = False
     if args.date:
         issue = conn.execute("SELECT * FROM issues WHERE issue_date = ?",
                              (args.date,)).fetchone()
@@ -201,19 +202,25 @@ def main(argv=None):
         issue = conn.execute(
             "SELECT * FROM issues WHERE status = 'draft' "
             "ORDER BY issue_date DESC LIMIT 1").fetchone()
+        if issue is None:
+            # No draft pending: fall back to regenerating the site from the
+            # latest published issue (refreshed data, corrected copy)
+            # without touching any status.
+            issue = conn.execute(
+                "SELECT * FROM issues ORDER BY issue_date DESC LIMIT 1"
+            ).fetchone()
+            regen_only = issue is not None
     if issue is None:
-        print("publish: no draft issue found; run python -m radar.issue first.")
+        print("publish: no issue found; run python -m radar.issue first.")
         return 2
 
-    if issue["status"] == "draft":
-        conn.execute(
-            "UPDATE issues SET status = 'published', published_at = ? "
-            "WHERE id = ?", (datetime.datetime.now().isoformat(timespec="seconds"),
-                             issue["id"]))
+    if db.publish_issue(conn, issue["id"]):
         for event in conn.execute(
                 "SELECT id FROM funding_events WHERE issue_date = ? "
                 "AND status = 'featured'", (issue["issue_date"],)).fetchall():
             db.advance_status(conn, event["id"], "published")
+    else:
+        regen_only = True
 
     sample_data = conn.execute(
         "SELECT COUNT(*) c FROM funding_events WHERE source_mode = 'fixture' "
@@ -224,7 +231,12 @@ def main(argv=None):
     n_pages = render_site(conn, sample_data)
     conn.commit()
 
-    print("publish: issue %s marked published in the DB" % issue["issue_date"])
+    if regen_only:
+        print("publish: issue %s already published; regenerated the "
+              "dataset and site only" % issue["issue_date"])
+    else:
+        print("publish: issue %s marked published in the DB"
+              % issue["issue_date"])
     print("  dataset: docs/data/ (%d companies, %d events, %d jobs, "
           "JSON and CSV)" % (n_companies, n_events, n_jobs))
     print("  site:    docs/index.html, docs/jobs.html, plus %d issue "

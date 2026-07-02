@@ -213,15 +213,16 @@ class TestDraftPublishedCascade(unittest.TestCase):
         self.assertIsNotNone(issue_row["published_at"])
         self.assertEqual(self._event_status(), "published")
 
-    def test_second_run_is_a_noop_and_does_not_error(self):
+    def test_second_run_regenerates_without_touching_statuses(self):
         self.assertEqual(publish.main(["--db", str(self.db_path)]), 0)
         published_at_first = self._issue_row()["published_at"]
 
         # A second run finds no 'draft' issue (the one we had is now
-        # 'published'); it must exit cleanly rather than raise, and must
-        # not touch anything already published.
+        # 'published'); it regenerates the dataset and site from the latest
+        # published issue (exit 0) without touching anything already
+        # published: no status change, no new published_at.
         rc = publish.main(["--db", str(self.db_path)])
-        self.assertEqual(rc, 2)
+        self.assertEqual(rc, 0)
 
         issue_row = self._issue_row()
         self.assertEqual(issue_row["status"], "published")
