@@ -177,7 +177,15 @@ def load_scout_leads(root=None):
         directory = root / "reports" / sub
         if directory.is_dir():
             for path in sorted(directory.glob("*.md")):
-                items.extend(parse_scout_report(path.read_text()))
+                # One unreadable or badly-encoded cloud-written report must
+                # not abort the whole ingest; skip it, say so, keep going.
+                try:
+                    text = path.read_text(encoding="utf-8")
+                except (OSError, UnicodeDecodeError) as exc:
+                    print("  warn: skipping unreadable scout report %s: %s"
+                          % (path.name, exc))
+                    continue
+                items.extend(parse_scout_report(text))
     return _dedup([item for item in items if item.get("published_date")])
 
 

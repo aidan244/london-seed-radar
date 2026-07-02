@@ -153,6 +153,20 @@ class TestManualAndCombine(unittest.TestCase):
         names = {i["company_name"] for i in leads.load_scout_leads(tmp)}
         self.assertEqual(names, {"RevEng.AI", "Brixton Bio"})
 
+    def test_one_unreadable_report_does_not_abort_the_load(self):
+        # regression: a single badly-encoded cloud-written file used to
+        # raise UnicodeDecodeError out of ingest, dropping every lead
+        tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, tmp, ignore_errors=True)
+        scout = os.path.join(tmp, "reports", "scout")
+        os.makedirs(scout)
+        with open(os.path.join(scout, "2026-06-13.md"), "w") as f:
+            f.write(WITH_BLOCK)
+        with open(os.path.join(scout, "2026-06-20.md"), "wb") as f:
+            f.write(b"\xff\xfe invalid utf-8 \x9c\x81")
+        names = {i["company_name"] for i in leads.load_scout_leads(tmp)}
+        self.assertEqual(names, {"RevEng.AI", "Brixton Bio"})
+
 
 if __name__ == "__main__":
     unittest.main()
