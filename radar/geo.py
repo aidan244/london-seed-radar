@@ -61,6 +61,14 @@ EXCLUSION_PHRASES = [
     "london ontario",
     "east london, south africa",
     "little london",
+    "london, kentucky", "london, ky", "london, ohio",
+    # Commonwealth place names that contain a UK nation marker as a whole
+    # word ("Wales" in New South Wales, "Britain"/"British" in the others).
+    # Word-boundary matching cannot help here; the phrase must be masked.
+    "new south wales",
+    "british columbia",
+    "new britain",
+    "british virgin islands",
     # UK city names that collide with US cities, in the common
     # "City, State" press form. Masking the whole phrase removes the
     # city token so it cannot pass the UK gate on its own.
@@ -158,7 +166,7 @@ FOREIGN_PLACES = [
     "germany", "sweden", "france", "netherlands", "spain", "italy", "denmark",
     "finland", "norway", "switzerland", "austria", "belgium", "portugal",
     "poland", "estonia", "ireland", "united states", "u.s.", "usa", "canada",
-    "australia", "israel", "india",
+    "australia", "israel", "india", "new south wales", "british columbia",
 ]
 FOREIGN_NATIONALITIES = [
     "german", "swedish", "french", "dutch", "spanish", "italian", "danish",
@@ -182,6 +190,13 @@ _FOREIGN_IN = re.compile(
     r"\b(?:headquartered|based|hq)\s+in\s+(?:" +
     "|".join(re.escape(p) for p in FOREIGN_PLACES) + r")\b", re.IGNORECASE)
 
+# UK places whose names contain a FOREIGN_PLACES token as a whole word:
+# "Northern Ireland-based" must not fire the "ireland" veto. Masked out
+# before the foreign scan only; the UK gate still sees these phrases.
+FOREIGN_SCAN_MASK = [
+    "northern ireland",
+]
+
 
 def find_foreign_hq(text):
     """Return a phrase asserting a non-UK headquarters, or None. Matches
@@ -193,9 +208,14 @@ def find_foreign_hq(text):
         return None
     # No exclusion masking here: that mask blanks "new york" to stop it
     # passing the UK gate, but for foreign detection "New York-based" should
-    # match, not be hidden.
+    # match, not be hidden. Only the UK-place overlaps are masked, so that
+    # "Northern Ireland-based" is not read as "Ireland-based".
+    scan = text
+    for phrase in FOREIGN_SCAN_MASK:
+        scan = re.sub(re.escape(phrase), " " * len(phrase), scan,
+                      flags=re.IGNORECASE)
     for rx in (_FOREIGN_BASED, _FOREIGN_NAT, _FOREIGN_IN):
-        m = rx.search(text)
+        m = rx.search(scan)
         if m:
             return m.group(0).strip()
     return None

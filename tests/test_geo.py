@@ -141,6 +141,57 @@ class TestForeignHQ(unittest.TestCase):
             "founded by a Swedish engineer, based in London"))
         self.assertIsNone(geo.find_foreign_hq("expanding to Berlin next year"))
 
+    def test_northern_ireland_is_not_ireland(self):
+        # "ireland" in FOREIGN_PLACES must not fire inside Northern Ireland
+        self.assertIsNone(geo.find_foreign_hq(
+            "a Northern Ireland-based agritech"))
+        self.assertIsNone(geo.find_foreign_hq(
+            "the Northern Ireland based cyber startup"))
+        self.assertEqual(geo.locate("a Northern Ireland-based agritech"),
+                         ("uk", "northern ireland"))
+
+    def test_republic_of_ireland_still_vetoes(self):
+        self.assertTrue(geo.find_foreign_hq("a Dublin-based fintech"))
+        self.assertTrue(geo.find_foreign_hq("an Ireland-based payments firm"))
+
+    def test_commonwealth_place_based_vetoes(self):
+        self.assertTrue(geo.find_foreign_hq(
+            "a New South Wales-based agritech"))
+        self.assertTrue(geo.find_foreign_hq(
+            "a British Columbia-based mining startup"))
+
+
+class TestCommonwealthCollisions(unittest.TestCase):
+    """Bare nation tokens ("wales", "british", "britain") are whole words
+    inside several Commonwealth place names; those phrases are masked so
+    they can never pass the UK gate."""
+
+    def test_new_south_wales_is_not_wales(self):
+        self.assertEqual(geo.locate(
+            "a New South Wales-based agritech, Australia"), (None, None))
+
+    def test_british_columbia_is_not_british(self):
+        self.assertEqual(geo.locate(
+            "a British Columbia-based mining startup, Canada"), (None, None))
+
+    def test_new_britain_is_not_britain(self):
+        self.assertEqual(geo.locate(
+            "a factory in New Britain, Connecticut"), (None, None))
+
+    def test_london_kentucky_is_not_london(self):
+        self.assertEqual(geo.locate("a plant in London, Kentucky"),
+                         (None, None))
+
+    def test_real_wales_still_passes(self):
+        self.assertEqual(geo.locate("a Cardiff, Wales startup"),
+                         ("uk", "wales"))
+        self.assertEqual(geo.locate("a startup in rural Wales"),
+                         ("uk", "wales"))
+
+    def test_real_british_still_passes(self):
+        self.assertEqual(geo.locate("the British startup raised"),
+                         ("uk", "british"))
+
 
 if __name__ == "__main__":
     unittest.main()
