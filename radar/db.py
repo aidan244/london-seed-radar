@@ -137,9 +137,12 @@ def event_evidence(conn, event_id):
 
 def add_evidence(conn, event_id, kind, source_name, url, title=None,
                  snippet=None, published_date=None):
+    # A missing url is stored as '' rather than NULL: SQLite treats every
+    # NULL as distinct in a UNIQUE constraint, so NULL urls would bypass
+    # UNIQUE(funding_event_id, kind, url) and duplicate on every re-run.
     conn.execute(
         "INSERT OR IGNORE INTO evidence "
         "(funding_event_id, kind, source_name, url, title, snippet, published_date) "
         "VALUES (?, ?, ?, ?, ?, ?, ?)",
-        (event_id, kind, source_name, url, title, snippet, published_date),
+        (event_id, kind, source_name, url or "", title, snippet, published_date),
     )

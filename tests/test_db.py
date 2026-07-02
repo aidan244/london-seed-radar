@@ -86,6 +86,39 @@ class TestEventMerging(unittest.TestCase):
         self.assertNotEqual(a, b)
 
 
+class TestEvidenceDedup(unittest.TestCase):
+    """Regression for the audit's M3: SQLite treats every NULL as distinct
+    in a UNIQUE constraint, so url-less evidence (prose leads, link-less
+    RSS entries) duplicated on every re-run. add_evidence stores '' so the
+    UNIQUE actually fires."""
+
+    def setUp(self):
+        self.conn = db.connect(":memory:")
+        db.init_db(self.conn)
+        company = db.upsert_company(self.conn, "Testco Ltd")
+        self.event, _ = find_or_create_event(self.conn, company,
+                                             "2026-06-03", "fixture")
+
+    def count(self):
+        return self.conn.execute(
+            "SELECT COUNT(*) c FROM evidence WHERE funding_event_id = ?",
+            (self.event,)).fetchone()["c"]
+
+    def test_urlless_evidence_dedups_on_rerun(self):
+        for _ in range(3):
+            db.add_evidence(self.conn, self.event, "press", "scout (lead)",
+                            None, title="Testco raises",
+                            published_date="2026-06-03")
+        self.assertEqual(self.count(), 1)
+
+    def test_distinct_urls_still_both_kept(self):
+        db.add_evidence(self.conn, self.event, "press", "UKTN",
+                        "https://example.com/a")
+        db.add_evidence(self.conn, self.event, "press", "UKTN",
+                        "https://example.com/b")
+        self.assertEqual(self.count(), 2)
+
+
 class TestTerminalEventsAreImmutable(unittest.TestCase):
     """Regression for the audit's H3: a re-ingest must never rewrite the
     stage, amount, or date of a published (or dropped) event. The merge
