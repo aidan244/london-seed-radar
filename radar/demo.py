@@ -6,8 +6,14 @@ reproducible byte for byte. All fixture companies are fictional; the
 published pages carry a sample-data banner.
 
 Refuses to run if the database already holds live-mode events, so a demo
-can never mix fixture data into a real dataset; point RADAR_DB or --db
-at a scratch file instead.
+can never mix fixture data into a real dataset.
+
+ISOLATION: --db and RADAR_DB redirect only the SQLite file; the issue and
+publish stages still write the repo's issues/ and docs/ dirs (this
+overwrote real artifacts on 2026-06-13, see MISTAKES.md). To sandbox a
+demo completely, set RADAR_ROOT to a scratch dir; docs/, issues/, and
+the DB all relocate together:
+  RADAR_ROOT=/tmp/radar-scratch python -m radar.demo
 """
 
 import argparse
@@ -39,8 +45,10 @@ def main(argv=None):
     conn.close()
     if live:
         print("demo: %s already holds %d live-mode event(s); refusing to mix "
-              "fixture data in. Run with --db /tmp/demo.db instead." %
+              "fixture data in. Run isolated instead (RADAR_ROOT relocates "
+              "docs/, issues/, and the DB together):" %
               (args.db or config.DB_PATH, live))
+        print("  RADAR_ROOT=/tmp/radar-scratch python -m radar.demo")
         return 2
 
     print("London Seed Radar demo: fixtures only, as of %s." % DEMO_AS_OF)
