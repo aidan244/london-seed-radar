@@ -184,3 +184,28 @@ Format:
 - Prevention: when logging a leak in this file, describe it by file, line,
   and kind, never by value; a remediation is not complete until every
   public ref stops serving the string, not just HEAD of main.
+
+## 2026-07-03: the audit found four gate and honesty defects in shipped code
+- What happened: a function-level audit (report untracked at the repo
+  root, RADAR_AUDIT_2026-07-02.md) confirmed four high-severity defects
+  that had shipped: the geography gate passed "New South Wales" and
+  "British Columbia" as UK and vetoed "Northern Ireland-based" as
+  foreign; parse_amount_gbp read £1,500,000 as £1,500; and a re-ingest
+  could silently rewrite stage, amount, and date on already-published
+  events. A cluster of crash and idempotence bugs sat exactly in the 13
+  modules with no dedicated tests, including publish.py, the code that
+  keeps contact data out of the public dataset.
+- Why: marker lists were only ever checked against the collisions someone
+  had already thought of; the status guard protected the status column
+  and nothing else; and untested modules stayed untested because the demo
+  exercised their happy path, which reads as coverage.
+- Fix: all confirmed findings fixed across ~30 commits on 2026-07-03,
+  each with a regression test; the suite grew from 160 to 329 tests, and
+  every hard-rule behaviour (public-dataset field allowlist, ATS 404
+  honesty, RADAR_ROOT isolation, serve lockdown, forward-only for issues
+  as well as events) now has a test fence.
+- Prevention: an absent guard is a finding even when no function contains
+  it; when adding a geography marker, hunt its containing phrases before
+  trusting word boundaries; any invariant worth a docstring gets a test
+  that fails when the invariant regresses, not a demo that passes while
+  it holds.
