@@ -108,5 +108,54 @@ class TestCuratedEnrichment(unittest.TestCase):
                          "Clay (LinkedIn-derived), 2026-06-29")
 
 
+class TestAtsOwnershipCorroboration(unittest.TestCase):
+    """A guessed slug that any provider answers 200 for is not proof the
+    board belongs to this company; without corroboration an unrelated
+    company's postings would be published as a verified hiring signal
+    (audit finding M4)."""
+
+    def setUp(self):
+        self.conn = db.connect(":memory:")
+        db.init_db(self.conn)
+        self.addCleanup(self.conn.close)
+        cid = db.upsert_company(self.conn, "Acme Analytics")
+        self.company = db.get_company(self.conn, cid)
+        # ats.fetch stub: greenhouse answers 200 for the guessed slug
+        self.orig_fetch = enrich.ats.fetch
+        enrich.ats.fetch = lambda provider, token, fixtures=False: (
+            {"status": "verified",
+             "jobs": [{"title": "Engineer", "location": "Remote",
+                       "url": "https://boards.greenhouse.io/x/1"}]}
+            if provider == "greenhouse"
+            else {"status": "unverifiable", "jobs": []})
+        self.addCleanup(setattr, enrich.ats, "fetch", self.orig_fetch)
+
+    def test_uncorroborated_board_is_rejected(self):
+        # the hosted page belongs to a different company entirely
+        page = lambda url: "<title>Careers at Zenith Robotics</title>"
+        provider, token, result = enrich._discover_ats(
+            self.company, fixtures=False, page_fetch=page)
+        self.assertIsNone(provider)
+        self.assertIsNone(result)
+
+    def test_corroborated_board_is_accepted(self):
+        page = lambda url: "<h1>Acme Analytics is hiring in London</h1>"
+        provider, token, result = enrich._discover_ats(
+            self.company, fixtures=False, page_fetch=page)
+        self.assertEqual(provider, "greenhouse")
+        self.assertEqual(result["status"], "verified")
+
+    def test_unreachable_hosted_page_is_rejected(self):
+        provider, token, result = enrich._discover_ats(
+            self.company, fixtures=False, page_fetch=lambda url: None)
+        self.assertIsNone(provider)
+
+    def test_fixture_mode_trusts_recorded_fixtures(self):
+        provider, token, result = enrich._discover_ats(
+            self.company, fixtures=True,
+            page_fetch=lambda url: self.fail("no page fetch in fixtures"))
+        self.assertEqual(provider, "greenhouse")
+
+
 if __name__ == "__main__":
     unittest.main()

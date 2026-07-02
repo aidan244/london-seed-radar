@@ -14,7 +14,7 @@ import sys
 
 import requests
 
-from radar import ats, config, db, util
+from radar import ats, config, db, domains, util
 
 _TITLE_TAG = re.compile(r"<title[^>]*>(.*?)</title>", re.IGNORECASE | re.DOTALL)
 _META_DESC = re.compile(
@@ -64,10 +64,33 @@ def _founders_from_press(evidence):
     return found
 
 
-def _discover_ats(company, fixtures):
+# Public hosted board pages, one per provider, used to corroborate that a
+# guessed slug's board actually belongs to the company.
+_HOSTED_PAGES = {
+    "greenhouse": "https://boards.greenhouse.io/%s",
+    "ashby": "https://jobs.ashbyhq.com/%s",
+    "lever": "https://jobs.lever.co/%s",
+}
+
+
+def _board_belongs_to(company, provider, token, page_fetch=None):
+    """A 200 from a guessed slug is not proof the board is this company's:
+    two firms can share the same slug guess, and accepting the first hit
+    would publish an unrelated company's postings as a verified hiring
+    signal. Corroborate against the provider's public hosted page with the
+    same honesty guardrail domains.py uses for websites."""
+    fetch = page_fetch or domains._fetch
+    html = fetch(_HOSTED_PAGES[provider] % token)
+    return html is not None and domains.corroborates(html, company["name"])
+
+
+def _discover_ats(company, fixtures, page_fetch=None):
     """Resolve an ATS board: explicit override, then slug probing.
     All three providers expose open JSON endpoints; a 404 just means
-    the slug is not theirs (or, for Ashby, the public API is disabled)."""
+    the slug is not theirs (or, for Ashby, the public API is disabled).
+    A human-verified ats_override is trusted as-is; a probed slug must
+    also corroborate as belonging to this company. Fixture mode trusts
+    the recorded fixtures (they are curated)."""
     overrides = config.load_sources().get("ats_overrides") or {}
     override = overrides.get(company["normalized_name"])
     if override:
@@ -80,7 +103,10 @@ def _discover_ats(company, fixtures):
     for provider in ats.PROVIDERS:
         for slug in dict.fromkeys(slugs):
             result = ats.fetch(provider, slug, fixtures)
-            if result["status"] == "verified":
+            if result["status"] != "verified":
+                continue
+            if fixtures or _board_belongs_to(company, provider, slug,
+                                             page_fetch):
                 return provider, slug, result
     return None, None, None
 
