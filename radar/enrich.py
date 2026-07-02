@@ -175,14 +175,23 @@ def enrich_company(conn, company, evidence, fixtures):
         one_liner_source = "press summary (rewrite before featuring)"
 
     founders = override.get("founders") or _founders_from_press(evidence)
+    written = 0
     for founder in founders:
+        # Hard rule 2, enforced at the write: a scraped role line or a
+        # curated typo carrying an email or phone shape never lands.
+        if any(util.looks_like_contact_data(founder.get(k))
+               for k in ("name", "role", "background")):
+            print("  warn: founder entry for %s looks like it carries "
+                  "contact data; skipped" % company["name"])
+            continue
         conn.execute(
             "INSERT OR IGNORE INTO founders "
             "(company_id, name, role, background, source_url) "
             "VALUES (?, ?, ?, ?, ?)",
             (company["id"], founder["name"], founder.get("role"),
              founder.get("background"), founder.get("source_url")))
-    notes.append("%d founder(s)" % len(founders))
+        written += 1
+    notes.append("%d founder(s)" % written)
 
     headcount = override.get("headcount_estimate") or "unknown"
     headcount_source = override.get("headcount_source") or \

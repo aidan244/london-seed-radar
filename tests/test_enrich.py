@@ -157,6 +157,43 @@ class TestAtsOwnershipCorroboration(unittest.TestCase):
         self.assertEqual(provider, "greenhouse")
 
 
+class TestFounderContactGuard(unittest.TestCase):
+    """Hard rule 2 at the write path: a founder entry carrying an email or
+    phone shape is skipped with a warning, never written."""
+
+    def setUp(self):
+        self.conn = db.connect(":memory:")
+        db.init_db(self.conn)
+        self.addCleanup(self.conn.close)
+        # keep enrich offline
+        orig = enrich._discover_ats
+        enrich._discover_ats = lambda c, f, page_fetch=None: (None, None, None)
+        self.addCleanup(setattr, enrich, "_discover_ats", orig)
+
+    def test_contact_carrying_entry_is_skipped(self):
+        cid = db.upsert_company(self.conn, "Acme Analytics")
+        company = db.get_company(self.conn, cid)
+        evidence = [{"title": "Acme raises seed",
+                     "snippet": "Founded by Jane Doe and John Roe. Press: "
+                                "press@acme.example.com",
+                     "url": "https://p.example/a"}]
+        # _founders_from_press only captures names, so drive the guard via
+        # a curated-style override carrying a bad background line
+        orig_load = enrich.config.load_curated_enrichment
+        enrich.config.load_curated_enrichment = lambda n: {"founders": [
+            {"name": "Jane Doe", "role": "CEO",
+             "background": "email her at jane@acme.example.com"},
+            {"name": "John Roe", "role": "CTO",
+             "background": "previously at a public research lab"},
+        ]}
+        self.addCleanup(setattr, enrich.config, "load_curated_enrichment",
+                        orig_load)
+        enrich.enrich_company(self.conn, company, evidence, fixtures=False)
+        rows = self.conn.execute(
+            "SELECT name FROM founders ORDER BY name").fetchall()
+        self.assertEqual([r["name"] for r in rows], ["John Roe"])
+
+
 class TestJobExpiry(unittest.TestCase):
     """Postings age out honestly: every fetch stamps last_seen on what it
     saw, and publish exports only each company's latest-fetch postings, so

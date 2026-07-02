@@ -113,5 +113,27 @@ class TestHr(unittest.TestCase):
                          "%s\nWeekly loop\n%s" % (line, line))
 
 
+class TestLooksLikeContactData(unittest.TestCase):
+    """Hard rule 2 defense in depth: the shapes checked at the founders
+    write path and the curated-file load."""
+
+    def test_emails_detected(self):
+        self.assertTrue(util.looks_like_contact_data(
+            "reach her at jane@example.com for press"))
+        self.assertTrue(util.looks_like_contact_data("jane.doe+x@sub.co.uk"))
+
+    def test_phones_detected(self):
+        self.assertTrue(util.looks_like_contact_data("+44 20 7946 0958"))
+        self.assertTrue(util.looks_like_contact_data("call 07911 123456"))
+
+    def test_public_record_lines_pass(self):
+        self.assertFalse(util.looks_like_contact_data(
+            "previously co-founded Onfido, acquired by Entrust for $650m"))
+        self.assertFalse(util.looks_like_contact_data(
+            "spent 7+ years in private equity at AEA Investors and Citi"))
+        self.assertFalse(util.looks_like_contact_data(None))
+        self.assertFalse(util.looks_like_contact_data(""))
+
+
 if __name__ == "__main__":
     unittest.main()

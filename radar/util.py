@@ -47,3 +47,22 @@ def domain_of(url):
 def hr(title=""):
     line = "=" * 64
     return "%s\n%s\n%s" % (line, title, line) if title else line
+
+
+# Hard rule 2: no personal contact data anywhere in this repo. These
+# shapes are checked wherever founder-adjacent text is written (enrich)
+# or loaded from curated files (config), as defense in depth on top of
+# the schema having no contact columns.
+_EMAIL = re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")
+_PHONE = re.compile(r"(?:\+|\b0)\d[\d\s().-]{7,}\d\b")
+
+
+def looks_like_contact_data(text):
+    """True when text contains an email address or a phone-number shape.
+    Deliberately loose on phones (any long separated digit run after +
+    or a leading 0); a rare false positive costs one skipped background
+    line, a false negative publishes personal contact data."""
+    if not text:
+        return False
+    s = str(text)
+    return bool(_EMAIL.search(s) or _PHONE.search(s))

@@ -157,6 +157,26 @@ class TestLoadCuratedEnrichment(unittest.TestCase):
         (self.tmp / "15396489.json").write_text(json.dumps(data))
         self.assertEqual(config.load_curated_enrichment("15396489"), data)
 
+    def test_unknown_key_rejects_the_whole_file(self):
+        # fail closed: a typo'd or contact-smuggling key means nothing from
+        # the file is trusted
+        data = {"one_liner": "Fine.", "founder_email": "x@example.com"}
+        (self.tmp / "15396489.json").write_text(json.dumps(data))
+        self.assertEqual(config.load_curated_enrichment("15396489"), {})
+
+    def test_malformed_json_is_ignored_not_fatal(self):
+        (self.tmp / "15396489.json").write_text("{not json")
+        self.assertEqual(config.load_curated_enrichment("15396489"), {})
+
+    def test_real_curated_files_pass_the_allowlist(self):
+        # the checked-in enrichment/ files must always stay loadable
+        import pathlib
+        real = pathlib.Path(__file__).resolve().parents[1] / "enrichment"
+        for path in sorted(real.glob("*.json")):
+            keys = set(json.loads(path.read_text()))
+            self.assertFalse(keys - config.CURATED_ENRICHMENT_KEYS,
+                             "unknown keys in %s" % path.name)
+
 
 if __name__ == "__main__":
     unittest.main()

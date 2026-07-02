@@ -53,18 +53,42 @@ def load_sources():
         return yaml.safe_load(f) or {}
 
 
+# Every key a curated enrichment file may carry; anything else is a typo
+# or an attempt to smuggle a field the pipeline never validated. Unknown
+# keys reject the whole file (fail closed: unverified data stays out).
+CURATED_ENRICHMENT_KEYS = {
+    "_note", "company_number", "one_liner", "one_liner_source",
+    "headcount_estimate", "headcount_source", "founders", "ats",
+    "hq_country",
+}
+
+
 def load_curated_enrichment(company_number):
     """Curated live-mode enrichment override for one Companies House number,
     or {} when there is no file. Read in every mode (unlike the test
     fixtures, which load only under --fixtures), the way website_overrides
     and ats_overrides are. Public facts only; the file never holds contact
-    data. Keyed by company_number, so it tracks an entity across renames."""
+    data. Keyed by company_number, so it tracks an entity across renames.
+    A malformed or unknown-keyed file is rejected with a warning rather
+    than crashing the enrich batch or flowing through unvalidated."""
     if not company_number:
         return {}
     path = ENRICHMENT_DIR / ("%s.json" % company_number)
     if not path.exists():
         return {}
-    return json.loads(path.read_text())
+    try:
+        data = json.loads(path.read_text())
+    except (ValueError, OSError) as exc:
+        print("  warn: ignoring unreadable curated file %s: %s"
+              % (path.name, exc))
+        return {}
+    unknown = set(data) - CURATED_ENRICHMENT_KEYS
+    if unknown:
+        print("  warn: ignoring curated file %s: unknown key(s) %s "
+              "(allowed: %s)" % (path.name, ", ".join(sorted(unknown)),
+                                 ", ".join(sorted(CURATED_ENRICHMENT_KEYS))))
+        return {}
+    return data
 
 
 def lookback_days(sources=None):
