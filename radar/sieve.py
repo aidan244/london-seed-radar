@@ -140,7 +140,8 @@ def main(argv=None):
                         help="report gate outcomes without writing anything")
     args = parser.parse_args(argv)
     as_of = util.resolve_as_of(args)
-    window = args.window or config.lookback_days()
+    window = (args.window if args.window is not None
+              else config.lookback_days())
 
     conn = db.connect(args.db)
     db.init_db(conn)

@@ -16,9 +16,10 @@ import re
 # as remote.
 # "distributed" is deliberately omitted: "Distributed Systems Engineer"
 # is a common on-site title, not a remote signal.
+# The bare "remote" word-boundary match already covers "remote-first" and
+# "fully remote"; those alternates were dead pattern and are gone.
 _REMOTE = re.compile(
-    r"\b(remote|remote[ -]first|fully[ -]remote|work[ -]from[ -]home|"
-    r"wfh|anywhere)\b", re.IGNORECASE)
+    r"\b(remote|work[ -]from[ -]home|wfh|anywhere)\b", re.IGNORECASE)
 
 # "Remote" sometimes appears negated; do not flag those.
 _NOT_REMOTE = re.compile(

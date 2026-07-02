@@ -231,13 +231,15 @@ def find_foreign_hq(text):
 
 
 def classify_region(text):
-    """Return 'london', 'uk', or None for the geography gate."""
+    """Return 'london', 'uk', or None. A convenience over locate() kept
+    for triage scripts and the test suite; the pipeline calls locate()."""
     return locate(text)[0]
 
 
 def contains_uk(text):
-    """True if text names anywhere in the UK, London included. Used for
-    triage and the geography gate."""
+    """True if text names anywhere in the UK, London included. Like
+    contains_london, a convenience kept for triage and tests; the
+    pipeline itself calls locate()."""
     return classify_region(text) is not None
 
 

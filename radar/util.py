@@ -1,10 +1,7 @@
 """Small shared helpers for the CLI commands."""
 
-import argparse
 import datetime
 import re
-
-from radar import config
 
 
 def slugify(name):

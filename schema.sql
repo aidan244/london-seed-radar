@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS companies (
     company_number TEXT UNIQUE,
     domain TEXT UNIQUE,
     website TEXT,
-    website_status TEXT,             -- live | unreachable | unknown
+    website_status TEXT,             -- live | unknown (only 'live' is ever
+                                     -- written, on a reality-gate pass)
     location_text TEXT,              -- registered office or press location mention
     incorporated_on TEXT,
     one_liner TEXT,
