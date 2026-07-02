@@ -83,10 +83,11 @@ Every candidate passes all four or is dropped with a recorded reason:
 
 ## Issue composition
 
-Each issue targets 10 companies (companies_per_issue in sources.yaml,
-set 2026-06-11 at Aidan's request). If fewer qualify in a week, feature
-the real ones and say so in the issue; never pad with unverified
-companies or stretch the gates to hit the number.
+Each issue targets 5 companies (companies_per_issue in sources.yaml, set
+2026-06-29 with the move to a biweekly cadence; it had been 10 when the
+briefing was weekly). If fewer qualify in a fortnight, feature the real
+ones and say so in the issue; never pad with unverified companies or
+stretch the gates to hit the number.
 
 ## Status flow (forward-only)
 
