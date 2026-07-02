@@ -41,6 +41,30 @@ class TestParseAmount(unittest.TestCase):
     def test_non_gbp_returns_none(self):
         self.assertIsNone(stages.parse_amount_gbp("raised $5m"))
 
+    def test_comma_grouped_full_figures(self):
+        # regression: £1,500,000 used to parse as 1500, a 1000x undercount
+        self.assertEqual(
+            stages.parse_amount_gbp("raised £1,500,000 in seed funding"),
+            1_500_000)
+        self.assertEqual(stages.parse_amount_gbp("a £850,000 pre-seed"),
+                         850_000)
+        self.assertEqual(
+            stages.parse_amount_gbp("closed £12,000,000 series a"),
+            12_000_000)
+
+    def test_ambiguous_grouping_is_undisclosed(self):
+        # digits continuing past the parsed figure mean the number was not
+        # understood; undisclosed beats wrong
+        self.assertIsNone(stages.parse_amount_gbp("raised £1,5m"))
+        self.assertIsNone(stages.parse_amount_gbp("raised £1,5000"))
+
+    def test_plain_and_decimal_still_work(self):
+        self.assertEqual(stages.parse_amount_gbp("a £13.4m round"),
+                         13_400_000)
+        self.assertEqual(stages.parse_amount_gbp("£2bn fund"),
+                         2_000_000_000)
+        self.assertEqual(stages.parse_amount_gbp("about £1,500 spent"), 1_500)
+
     def test_format(self):
         self.assertEqual(stages.format_amount(2_400_000), "£2.4m")
         self.assertEqual(stages.format_amount(750_000), "£750k")

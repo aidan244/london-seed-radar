@@ -20,8 +20,13 @@ FUNDING_WORDS = re.compile(
     re.IGNORECASE,
 )
 
+# Full comma-grouped figures first (1,500,000), then plain digits with an
+# optional decimal (2.5). A comma is always a thousands separator here;
+# figures whose digits continue past the match are ambiguous and parse to
+# None (undisclosed beats wrong).
 _AMOUNT = re.compile(
-    r"£\s*(\d+(?:[.,]\d+)?)\s*(m|million|bn|billion|k|thousand)?\b", re.IGNORECASE
+    r"£\s*(\d{1,3}(?:,\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)\s*"
+    r"(m|million|bn|billion|k|thousand)?\b", re.IGNORECASE
 )
 
 
@@ -48,6 +53,11 @@ def parse_amount_gbp(text):
         return None
     m = _AMOUNT.search(text)
     if not m:
+        return None
+    if re.match(r",?\d", text[m.end(1):m.end(1) + 2]):
+        # The figure's digits continue past what the pattern understood
+        # (e.g. "£1,5m" or a malformed grouping): ambiguous, so report
+        # undisclosed rather than a silently wrong number.
         return None
     value = float(m.group(1).replace(",", ""))
     unit = (m.group(2) or "").lower()
