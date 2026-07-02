@@ -1,5 +1,5 @@
 {
-  "_note": "Curated live-mode enrichment. Public facts only; no contact data.",
+  "_note": "Curated live-mode enrichment. Public facts only; no contact data. Founders re-verified against live sources 2026-07-03 (company site, press, CH officers).",
   "company_number": "16058953",
   "one_liner": "Files UK self-assessment tax returns by combining AI with qualified accountants who review every return, at a fixed price.",
   "one_liner_source": "company site (verified 2026-06-29)",
@@ -9,13 +9,13 @@
     {
       "name": "Dhruv Chadha",
       "role": "Co-Founder",
-      "background": "previously worked in finance at Google, Wise, and Nansen",
+      "background": "Previously worked in finance at Google, Wise, and Nansen.",
       "source_url": "https://techfundingnews.com/record-os-2m-pre-seed-uk-tax-returns/"
     },
     {
       "name": "Jose Luis de la Pena",
       "role": "Co-Founder",
-      "background": "former Wise operator",
+      "background": "Former Wise operator.",
       "source_url": "https://techfundingnews.com/record-os-2m-pre-seed-uk-tax-returns/"
     }
   ]

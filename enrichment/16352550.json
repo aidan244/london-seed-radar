@@ -1,5 +1,5 @@
 {
-  "_note": "Curated live-mode enrichment. Public facts only; no contact data.",
+  "_note": "Curated live-mode enrichment. Public facts only; no contact data. Founders re-verified against live sources 2026-07-03 (company site, press, CH officers).",
   "company_number": "16352550",
   "one_liner": "Redesigns DNA therapeutics to evade cellular defence mechanisms so genetic medicines work at lower doses with better safety.",
   "one_liner_source": "company site (verified 2026-06-29)",
@@ -9,13 +9,13 @@
     {
       "name": "Jonathan Cohen-Gold",
       "role": "Co-Founder and CEO",
-      "background": null,
+      "background": "Discovered the company's core molecular approach to DNA silencing during his PhD at the University of Cambridge.",
       "source_url": "https://www.houdinibio.com"
     },
     {
       "name": "Lee Dunham",
       "role": "Co-Founder and CBO",
-      "background": null,
+      "background": "Spent over ten years working with more than 100 cell and gene therapy companies as a director at the Cell and Gene Therapy Catapult.",
       "source_url": "https://www.houdinibio.com"
     }
   ]

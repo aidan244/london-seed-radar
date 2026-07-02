@@ -1,5 +1,5 @@
 {
-  "_note": "Curated live-mode enrichment. Public facts only; no contact data.",
+  "_note": "Curated live-mode enrichment. Public facts only; no contact data. Founders re-verified against live sources 2026-07-03 (company site, press, CH officers).",
   "company_number": "15396489",
   "one_liner": "Agentic AI that maps the business logic buried inside legacy enterprise software, starting with SAP, so teams can understand and change core systems faster.",
   "one_liner_source": "company site (verified 2026-06-29)",
@@ -8,21 +8,21 @@
   "founders": [
     {
       "name": "Jan Philipp Haas",
-      "role": "Co-Founder",
-      "background": "former Palantir engineer and executive",
-      "source_url": "https://www.eu-startups.com/2026/06/ex-palantir-team-behind-conduct-raises-e51-million-to-make-enterprise-systems-ai-ready/"
+      "role": "Co-Founder and CEO",
+      "background": "Former Palantir engineer.",
+      "source_url": "https://techfundingnews.com/ex-palantir-founders-raise-12m-to-transform-legacy-erp-with-ai/"
     },
     {
       "name": "Philipp Hoefer",
-      "role": "Co-Founder",
-      "background": "former Palantir engineer and executive",
-      "source_url": "https://www.eu-startups.com/2026/06/ex-palantir-team-behind-conduct-raises-e51-million-to-make-enterprise-systems-ai-ready/"
+      "role": "Co-Founder and Chief Product Officer",
+      "background": "Former Palantir engineer.",
+      "source_url": "https://techfundingnews.com/ex-palantir-founders-raise-12m-to-transform-legacy-erp-with-ai/"
     },
     {
       "name": "Henry Thompson",
       "role": "Co-Founder and CTO",
-      "background": "former Palantir engineer and executive",
-      "source_url": "https://www.eu-startups.com/2026/06/ex-palantir-team-behind-conduct-raises-e51-million-to-make-enterprise-systems-ai-ready/"
+      "background": "Former Palantir engineer.",
+      "source_url": "https://techfundingnews.com/ex-palantir-founders-raise-12m-to-transform-legacy-erp-with-ai/"
     }
   ]
 }

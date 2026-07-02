@@ -1,5 +1,5 @@
 {
-  "_note": "Curated live-mode enrichment. Public facts only; no contact data.",
+  "_note": "Curated live-mode enrichment. Public facts only; no contact data. Founders re-verified against live sources 2026-07-03 (company site, press, CH officers).",
   "company_number": "15323501",
   "one_liner": "AI operating system for private capital firms that automates deal sourcing, due diligence, and portfolio monitoring.",
   "one_liner_source": "company site (verified 2026-06-29)",
@@ -7,16 +7,16 @@
   "headcount_source": "Clay (LinkedIn-derived), 2026-06-29",
   "founders": [
     {
-      "name": "Danyal Ozduzenciler",
+      "name": "Danyal Özdüzenciler",
       "role": "Co-Founder and CEO",
-      "background": "previously spent 7+ years in private equity and investment banking at AEA Investors, Citi, and Deutsche Bank",
-      "source_url": "https://www.vestbee.com/insights/articles/capsa-ai-raises-1-7-m"
+      "background": "Spent 7+ years in private equity and investment banking at AEA Investors, Citi, and Deutsche Bank before co-founding Capsa AI.",
+      "source_url": "https://businesscloud.co.uk/news/capsa-ai-raises-18m-to-expand-ai-platform-for-private-capital/"
     },
     {
       "name": "Callum Downie",
-      "role": "Co-Founder and CTO",
-      "background": "previously led machine learning teams and AI products at ThirdEye Labs and Standard AI",
-      "source_url": "https://www.vestbee.com/insights/articles/capsa-ai-raises-1-7-m"
+      "role": "Co-Founder",
+      "background": "Previously led machine learning teams and AI products at ThirdEye Labs and Standard AI.",
+      "source_url": "https://businesscloud.co.uk/news/capsa-ai-raises-18m-to-expand-ai-platform-for-private-capital/"
     }
   ]
 }
