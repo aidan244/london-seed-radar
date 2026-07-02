@@ -118,7 +118,9 @@ def gather_dashboard_data(conn, sources=None, root=None, today=None,
         if anchor >= today:
             next_date = anchor
         else:
-            steps = (today - anchor).days // cadence + 1
+            # Ceil, not floor+1: on a scheduled issue day the next issue is
+            # today (0 days), not a whole cadence away.
+            steps = -((today - anchor).days // -cadence)
             next_date = anchor + datetime.timedelta(days=steps * cadence)
         next_issue = next_date.isoformat()
         days_to_next_issue = (next_date - today).days
@@ -604,6 +606,12 @@ def serve(args):
             self._send(code, json.dumps(obj).encode("utf-8"), "application/json")
 
         def do_GET(self):
+            # Same Host allowlist as do_POST: the page shows internal
+            # working state, and a DNS-rebinding page could otherwise read
+            # it (the bind is 127.0.0.1, this is belt and braces).
+            if self.headers.get("Host", "") not in hosts_ok:
+                self.send_error(403, "bad host")
+                return
             if self.path.split("?", 1)[0] not in ("/", "/index.html"):
                 self.send_error(404)
                 return

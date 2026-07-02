@@ -85,11 +85,17 @@ def main(argv=None):
     p_ats.add_argument("token")
     args = parser.parse_args(argv)
 
-    if args.source == "companies_house":
-        return smoke_companies_house(args.query)
-    if args.source == "rss":
-        return smoke_rss(args.from_dir)
-    return smoke_ats(args.provider, args.token)
+    # A smoke test that stack-traces on a timeout has failed at its one
+    # job; report the failure and exit nonzero instead.
+    try:
+        if args.source == "companies_house":
+            return smoke_companies_house(args.query)
+        if args.source == "rss":
+            return smoke_rss(args.from_dir)
+        return smoke_ats(args.provider, args.token)
+    except Exception as exc:
+        print("smoke %s failed: %s" % (args.source, exc))
+        return 1
 
 
 if __name__ == "__main__":

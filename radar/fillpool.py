@@ -96,7 +96,8 @@ def main(argv=None):
                              "(default 8)")
     args = parser.parse_args(argv)
 
-    target = args.target or config.companies_per_issue()
+    target = (args.target if args.target is not None
+              else config.companies_per_issue())
     print("fillpool: aiming for %d enriched companies; it stops early if a "
           "round adds nothing new, and never relaxes the gates." % target)
     print()
@@ -112,7 +113,9 @@ def main(argv=None):
     if not result["reached"]:
         print("  Honest stop: no gate was relaxed and nothing was padded. "
               "Feature the real ones and widen discovery over time.")
-    return 0
+    # A short pool is an honest outcome (exit 0); a crashed pipeline stage
+    # is a failure the shell must see.
+    return 1 if "failed" in result["reason"] else 0
 
 
 if __name__ == "__main__":

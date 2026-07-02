@@ -149,6 +149,16 @@ class TestGatherDashboardData(unittest.TestCase):
         self.assertEqual(data["kpis"]["next_issue"], "2026-06-29")
         self.assertEqual(data["kpis"]["days_to_next_issue"], 9)
 
+    def test_cadence_on_the_issue_day_is_today(self):
+        # regression: on a scheduled issue day the countdown showed a full
+        # fortnight instead of 0 days
+        data = dashboard.gather_dashboard_data(
+            self.conn,
+            sources={"first_issue_date": "2026-06-01", "issue_cadence_days": 14},
+            root=self.tmp, today=datetime.date(2026, 6, 29))
+        self.assertEqual(data["kpis"]["next_issue"], "2026-06-29")
+        self.assertEqual(data["kpis"]["days_to_next_issue"], 0)
+
     def test_current_issue_and_loop(self):
         data = self.gather()
         self.assertEqual(data["kpis"]["current_issue_status"], "draft")

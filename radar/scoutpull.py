@@ -71,6 +71,11 @@ def pull(root=None, git=None):
             continue
         dest = root / path
         dest.parent.mkdir(parents=True, exist_ok=True)
+        if dest.exists() and dest.read_text() != show.stdout:
+            # A re-pull replaces the file; if someone annotated the local
+            # copy, say so rather than silently discarding their edits.
+            print("  note: %s differed locally; overwritten with the "
+                  "branch copy" % path)
         dest.write_text(show.stdout)
         written.append(path)
     return written
