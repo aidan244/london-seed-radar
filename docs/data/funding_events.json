@@ -1,7 +1,57 @@
 {
-  "generated_at": "2026-07-03 00:27",
-  "count": 5,
+  "generated_at": "2026-07-12 20:52",
+  "count": 10,
   "funding_events": [
+    {
+      "stage": "series-a",
+      "amount_gbp": 6400000,
+      "amount_source": "press: UKTN (lead)",
+      "event_date": "2026-07-08",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-07-13",
+      "company_name": "Kord"
+    },
+    {
+      "stage": "seed",
+      "amount_gbp": 5200000,
+      "amount_source": "press: about GBP5.2m ($7m)",
+      "event_date": "2026-07-07",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-07-13",
+      "company_name": "Whering"
+    },
+    {
+      "stage": "seed",
+      "amount_gbp": 9400000,
+      "amount_source": "press: UKTN (lead)",
+      "event_date": "2026-07-03",
+      "filing_id": "MzUyNjQ0MDQyNGFkaXF6a2N4",
+      "status": "published",
+      "issue_date": "2026-07-13",
+      "company_name": "geoSurge"
+    },
+    {
+      "stage": "series-a",
+      "amount_gbp": 15000000,
+      "amount_source": "press: UKTN (lead)",
+      "event_date": "2026-07-02",
+      "filing_id": "MzUzMDA5OTYzM2FkaXF6a2N4",
+      "status": "published",
+      "issue_date": "2026-07-13",
+      "company_name": "StirlingX"
+    },
+    {
+      "stage": "pre-seed",
+      "amount_gbp": 2800000,
+      "amount_source": "press: UKTN (lead)",
+      "event_date": "2026-07-01",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-07-13",
+      "company_name": "Xylo"
+    },
     {
       "stage": "series-a",
       "amount_gbp": 30000000,

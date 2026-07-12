@@ -1,7 +1,122 @@
 {
-  "generated_at": "2026-07-03 00:27",
-  "count": 5,
+  "generated_at": "2026-07-12 20:52",
+  "count": 10,
   "companies": [
+    {
+      "name": "Kord",
+      "company_number": "12243866",
+      "domain": "kord.com",
+      "website": "https://kord.com",
+      "location_text": "853-859 Salisbury House, 29 Finsbury Circus, London, EC2M 5QQ",
+      "incorporated_on": "2019-10-04",
+      "one_liner": "Kord is an FCA-regulated platform that combines identity verification, AML and compliance checks, client onboarding and e-signing, and payment processing into a single system for regulated industries such as estate agents, law firms, and conveyancers.",
+      "headcount_estimate": "26-50",
+      "headcount_source": "Estimate only; no public headcount figure found. Inferred from Series A stage, revenue reported growing from about GBP600k to GBP4m in a year, 100+ paying customers, and two product lines. Treat as an estimate, not a confirmed number.",
+      "ats_provider": null,
+      "ats_status": "none",
+      "founders": [
+        {
+          "name": "James Owusu",
+          "role": "Founder and CEO",
+          "background": "Founded the company as Checkboard in 2019, after a slow and costly personal property transaction; its B2B arm now trades as Kord."
+        }
+      ]
+    },
+    {
+      "name": "Whering",
+      "company_number": "12660509",
+      "domain": "whering.ai",
+      "website": "https://whering.co",
+      "location_text": "396 St. John Street, London, EC1V 4NJ",
+      "incorporated_on": "2020-06-10",
+      "one_liner": "Whering is a digital wardrobe app that lets people catalogue the clothes they already own, plan and style outfits from them, and shop more intentionally.",
+      "headcount_estimate": "11-25",
+      "headcount_source": "About page states a team of over 20 people, based in Farringdon, London (whering.co/about, verified 2026-07-12). Bucketed as 11-25.",
+      "ats_provider": null,
+      "ats_status": "none",
+      "founders": [
+        {
+          "name": "Bianca Rangecroft",
+          "role": "Founder and CEO",
+          "background": "Founder and CEO of Whering and a director since its incorporation on 10 June 2020; started the company to solve her own wardrobe-management problem and has led it to 10m users."
+        }
+      ]
+    },
+    {
+      "name": "geoSurge",
+      "company_number": "16249592",
+      "domain": "geosurge.ai",
+      "website": "https://geosurge.ai",
+      "location_text": "167-169 Great Portland Street Great Portland Street, 5th Floor, London, W1W 5PF",
+      "incorporated_on": "2025-02-13",
+      "one_liner": "geoSurge is a London deep-tech company whose platform helps brands measure, understand, and improve how they are represented inside large language models and AI search such as ChatGPT, Claude, and Gemini, using its proprietary Corpus Engineering method.",
+      "headcount_estimate": "11-25",
+      "headcount_source": "No absolute figure published; soft estimate from a just-closed $12m seed with active hiring and press noting headcount doubled since a 2025 stealth exit. Treat as an estimate; it could be under 10.",
+      "ats_provider": "ashby",
+      "ats_status": "verified",
+      "founders": [
+        {
+          "name": "Francisco Vigo",
+          "role": "Co-founder and CEO",
+          "background": "Originally from Argentina; an economist and data scientist focused on large-scale data systems and machine learning; developed geoSurge's Corpus Engineering method. Registered at Companies House as Francisco Juan Vigo Rabolini, a director since incorporation on 13 February 2025."
+        },
+        {
+          "name": "Jons Mostovojs",
+          "role": "Co-founder and CTO",
+          "background": "An AI and machine learning engineer who has previously served as a CTO and chief architect; owns geoSurge's data ingestion pipeline and model-layer architecture."
+        }
+      ]
+    },
+    {
+      "name": "StirlingX",
+      "company_number": "14111820",
+      "domain": "stirlingx.io",
+      "website": "https://stirlingx.io",
+      "location_text": "3rd Floor 86-90 Paul Street, London, EC2A 4NE",
+      "incorporated_on": "2022-05-17",
+      "one_liner": "StirlingX runs a sovereign data intelligence platform that captures, secures, and fuses multi-sensor data into defence-grade insight for critical national infrastructure, defence, and government customers.",
+      "headcount_estimate": "11-25",
+      "headcount_source": "No public headcount. Estimate from the /about page (seven named operational leaders plus a chairman and advisors) and the Series A plan to grow the engineering team; treat as an estimate.",
+      "ats_provider": null,
+      "ats_status": "none",
+      "founders": [
+        {
+          "name": "Dean Jones",
+          "role": "Founder and CEO",
+          "background": "Co-founder of GALLOS Technologies, the venture studio that incubated StirlingX; former Royal Marines with over two decades of operational experience; a Sloan Fellow at London Business School."
+        },
+        {
+          "name": "Joshua Burch",
+          "role": "Co-founder and Director",
+          "background": "Co-founder of the parent studio GALLOS Technologies; former Head of Strategy and Risk at GCHQ and a partner at FTI Consulting who built its EMEIA cyber practice; appointed to the UK National Cyber Advisory Board in 2025."
+        }
+      ]
+    },
+    {
+      "name": "Xylo",
+      "company_number": "16113693",
+      "domain": "xylo.ai",
+      "website": "https://buildxylo.ai",
+      "location_text": "9th Floor 107 Cheapside, London, EC2V 6DN",
+      "incorporated_on": "2024-12-02",
+      "one_liner": "Xylo builds an AI-agent workspace for UK local-authority planning teams that automates the administrative work on planning applications, chasing documents, verifying submissions, and compiling responses, while final judgement stays with planning officers.",
+      "headcount_estimate": "1-10",
+      "headcount_source": "Stage-based estimate: pre-seed, incorporated December 2024, two co-founder directors on Companies House, no team or careers page on the live site. No public headcount figure.",
+      "ats_provider": null,
+      "ats_status": "none",
+      "founders": [
+        {
+          "name": "Dermot O'Riordan",
+          "role": "Co-founder",
+          "background": "A former lawyer and operator with legal and operational experience at Hogan Lovells and Orrick; a director of Xylo AI Ltd since its incorporation on 2 December 2024."
+        },
+        {
+          "name": "Habs Kim",
+          "role": "Co-founder",
+          "background": "Engineering co-founder, previously an engineer at Cytora and Marshmallow; registered at Companies House as Ha Bin Kim, a director since 26 January 2025."
+        }
+      ]
+    },
     {
       "name": "Isometric",
       "company_number": "13829439",
