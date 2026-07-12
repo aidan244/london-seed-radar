@@ -81,6 +81,41 @@ class TestGates(unittest.TestCase):
                        press("a London seed round"))
         self.assertTrue(ok)
 
+    def test_recency_recovers_from_press_when_event_date_is_a_stale_filing(self):
+        # event_date is a nominal SH01 before the window, but the round was
+        # announced (press) inside it: the StirlingX and geoSurge recovery.
+        ev = [{"kind": "filing", "title": "SH01",
+               "snippet": "SH01 allotment", "published_date": "2026-05-01"},
+              {"kind": "press", "title": "Testco raises a round",
+               "snippet": "a London seed round", "published_date": "2026-06-05"}]
+        ok, gates, reason = run(company(), event(date="2026-05-01"), ev)
+        self.assertTrue(ok, reason)
+        recency = [g for g in gates if g["gate"] == "recency"][0]
+        self.assertTrue(recency["passed"])
+        self.assertIn("most recent corroboration 2026-06-05", recency["detail"])
+
+    def test_recency_drops_when_event_and_all_evidence_predate_window(self):
+        # A recent-looking press date does not rescue a genuinely old round:
+        # every corroboration must be inside the window.
+        ev = [{"kind": "filing", "title": "SH01",
+               "snippet": "SH01 allotment", "published_date": "2026-04-30"},
+              {"kind": "press", "title": "Testco raises a round",
+               "snippet": "a London seed round", "published_date": "2026-05-02"}]
+        ok, _, reason = run(company(), event(date="2026-04-20"), ev)
+        self.assertFalse(ok)
+        self.assertTrue(reason.startswith("recency:"))
+
+    def test_recency_tolerates_missing_or_bad_evidence_dates(self):
+        # Missing published_date, an empty one, and a non-ISO string must not
+        # crash; recency falls back to the event_date.
+        ev = [{"kind": "press", "title": "t", "snippet": "a London seed round"},
+              {"kind": "press", "title": "t", "snippet": "x",
+               "published_date": ""},
+              {"kind": "press", "title": "t", "snippet": "y",
+               "published_date": "not-a-date"}]
+        ok, _, _ = run(company(), event(date="2026-06-03"), ev)
+        self.assertTrue(ok)
+
     def test_reality_drops_when_no_website(self):
         # 16012012 is the recorded stealth company with no live site.
         ok, _, reason = run(company(number="16012012"), event(),

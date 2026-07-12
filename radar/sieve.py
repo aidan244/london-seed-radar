@@ -59,6 +59,23 @@ def resolve_website(company, fixtures):
     return url, _check_website_live(url)
 
 
+def _evidence_date(e):
+    """Published date of one evidence row, or None. Tolerates a sqlite3.Row
+    (raises IndexError on a missing column), a plain dict (KeyError), an
+    empty value, and a non-ISO string (ValueError), so one malformed date
+    never crashes the sieve."""
+    try:
+        raw = e["published_date"]
+    except (KeyError, IndexError):
+        return None
+    if not raw:
+        return None
+    try:
+        return util.parse_iso(raw)
+    except (ValueError, TypeError):
+        return None
+
+
 def evaluate_gates(company, event, evidence, as_of, window_days, fixtures):
     """Run the four gates. Returns (passed, gates, drop_reason).
     gates is an ordered list of {gate, passed, detail} dicts."""
@@ -104,12 +121,25 @@ def evaluate_gates(company, event, evidence, as_of, window_days, fixtures):
         record("stage", False, detail)
         return False, gates, "stage: " + detail
 
-    # 3. Recency.
+    # 3. Recency. A round counts as recent if it was corroborated inside the
+    # window by any evidence, not only by the stored event_date. A nominal
+    # SH01 (a small statement-of-capital filing, not the raise) can predate
+    # the announcement by weeks and, merged into the round within
+    # MERGE_WINDOW_DAYS, would otherwise date the event before the window and
+    # drop a genuinely fresh raise. This is the StirlingX and geoSurge
+    # false-drop, the same shape as the earlier Geordie AI miss: the press
+    # announcement date is a first-class signal of when the round happened.
     cutoff = as_of - datetime.timedelta(days=window_days)
     event_date = util.parse_iso(event["event_date"])
-    if not record("recency", event_date >= cutoff,
-                  "event date %s vs %d-day window starting %s"
-                  % (event_date, window_days, cutoff)):
+    dates = [event_date] + [d for d in (_evidence_date(e) for e in evidence)
+                            if d is not None]
+    recency_date = max(dates)
+    detail = ("event date %s vs %d-day window starting %s"
+              % (event_date, window_days, cutoff) if recency_date == event_date
+              else "most recent corroboration %s (event date %s) vs %d-day "
+                   "window starting %s"
+                   % (recency_date, event_date, window_days, cutoff))
+    if not record("recency", recency_date >= cutoff, detail):
         return False, gates, "recency: " + gates[-1]["detail"]
 
     # 4. Reality: live web presence and a corroborated funding event.

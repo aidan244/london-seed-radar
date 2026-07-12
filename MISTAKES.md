@@ -209,3 +209,32 @@ Format:
   trusting word boundaries; any invariant worth a docstring gets a test
   that fails when the invariant regresses, not a demo that passes while
   it holds.
+
+## 2026-07-12: recency dropped fresh raises dated by a stale nominal SH01
+- What happened: building issue 2, two genuine fresh London raises,
+  StirlingX (GBP15m Series A announced 2026-07-02) and geoSurge (GBP9.4m
+  seed announced 2026-07-03), were dropped by the sieve on recency
+  ("event date 2026-06-05/06-03 vs 14-day window starting 2026-06-28")
+  even though both had in-window press evidence on the same event.
+- Why: each company had filed a tiny nominal SH01 (statement of capital
+  GBP264 and GBP230, not the raise) in early June. ingest_filings runs
+  before ingest_press and stamps the event with the filing date; the July
+  press item then merged into that event (27 to 30 days apart, inside
+  MERGE_WINDOW_DAYS=45) without advancing the date. The recency gate read
+  only event["event_date"], so the stale filing date, not the announcement,
+  decided recency. Same shape as the earlier Geordie AI miss the handover
+  noted but never fixed.
+- Fix: the recency gate now passes when the round was corroborated inside
+  the window by ANY evidence, computing recency_date = max(event_date, all
+  evidence published_dates) and testing that against the cutoff
+  (radar/sieve.py). Added _evidence_date, which tolerates a sqlite3.Row or
+  a plain dict, a missing/empty column, and a non-ISO string, so one bad
+  date never crashes the sieve. Three regression tests in
+  tests/test_sieve.py (recovery from a stale filing, no false rescue when
+  every corroboration is old, and the bad-date guard); suite 329 -> 332.
+- Prevention: recency is about when the round happened, and the press
+  announcement date is a first-class signal of that, not subordinate to a
+  filing date; when a gate reads one stored field, ask whether the
+  evidence rows hold a truer value. The nominal-SH01-predates-announcement
+  pattern is common (Geordie AI, 01Health, Monument, now StirlingX and
+  geoSurge); expect it every cycle.
