@@ -1,0 +1,22 @@
+{
+  "_note": "Verified 2026-07-12 from the live site buildxylo.ai, the Mindflair (MFAI) RNS on Investegate, the Sure Valley Ventures announcement, and Companies House 16113693 (officers and filings). The correct domain is buildxylo.ai; xylo.ai is an unrelated company. The 40 percent more applications per officer and 83 percent accuracy figures are company-reported claims, not audited. Mindflair's interest is indirect, held through its stake in the Sure Valley Ventures fund, not a direct shareholding. Public facts only; no contact data.",
+  "company_number": "16113693",
+  "one_liner": "Xylo builds an AI-agent workspace for UK local-authority planning teams that automates the administrative work on planning applications, chasing documents, verifying submissions, and compiling responses, while final judgement stays with planning officers.",
+  "one_liner_source": "https://buildxylo.ai (verified 2026-07-12)",
+  "headcount_estimate": "1-10",
+  "headcount_source": "Stage-based estimate: pre-seed, incorporated December 2024, two co-founder directors on Companies House, no team or careers page on the live site. No public headcount figure.",
+  "founders": [
+    {
+      "name": "Habs Kim",
+      "role": "Co-founder",
+      "background": "Engineering co-founder, previously an engineer at Cytora and Marshmallow; registered at Companies House as Ha Bin Kim, a director since 26 January 2025.",
+      "source_url": "https://www.svv.ai/news/investmentxylo"
+    },
+    {
+      "name": "Dermot O'Riordan",
+      "role": "Co-founder",
+      "background": "A former lawyer and operator with legal and operational experience at Hogan Lovells and Orrick; a director of Xylo AI Ltd since its incorporation on 2 December 2024.",
+      "source_url": "https://www.svv.ai/news/investmentxylo"
+    }
+  ]
+}

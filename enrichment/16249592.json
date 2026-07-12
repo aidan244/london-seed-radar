@@ -1,0 +1,22 @@
+{
+  "_note": "Verified 2026-07-12 against the live geosurge.ai homepage and /about team page, the AlbionVC-led seed press, and Companies House 16249592. Investor-side directors and a reported prior role (Chief Data Scientist at Zilch) that could not be confirmed on a live source are deliberately left out. Public facts only; no contact data.",
+  "company_number": "16249592",
+  "one_liner": "geoSurge is a London deep-tech company whose platform helps brands measure, understand, and improve how they are represented inside large language models and AI search such as ChatGPT, Claude, and Gemini, using its proprietary Corpus Engineering method.",
+  "one_liner_source": "https://geosurge.ai (verified 2026-07-12)",
+  "headcount_estimate": "11-25",
+  "headcount_source": "No absolute figure published; soft estimate from a just-closed $12m seed with active hiring and press noting headcount doubled since a 2025 stealth exit. Treat as an estimate; it could be under 10.",
+  "founders": [
+    {
+      "name": "Francisco Vigo",
+      "role": "Co-founder and CEO",
+      "background": "Originally from Argentina; an economist and data scientist focused on large-scale data systems and machine learning; developed geoSurge's Corpus Engineering method. Registered at Companies House as Francisco Juan Vigo Rabolini, a director since incorporation on 13 February 2025.",
+      "source_url": "https://geosurge.ai/about/"
+    },
+    {
+      "name": "Jons Mostovojs",
+      "role": "Co-founder and CTO",
+      "background": "An AI and machine learning engineer who has previously served as a CTO and chief architect; owns geoSurge's data ingestion pipeline and model-layer architecture.",
+      "source_url": "https://geosurge.ai/about/"
+    }
+  ]
+}

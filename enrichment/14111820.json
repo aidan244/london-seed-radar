@@ -1,0 +1,22 @@
+{
+  "_note": "Verified 2026-07-12 from the live site stirlingx.io (home and /about), the GALLOS Technologies team page, press (TechRound, BusinessCloud, SiliconANGLE, all 2026-07-02), and Companies House 14111820. The entity was formerly GALLOS TECHNOLOGIES SUBSIDIARY 1 LIMITED, renamed StirlingX in 2025. Sir Jeremy Fleming is chairman, not a founder, and is deliberately excluded. Public facts only; no contact data.",
+  "company_number": "14111820",
+  "one_liner": "StirlingX runs a sovereign data intelligence platform that captures, secures, and fuses multi-sensor data into defence-grade insight for critical national infrastructure, defence, and government customers.",
+  "one_liner_source": "https://stirlingx.io/about (verified 2026-07-12)",
+  "headcount_estimate": "11-25",
+  "headcount_source": "No public headcount. Estimate from the /about page (seven named operational leaders plus a chairman and advisors) and the Series A plan to grow the engineering team; treat as an estimate.",
+  "founders": [
+    {
+      "name": "Dean Jones",
+      "role": "Founder and CEO",
+      "background": "Co-founder of GALLOS Technologies, the venture studio that incubated StirlingX; former Royal Marines with over two decades of operational experience; a Sloan Fellow at London Business School.",
+      "source_url": "https://www.gallostech.io/team/"
+    },
+    {
+      "name": "Joshua Burch",
+      "role": "Co-founder and Director",
+      "background": "Co-founder of the parent studio GALLOS Technologies; former Head of Strategy and Risk at GCHQ and a partner at FTI Consulting who built its EMEIA cyber practice; appointed to the UK National Cyber Advisory Board in 2025.",
+      "source_url": "https://www.gallostech.io/team/"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "_note": "Recorded foreign-HQ drop 2026-07-12 (Aidan's editorial call). LUCIDA AI LTD (16830373, 124 City Road, London) is London-registered with a real SH01 dated 2026-06-30, but the company is Istanbul-founded: Crunchbase lists Istanbul as HQ, founders Mustafa Girgin and Mustafa Sait Demirci are Istanbul-based, and the seed round is led by Turkish investors (Velocity Capital, Bogazici Ventures, Yapi Kredi Frwrd, Unlu and Co). hq_country is set to TR so the geography gate drops it as a foreign HQ rather than featuring a Turkish company as London. Public facts only; no contact data.",
+  "company_number": "16830373",
+  "hq_country": "TR"
+}

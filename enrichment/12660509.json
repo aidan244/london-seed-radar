@@ -1,0 +1,16 @@
+{
+  "_note": "Verified 2026-07-12 against Whering's live site (whering.co, /about, /careers), Companies House 12660509, and funding press (tech.eu, theindustry.fashion). The round is a $7m (about GBP5.2m) seed led by eBay Ventures and Google's AI Futures Fund. Public facts only; no contact data.",
+  "company_number": "12660509",
+  "one_liner": "Whering is a digital wardrobe app that lets people catalogue the clothes they already own, plan and style outfits from them, and shop more intentionally.",
+  "one_liner_source": "https://whering.co/about (verified 2026-07-12)",
+  "headcount_estimate": "11-25",
+  "headcount_source": "About page states a team of over 20 people, based in Farringdon, London (whering.co/about, verified 2026-07-12). Bucketed as 11-25.",
+  "founders": [
+    {
+      "name": "Bianca Rangecroft",
+      "role": "Founder and CEO",
+      "background": "Founder and CEO of Whering and a director since its incorporation on 10 June 2020; started the company to solve her own wardrobe-management problem and has led it to 10m users.",
+      "source_url": "https://whering.co/about"
+    }
+  ]
+}

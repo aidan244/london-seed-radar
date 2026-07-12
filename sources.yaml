@@ -151,10 +151,68 @@ leads:
     amount_gbp: 13400000
     company_number: "15323501"     # already enriched previously; kept in the pool across rebuilds
     source: UKTN
+  # Issue 2 batch (2026-07-13). Resolved and verified against the Companies
+  # House register 2026-07-12 from the Sunday pre-draft shortlist (PR #17).
+  # company_number pins the real entity; flags noted where the entity or
+  # geography needs a human editorial call before featuring.
+  - name: Xylo
+    stage: pre-seed
+    url: https://www.investegate.co.uk/announcement/rns/mindflair--mfai/uk-govtech-ai-business-xylo-raises-2-8-million/9647620
+    date: 2026-07-01
+    amount_gbp: 2800000
+    company_number: "16113693"     # XYLO AI LTD (buildxylo.ai), 107 Cheapside, London EC2V; AI planning govtech; Mindflair (MFAI) interest is indirect via Sure Valley Ventures
+    source: Investegate
+  - name: Kord
+    stage: series-a
+    url: https://www.uktech.news/fintech/kord-secures-6-4m-to-process-payments-for-regulated-industries-20260708
+    date: 2026-07-08
+    amount_gbp: 6400000
+    company_number: "12243866"     # CHECKBOARD LIMITED, Salisbury House, London EC2M, trades as Kord (B2B arm); the funded PARENT, confirmed 2026-07-12 (Guinness Ventures board seat, Articles adopted 2026-07-01, 2026 SH01s). Kord Pay (12613378) is only the FCA payments subsidiary; KORD OS/PLATFORM are dormant shells
+    source: UKTN
+  - name: Alchemab Therapeutics
+    stage: series-a
+    url: https://www.uktech.news/biotech/alchemab-therapeutics-extends-series-a-with-25m-investment-20260709
+    date: 2026-07-09
+    amount_gbp: 25000000
+    company_number: "12156844"     # ALCHEMAB THERAPEUTICS LTD, Kings Cross, London; FLAG: 2019 co, Series A EXTENSION (GBP109m cumulative), editorial stretch for a newly-funded briefing
+    source: UKTN
+  - name: Lucida AI
+    stage: seed
+    url: https://businesscloud.co.uk/news/speech-to-speech-ai-platform-lucida-ai-raises-5-3m/
+    date: 2026-06-30
+    amount_gbp: 5300000
+    company_number: "16830373"     # LUCIDA AI LTD, 124 City Road, London EC1V; DROPPED 2026-07-12 as foreign HQ (Istanbul-founded) via enrichment/16830373.json hq_country=TR; kept as a lead so the drop is recorded, not featured
+    source: BusinessCloud
+  - name: StirlingX
+    stage: series-a
+    url: https://www.uktech.news/defence-tech/stirlingx-raises-15m-to-scale-sovereign-data-intelligence-platform-20260702
+    date: 2026-07-02
+    amount_gbp: 15000000
+    company_number: "14111820"     # STIRLINGX LIMITED, 86-90 Paul Street, London EC2A; FLAG: latest SH01 06-05 predates the window, may false-drop on the filing-vs-press recency quirk
+    source: UKTN
+  - name: geoSurge
+    stage: seed
+    url: https://www.uktech.news/ai/ai-search-visibility-startup-geosurge-scores-9-4m-round-20260703
+    date: 2026-07-03
+    amount_gbp: 9400000
+    company_number: "16249592"     # GEOSURGE LIMITED, Great Portland Street, London W1W; AlbionVC-led; FLAG: same recency quirk as StirlingX (SH01 06-03)
+    source: UKTN
+  - name: Whering
+    stage: seed
+    url: https://tech.eu/2026/07/07/whering-lands-7m-as-digital-wardrobe-platform-reaches-10m-users/
+    date: 2026-07-07
+    amount_gbp: 5200000
+    company_number: "12660509"     # WHERING LTD, 396 St John Street, London EC1V; digital wardrobe app; $7m (~GBP5.2m) seed led by eBay Ventures and Google AI Futures; RSS-discovered, added as a lead for rebuild durability
+    source: Tech.eu
   # Held for human sign-off, deliberately NOT added (see this session's notes):
   #   Zaro (zaro.ai, London, real, but CH entity not identifiable from the register)
   #   Flagright (raise belongs to the distributed YC parent; UK Ltd is a GBP1 subsidiary)
   #   Airspeed (3 days outside the recency window)
+  #   Stoa (2026-07-06 pre-seed): two entities, STOA FINANCIAL TECHNOLOGIES INC
+  #     (Delaware, UK branch BR028334) and STOA AI LIMITED (17205874, no SH01);
+  #     the Flagright pattern, confirm the funded UK entity before featuring.
+  #   Build (2026-07-01 seed): dual London/NY HQ, "British and U.S.-based"; the
+  #     UK registered entity is not resolvable from the name alone, needs a human.
 
 # Public accelerator/investor portfolio pages for the candidate-mapping
 # tool (python -m radar.accelerators). It writes a reviewable list to
@@ -185,6 +243,12 @@ website_overrides:
   record os: https://www.record-os.com
   # Verified live 2026-06-29 (Bristol UK; Clay + press confirm the entity):
   astral systems: https://astralsystems.com
+  # Issue 2 featured set, verified live 2026-07-12 (HTTP 200, page names the company):
+  stirlingx: https://stirlingx.io
+  geosurge: https://geosurge.ai
+  kord: https://kord.com
+  xylo: https://buildxylo.ai
+  whering: https://whering.co
 
 # Manual ATS board mappings for live mode, same key as above.
 ats_overrides: {}

@@ -1,0 +1,16 @@
+{
+  "_note": "Verified 2026-07-12: the GBP6.4m Series A was raised by CHECKBOARD LIMITED (12243866), which trades as Kord for its B2B arm while its consumer app keeps the Checkboard name. Confirmed via press (UKTN, fintech.global, fintech.garden) and Companies House (a Guinness Ventures board seat, a Deepbridge NED corporate director, new Articles of Association adopted 2026-07-01, and 2026 SH01 allotments, most recent 2026-06-16). The FCA-regulated payments arm is the subsidiary Kord Pay Limited (12613378, formerly Ileero Pay Limited); KORD OS (16927109) and KORD PLATFORM (16971476) are dormant shells. kord.com returns 403 to automated fetches, so the one-liner is grounded in live press. Public facts only; no contact data.",
+  "company_number": "12243866",
+  "one_liner": "Kord is an FCA-regulated platform that combines identity verification, AML and compliance checks, client onboarding and e-signing, and payment processing into a single system for regulated industries such as estate agents, law firms, and conveyancers.",
+  "one_liner_source": "https://www.uktech.news/fintech/kord-secures-6-4m-to-process-payments-for-regulated-industries-20260708 (verified 2026-07-12)",
+  "headcount_estimate": "26-50",
+  "headcount_source": "Estimate only; no public headcount figure found. Inferred from Series A stage, revenue reported growing from about GBP600k to GBP4m in a year, 100+ paying customers, and two product lines. Treat as an estimate, not a confirmed number.",
+  "founders": [
+    {
+      "name": "James Owusu",
+      "role": "Founder and CEO",
+      "background": "Founded the company as Checkboard in 2019, after a slow and costly personal property transaction; its B2B arm now trades as Kord.",
+      "source_url": "https://www.uktech.news/fintech/kord-secures-6-4m-to-process-payments-for-regulated-industries-20260708"
+    }
+  ]
+}
