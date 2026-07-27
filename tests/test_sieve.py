@@ -10,7 +10,7 @@ from pathlib import Path
 
 import yaml
 
-from radar import config, sieve
+from radar import config, db, sieve
 from radar.sieve import evaluate_gates
 
 AS_OF = datetime.date(2026, 6, 10)
@@ -262,6 +262,58 @@ class TestResolveWebsiteLiveMode(unittest.TestCase):
 
         self.assertEqual(url, "https://row.example.com")
         self.assertTrue(reachable)
+
+
+class TestSieveDomainCollision(unittest.TestCase):
+    """Two companies resolving to one domain is a name/entity collision; the
+    sieve drops the second with a reason rather than aborting the whole run on
+    the UNIQUE(domain) constraint (the Humanoid duplicate crash)."""
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp()
+        self.addCleanup(shutil.rmtree, self.tmp, ignore_errors=True)
+        self.orig_sources = config.SOURCES_PATH
+        self.addCleanup(setattr, config, "SOURCES_PATH", self.orig_sources)
+        self.orig_check = sieve._check_website_live
+        self.addCleanup(setattr, sieve, "_check_website_live", self.orig_check)
+        sieve._check_website_live = lambda url: True
+        path = Path(self.tmp) / "sources.yaml"
+        path.write_text(yaml.safe_dump(
+            {"lookback_days": 14,
+             "website_overrides": {"newco": "https://collide.example"}}))
+        config.SOURCES_PATH = path
+
+    def test_domain_clash_drops_second_not_crashes(self):
+        dbpath = str(Path(self.tmp) / "radar.db")
+        conn = db.connect(dbpath)
+        db.init_db(conn)
+        # Company A already holds the domain the new company will resolve to.
+        a = db.upsert_company(conn, "Existing Co", company_number="111",
+                              location_text="London")
+        conn.execute("UPDATE companies SET domain = ? WHERE id = ?",
+                     ("collide.example", a))
+        # Company B is a fresh discovered London seed whose override points at
+        # the same domain.
+        b = db.upsert_company(conn, "Newco", company_number="222",
+                              location_text="London, EC1V 2NX")
+        ev = conn.execute(
+            "INSERT INTO funding_events (company_id, event_date, stage, status,"
+            " source_mode) VALUES (?,?,?,?,?)",
+            (b, "2026-07-20", "seed", "discovered", "live")).lastrowid
+        db.add_evidence(conn, ev, "press", "UKTN", "https://x.example",
+                        title="Newco raises", snippet="a London seed round",
+                        published_date="2026-07-20")
+        conn.commit()
+        conn.close()
+
+        rc = sieve.main(["--db", dbpath, "--as-of", "2026-07-26"])
+        self.assertEqual(rc, 0)  # did not crash on UNIQUE(domain)
+
+        conn = db.connect(dbpath)
+        row = conn.execute("SELECT status, drop_reason FROM funding_events "
+                           "WHERE id = ?", (ev,)).fetchone()
+        self.assertEqual(row["status"], "dropped")
+        self.assertIn("already claimed", row["drop_reason"])
 
 
 if __name__ == "__main__":

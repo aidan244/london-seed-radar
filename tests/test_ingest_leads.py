@@ -82,5 +82,90 @@ class TestIngestLeads(unittest.TestCase):
         self.assertIn("London", row["location_text"])      # office attached
 
 
+class TestEntityResolution(unittest.TestCase):
+    """A brand a lead pins by company_number must resolve only to that entity,
+    never to a same-name company a naive search matched. The Humanoid crash:
+    an unrelated active HUMANOID LTD (14835233) got created beside the funded
+    SKL ROBOTICS LTD (15702488) and both then claimed thehumanoid.ai, aborting
+    the sieve on UNIQUE(domain)."""
+
+    WRONG = {"company_name": "HUMANOID LTD", "date_of_creation": "2021-01-01",
+             "registered_office_address": {"address_line_1": "2 Foulden Terrace",
+                                           "locality": "London",
+                                           "postal_code": "N16 7UT"}}
+    RIGHT = {"company_name": "SKL ROBOTICS LTD", "date_of_creation": "2024-05-03",
+             "registered_office_address": {"address_line_1": "4-8 Ludgate Circus",
+                                           "locality": "London",
+                                           "postal_code": "EC4M 7LF"}}
+    ITEM = {"company_name": "Humanoid", "stage": "series-a",
+            "url": "https://thehumanoid.ai", "title": "Humanoid raises",
+            "summary": "London robotics", "published_date": "2026-07-21",
+            "source_name": "Forbes"}
+
+    def _number_after_ingest(self, pinned):
+        conn = db.connect(":memory:")
+        db.init_db(conn)
+        profiles = {"14835233": self.WRONG, "15702488": self.RIGHT}
+        ingest.ingest_press(conn, [dict(self.ITEM)], profiles, "live", pinned)
+        conn.commit()
+        return [r["company_number"]
+                for r in conn.execute("SELECT company_number FROM companies")]
+
+    def test_pinned_brand_routes_name_only_item_to_pinned_entity(self):
+        # With the brand pinned, the name-only press item attaches to the
+        # funded entity, not the same-name company the register would match.
+        self.assertEqual(self._number_after_ingest({"humanoid": "15702488"}),
+                         ["15702488"])
+
+    def test_without_pin_naive_match_takes_wrong_entity(self):
+        # Documents the pre-fix behaviour the pin exists to prevent.
+        self.assertEqual(self._number_after_ingest({}), ["14835233"])
+
+
+class TestLiveProfileResolution(unittest.TestCase):
+    class FakeClient:
+        def __init__(self, hits, profiles):
+            self._hits, self._profiles = hits, profiles
+            self.searched, self.fetched = [], []
+
+        def search_companies(self, q, items_per_page=5):
+            self.searched.append(q)
+            return self._hits.get(q, [])
+
+        def get_profile(self, number):
+            self.fetched.append(number)
+            return self._profiles[number]
+
+    def test_pinned_brand_is_not_name_searched(self):
+        # A generic pinned brand is resolved via its number only; the name
+        # search that would surface an unrelated same-name company is skipped.
+        client = self.FakeClient(
+            hits={"Humanoid": [{"title": "HUMANOID LTD",
+                                "company_number": "14835233",
+                                "company_status": "active"}]},
+            profiles={"15702488": {"company_name": "SKL ROBOTICS LTD",
+                                   "company_number": "15702488"},
+                      "14835233": {"company_name": "HUMANOID LTD",
+                                   "company_number": "14835233"}})
+        profiles = ingest._live_profiles_for_items(
+            client, [{"company_name": "Humanoid"}], watchlist=["15702488"],
+            pinned_brands={"humanoid": "15702488"})
+        self.assertIn("15702488", profiles)         # fetched via its number
+        self.assertNotIn("14835233", profiles)      # wrong entity never entered
+        self.assertNotIn("Humanoid", client.searched)  # search skipped entirely
+
+    def test_dissolved_same_name_is_skipped(self):
+        # A dissolved same-name shell is never resolved as a current raise
+        # (the Kord and Polysense shells): only an active match is taken.
+        client = self.FakeClient(
+            hits={"Kord": [{"title": "KORD LTD", "company_number": "13666141",
+                            "company_status": "dissolved"}]},
+            profiles={})
+        profiles = ingest._live_profiles_for_items(
+            client, [{"company_name": "Kord"}], watchlist=[], pinned_brands={})
+        self.assertEqual(profiles, {})              # dissolved hit not fetched
+        self.assertEqual(client.fetched, [])
+
+
 if __name__ == "__main__":
     unittest.main()

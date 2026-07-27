@@ -194,13 +194,29 @@ def main(argv=None):
         conn.execute("UPDATE funding_events SET gates_json = ? WHERE id = ?",
                      (json.dumps(gates), event["id"]))
         if ok:
-            # The reality gate verified the website; persist it.
+            # The reality gate verified the website; persist it. If another
+            # company already holds this domain, the two are a name/entity
+            # collision (a same-name company grabbed the brand's site); drop
+            # this one with a reason instead of aborting the whole run on the
+            # UNIQUE(domain) constraint.
             website, _ = resolve_website(company, args.fixtures)
+            dom = util.domain_of(website) if website else None
+            clash = conn.execute(
+                "SELECT id FROM companies WHERE domain = ? AND id != ?",
+                (dom, company["id"])).fetchone() if dom else None
+            if clash:
+                reason = ("reality: domain %s already claimed by company id %d "
+                          "(likely a name collision; verify the entity)"
+                          % (dom, clash["id"]))
+                print("  [DROP] %-28s %s" % (event["company_name"], reason))
+                db.advance_status(conn, event["id"], "dropped", reason)
+                dropped += 1
+                continue
             if website:
                 conn.execute(
                     "UPDATE companies SET website = ?, website_status = 'live', "
                     "domain = COALESCE(domain, ?) WHERE id = ?",
-                    (website, util.domain_of(website), company["id"]))
+                    (website, dom, company["id"]))
             db.advance_status(conn, event["id"], "sieved")
             passed += 1
         else:

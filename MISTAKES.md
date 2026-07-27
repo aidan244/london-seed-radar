@@ -238,3 +238,35 @@ Format:
   evidence rows hold a truer value. The nominal-SH01-predates-announcement
   pattern is common (Geordie AI, 01Health, Monument, now StirlingX and
   geoSurge); expect it every cycle.
+
+## 2026-07-26: a generic-name lead spawned a wrong-entity twin that crashed the sieve on UNIQUE(domain)
+- What happened: building issue 3, ingest created TWO "Humanoid" company
+  rows, the funded SKL ROBOTICS LTD (15702488, pinned by the lead's
+  company_number) and an unrelated active HUMANOID LTD (14835233, a London
+  video firm the generic name matched). Both normalised to "humanoid", so the
+  website_override "humanoid: thehumanoid.ai" applied to both; when the sieve
+  wrote companies.domain for the second, it raised sqlite3.IntegrityError:
+  UNIQUE constraint failed: companies.domain and aborted the whole run before
+  persisting any of the eight passing companies.
+- Why: two gaps compounded. (1) _live_profiles_for_items name-searches every
+  press item and fetched the wrong same-name profile even though a lead had
+  already pinned the brand to the correct number; ingest_filings then
+  materialised it (a bare name search also accepted dissolved shells, the
+  known Kord/Polysense weakness the handover flagged). (2) The sieve's domain
+  write had no collision handling, so one UNIQUE(domain) clash crashed the
+  entire sieve instead of dropping the single offending company.
+- Fix: (1) ingest builds a pinned-brand map from leads' company_numbers;
+  _live_profiles_for_items skips the name search for a pinned brand and
+  accepts only active same-name companies, and ingest_press routes a
+  name-only item of a pinned brand to the pinned number (radar/ingest.py).
+  (2) the sieve pre-checks whether another company already holds the resolved
+  domain and drops that event with a recorded reason instead of crashing
+  (radar/sieve.py). Deleted the wrong 14835233 row from radar.db. Five
+  regression tests (pinned-brand routing, name-search skip, dissolved skip,
+  domain-clash drops not crashes); suite 332 -> 337.
+- Prevention: a brand a human pinned by company_number is authoritative for
+  every same-named item; never let a name search introduce a second entity
+  for it, and never resolve a dissolved company as a current raise. Any
+  UNIQUE-constrained write reached inside a batch loop must degrade to
+  dropping the one row, never abort the batch (the same lesson as the
+  2026-07-03 "one bad record must not abort the run" hardening).

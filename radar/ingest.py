@@ -116,16 +116,21 @@ def _match_company_number(item_name, profiles):
     return None
 
 
-def ingest_press(conn, items, profiles, source_mode):
+def ingest_press(conn, items, profiles, source_mode, pinned_brands=None):
+    pinned_brands = pinned_brands or {}
     created = updated = 0
     for item in items:
         if not item.get("published_date"):
             continue
         # A lead's human-verified company_number wins over a name search,
         # so a brand (Conduct) resolves to its real entity (CONDUCT AI LTD)
-        # rather than a same-name company at the wrong UK address.
-        number = item.get("company_number") or _match_company_number(
-            item["company_name"], profiles)
+        # rather than a same-name company at the wrong UK address. A brand
+        # another lead pinned wins too, so a name-only press item that shares
+        # it (an RSS mention of Humanoid) merges into the pinned entity rather
+        # than resolving an unrelated same-name company by search.
+        number = (item.get("company_number")
+                  or pinned_brands.get(db.normalize_name(item["company_name"]))
+                  or _match_company_number(item["company_name"], profiles))
         profile = profiles.get(number)
         company_id = db.upsert_company(
             conn, item["company_name"], company_number=number,
@@ -157,8 +162,17 @@ def ingest_press(conn, items, profiles, source_mode):
     return created, updated
 
 
-def _live_profiles_for_items(client, items, watchlist):
-    """Resolve press candidates and watchlist numbers to CH profiles."""
+def _live_profiles_for_items(client, items, watchlist, pinned_brands=None):
+    """Resolve press candidates and watchlist numbers to CH profiles.
+
+    A brand a lead pins with an explicit company_number is resolved only
+    through that number (fetched via the watchlist below); the per-item name
+    search is skipped for it, so a same-name company never sneaks a second,
+    wrong-entity profile in beside the pinned one (the Humanoid collision: a
+    generic name matched an unrelated active company). The name search also
+    accepts active companies only, so a dissolved same-name shell is never
+    resolved as a current raise (the Kord and Polysense shells)."""
+    pinned_brands = pinned_brands or {}
     profiles = {}
     for number in watchlist:
         try:
@@ -168,9 +182,12 @@ def _live_profiles_for_items(client, items, watchlist):
             print("  warn: watchlist %s lookup failed: %s" % (number, exc))
     for item in items:
         norm = db.normalize_name(item["company_name"])
+        if norm in pinned_brands:
+            continue  # already fetched via its pinned company_number
         try:
             for hit in client.search_companies(item["company_name"]):
-                if db.normalize_name(hit.get("title", "")) == norm:
+                if (db.normalize_name(hit.get("title", "")) == norm
+                        and hit.get("company_status") == "active"):
                     profiles[hit["company_number"]] = client.get_profile(
                         hit["company_number"])
                     break
@@ -193,6 +210,13 @@ def main(argv=None):
     # Scout shortlists and manual leads join the press candidates as
     # ordinary items; the four gates verify them locally like any other.
     lead_items = leads.load_leads(config.ROOT, sources)
+
+    # Brands a lead pins with an explicit, human-verified company_number.
+    # Only leads carry a number, so these are the brands that must resolve to
+    # that exact entity: a same-name company (the unrelated HUMANOID LTD that
+    # a generic RSS mention matched) must never enter beside the pinned one.
+    pinned_brands = {db.normalize_name(i["company_name"]): str(i["company_number"])
+                     for i in lead_items if i.get("company_number")}
 
     if args.fixtures:
         profiles = ch.fixture_profiles()
@@ -222,12 +246,13 @@ def main(argv=None):
             + [i["company_number"] for i in items if i.get("company_number")]))
         print("Resolving %d candidates against Companies House ..."
               % len(items))
-        profiles = _live_profiles_for_items(client, items, watchlist)
+        profiles = _live_profiles_for_items(client, items, watchlist,
+                                            pinned_brands)
         filings_for = client.get_capital_filings
         mode = "live"
 
     fc, fu, filers = ingest_filings(conn, profiles, filings_for, as_of, mode)
-    pc, pu = ingest_press(conn, items, profiles, mode)
+    pc, pu = ingest_press(conn, items, profiles, mode, pinned_brands)
     conn.commit()
 
     total = conn.execute(
