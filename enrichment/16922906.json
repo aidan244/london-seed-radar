@@ -1,0 +1,34 @@
+{
+  "_note": "Curated live-mode enrichment; public facts only, no contact data. Verified 2026-07-27. Companies House register (checked 2026-07-27): ARRAKIS TECHNOLOGIES LIMITED (16922906), incorporated 19 December 2025, status active, SIC 62090; the sole active director is Rafael Louis Fernandez-Quintanilla ('Rafael Quintanilla'), appointed 19 December 2025. Per the caller the CEO is also the sole person with significant control, so the UK company is founder-owned with no corporate parent on the register. Product and sectors confirmed live on arrakis.tech and arrakistechnologies.ai; funding and founders confirmed against Fortune, BusinessCloud, The Next Web, and the company's BusinessWire stealth-exit release (all fetched live 2026-07-27; TechFundingNews and finsmes returned HTTP 403 to automated fetches and were corroborated via the other outlets). FUNDING IS PRESS-REPORTED ONLY: the reported $38m total (a $30m Series A led by Blossom Capital plus a prior $7.5m Accel seed, $140m post-money) has no matching Companies House filing; the register shows zero capital filings and no SH01 as of 2026-07-27, so amount and stage rest on press evidence, not a statement of capital. POSSIBLE US TOPCO: the site Terms are governed by US law and some public profiles use 'Arrakis Inc.', so a US (for example Delaware) parent may sit above the UK entity, though none appears on the UK register today. The registered office (B1 Vantage Park, Old Gloucester Road, Hambrook, Bristol, BS16 1GW) is a company-formation agent address, not an operating site; press places the team in London and Paris, at about 15 staff. FOUNDER NOTE: the company's own release names four co-founders and lists their prior employers collectively as alumni of Palantir, Delivery Hero, Revolut, Datadog, and ASML, without mapping one company to each person; the per-founder Palantir and Delivery Hero notes below are The Next Web's reporting, not the company's own attribution. Accel's investment announcement additionally names a fifth co-founder, Chester Thompson, whom the company release and most press omit; left out of the founders list below pending clearer public confirmation.",
+  "company_number": "16922906",
+  "one_liner": "Arrakis is an industrial AI company whose platform deploys AI agents into mission-critical operations for enterprises in sectors such as aerospace and defense, energy, engineering and construction, shipping, and telecommunications, without requiring them to replace their existing systems.",
+  "one_liner_source": "https://arrakis.tech (verified 2026-07-27)",
+  "headcount_estimate": "11-25",
+  "headcount_source": "Fortune and The Next Web report approximately 15 employees as of July 2026, with the company planning to triple headcount; the UK company was incorporated 19 December 2025, so it is about seven months old. Treat as a reported figure at the low end of this bucket.",
+  "founders": [
+    {
+      "name": "Rafael Quintanilla",
+      "role": "Co-founder and CEO",
+      "background": "Registered at Companies House as Rafael Louis Fernandez-Quintanilla, the UK company's sole director since incorporation on 19 December 2025; a former vice president at Accel, where he spent about a year developing the firm's investment thesis on defense and industrial resilience before leaving to found Arrakis.",
+      "source_url": "https://fortune.com/2026/07/22/arrakis-a-startup-betting-ais-biggest-payoff-is-in-industrial-sectors-not-office-work-emerges-from-stealth-with-38-million-in-venture-funding/"
+    },
+    {
+      "name": "Haroun Beltaifa",
+      "role": "Co-founder",
+      "background": "One of Arrakis's four named co-founders; The Next Web reports he previously worked at Palantir.",
+      "source_url": "https://thenextweb.com/news/arrakis-ai-startup-38-million-stealth-industrial"
+    },
+    {
+      "name": "Romain Fouilland",
+      "role": "Co-founder",
+      "background": "One of Arrakis's four named co-founders; The Next Web reports he previously worked at Palantir.",
+      "source_url": "https://thenextweb.com/news/arrakis-ai-startup-38-million-stealth-industrial"
+    },
+    {
+      "name": "Mikhail Galkov",
+      "role": "Co-founder",
+      "background": "One of Arrakis's four named co-founders; The Next Web reports he previously worked at Delivery Hero.",
+      "source_url": "https://thenextweb.com/news/arrakis-ai-startup-38-million-stealth-industrial"
+    }
+  ]
+}

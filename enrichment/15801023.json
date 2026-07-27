@@ -1,0 +1,16 @@
+{
+  "_note": "Verified 2026-07-27 against the live prolo.io homepage and /team page, UKTN and Tech.eu plus Pulse2 press on the 2026-07-14 GBP4.2m seed led by Triple Point Ventures, and Companies House 15801023. Companies House lists two directors: James David Morris-Manuel (appointed 2024-06-25) and Simon Bloom (appointed 2024-09-17). Morris-Manuel is founder and CEO per the site and press; his Virtual Walkthrough and Matterport background is confirmed on Pulse2. Simon Bloom is not on the public team page and is not described as a founder in press, so he is omitted from founders here. Refinement: the live /team page lists 14 named team members, so headcount is set to 11-25, not the 1-10 initially assumed. Public facts only; no contact data (the founder email shown on the site is deliberately excluded).",
+  "company_number": "15801023",
+  "one_liner": "Prolo is an AI-powered procurement platform for small and mid-sized construction firms, helping builders source, compare, and buy materials, equipment, and hire from a nationwide network of more than 185 supplier brands at competitive trade rates.",
+  "one_liner_source": "https://prolo.io (verified 2026-07-27)",
+  "headcount_estimate": "11-25",
+  "headcount_source": "No headcount figure published in the funding press; the live public team page (https://prolo.io/team) lists 14 named team members, so bucketed as 11-25. Verified 2026-07-27.",
+  "founders": [
+    {
+      "name": "James Morris-Manuel",
+      "role": "Founder and CEO",
+      "background": "Previously founded Virtual Walkthrough, scaled it into a European market leader and led its acquisition by spatial data company Matterport, then served as EMEA Managing Director at Matterport, establishing its London regional headquarters; registered at Companies House as James David Morris-Manuel, a director since 25 June 2024.",
+      "source_url": "https://pulse2.com/prolo-raises-4-2-million-seed-to-bring-ai-powered-procurement-to-sme-construction-contractors/"
+    }
+  ]
+}

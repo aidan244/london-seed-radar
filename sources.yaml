@@ -213,6 +213,109 @@ leads:
   #     the Flagright pattern, confirm the funded UK entity before featuring.
   #   Build (2026-07-01 seed): dual London/NY HQ, "British and U.S.-based"; the
   #     UK registered entity is not resolvable from the name alone, needs a human.
+  # Issue 3 batch (2026-07-27). Verified live 2026-07-26 against the Companies
+  # House public register (director/founder cross-checks) plus each company's own
+  # site and a content-verified press article. Sourced from the Sunday pre-draft
+  # (PR #22) and scout reports PR #18/#19/#21, which the WebSearch-only pre-draft
+  # could not see. company_number pins the real entity; flags note where
+  # geography, stage, or recency need a human editorial call.
+  #
+  # -- London, in window (2026-07-13..2026-07-27), feature-eligible (the five) --
+  - name: Valarian
+    stage: series-a
+    url: https://www.uktech.news/ai/ai-infrastructure-firm-valarian-raises-37-3m-20260715
+    date: 2026-07-15
+    amount_gbp: 37300000
+    company_number: "12295525"     # VALARIAN TECHNOLOGIES LIMITED, 175 High Holborn, London WC1V; sovereign AI infra (ACRA); NEA-led $50m/~GBP37.3m Series A; directors Max Buchan + Josh McLaughlin match the press founders; SH01 2026-07-03 corroborates; largest round in Radar history
+    source: UKTN
+  - name: Meticulous
+    stage: series-a
+    url: https://www.softwaretestingmagazine.com/news/meticulous-ai-automated-frontend-testing-platform-raises-15-million/
+    date: 2026-07-15
+    amount_gbp: 11000000
+    company_number: "14177185"     # METICULOUS AI LIMITED, 5 New Street Square, London EC4A; AI frontend/UI test automation; $15m/~GBP11m Series A led by Chemistry + Menlo; director Gabriel Spencer-Harper matches CEO; live Ashby board (8 roles, 5 London); FLAG: YC co, likely US Delaware parent, but London HQ and entity
+    source: Software Testing Magazine
+  - name: Prolo
+    stage: seed
+    url: https://www.uktech.news/ai/prolo-raises-4-2m-to-boost-procurement-for-sme-construction-firms-20260714
+    date: 2026-07-14
+    amount_gbp: 4200000
+    company_number: "15801023"     # PROLO LTD, 86-90 Paul Street, London EC2A (op: 119 Marylebone Rd); AI procurement for SME construction; GBP4.2m seed led by Triple Point Ventures; prolo.io footer self-declares this CH number; director James Morris-Manuel matches CEO
+    source: UKTN
+  - name: Tyred
+    stage: seed
+    url: https://bikebiz.com/tyred-raises-2-5-million-to-build-an-ai-powered-ownership-platform-for-cycling/
+    date: 2026-07-16
+    amount_gbp: 2500000
+    company_number: "14293054"     # TYRED LTD, 1-4 Argyll Street, London W1F; AI bike-ownership/maintenance, services Lime's London e-bike fleet; GBP2.5m led by Raw Ventures + Ada Ventures; director Lancelot Hoare matches CEO; FLAG: press says "GBP2.5m round," seed inferred from the round profile
+    source: BikeBiz
+  - name: Ossprey
+    stage: pre-seed
+    url: https://www.uktech.news/cybersecurity/cyber-startup-ossprey-raises-2m-to-tackle-ai-supply-chain-threats-20260722
+    date: 2026-07-22
+    amount_gbp: 2000000
+    company_number: "15950199"     # OSSPREY LTD, 86-90 Paul Street, London EC2A; software supply-chain security; $2.65m/~GBP2m pre-seed led by Episode 1 Ventures (+ Osney, Octopus); founders Nate Dunning + David Read
+    source: UKTN
+  - name: Arrakis
+    stage: series-a
+    url: https://businesscloud.co.uk/news/ex-accel-investor-raises-28m-to-build-industrial-ai-company/
+    date: 2026-07-22
+    amount_gbp: 28000000
+    company_number: "16922906"     # ARRAKIS TECHNOLOGIES LIMITED, a domestic England-Wales company (reg office B1 Vantage Park, Bristol is a formation-agent address; real HQ is London and Paris per press and arrakis.tech). Industrial AI "operating system"; $38m total (~GBP28m per BusinessCloud): a $30m Series A led by Blossom Capital plus a prior $7.5m Accel seed, $140m post. Sole director/PSC is CEO Rafael Fernandez-Quintanilla (the compound surname is why a plain "Quintanilla" search misses it). CAVEATS from the 2026-07-26 dig: no SH01 yet (press-reported funding, likely SAFE/ASA), and a residual US-topco risk (US-law ToS, "Arrakis Inc." on LinkedIn) the register cannot yet exclude. Location_text corrected to London post-ingest; feature funding as press-reported per the data-honesty rules
+    source: BusinessCloud
+  #
+  # -- Rest of UK (passes geography as UK, not London; Aidan's call vs 5-London) --
+  - name: BeCertain
+    stage: pre-seed
+    url: https://www.surrey.ac.uk/news/surrey-and-kings-ai-spinout-raises-ps17m-tackle-above-50-cent-dental-diagnostic-error-rates
+    date: 2026-07-16
+    amount_gbp: 1700000
+    company_number: "15853880"     # BECERTAIN LTD, 14 Culworth House, Guildford GU1 (Surrey, NOT London despite the KCL framing); clinical AI for dental diagnostics; GBP1.7m pre-seed led by Sure Valley Ventures + Innovate UK; KCL/Surrey spinout
+    source: University of Surrey
+  - name: Saible
+    stage: seed
+    url: https://www.uktech.news/fintech/construction-payments-fintech-saible-raises-2-9m-20260715
+    date: 2026-07-15
+    amount_gbp: 2900000
+    company_number: "14949907"     # SAIBLE LTD, reg office 71-75 Shelton St London (a formation address) but press says BIRMINGHAM-based; construction-payment escrow fintech; GBP2.9m from unspecified angels (the pre-draft's Index/LocalGlobe list was wrong); founder Jarvey Moss; FLAG: rest-of-UK plus angel stage
+    source: UKTN
+  #
+  # -- London but MARGINAL: editorial stretch (very large, growth in substance) --
+  - name: Humanoid
+    stage: series-a
+    url: https://www.forbes.com/sites/johnkoetsier/2026/07/21/humanoid-raises-152-million-at-135-billion-valuation-europes-newest-robot-unicorn/
+    date: 2026-07-21
+    amount_gbp: 114000000
+    company_number: "15702488"     # SKL ROBOTICS LTD (t/a Humanoid), 4-8 Ludgate Circus, London EC4M; humanoid robotics; $152m/~GBP114m "Series A" at a $1.35bn unicorn valuation, led by Prime Movers Lab; London HQ is real (satellites Boston/Vancouver/San Diego); FLAG: 10-15x the briefing's normal size, growth-stage in substance; feature only as a labeled "notable raise," if at all
+    source: Forbes
+  #
+  # -- Genuine London raises that MISSED the window (announced before 07-13, i.e.
+  #    inside issue 2's window); added so the sieve records the recency drop --
+  - name: Axle Energy
+    stage: series-a
+    url: https://www.uktech.news/energy/virtual-power-plant-firm-axle-energy-raises-20m-20260708
+    date: 2026-07-10
+    amount_gbp: 20000000
+    company_number: "14633671"     # AXLE ENERGY LIMITED, 128 City Road, London EC1V; virtual power plant / grid flexibility; $25m/~GBP20m Series A led by Energize Capital (+ Accel, Picus, Eka); announced 07-08/07-10, BEFORE the 07-13 window; drops on recency
+    source: UKTN
+  - name: Marker
+    stage: seed
+    url: https://tech.eu/2026/07/09/ai-writing-startup-co-founded-by-deepmind-creative-lead-raises-13m-seed-investment/
+    date: 2026-07-09
+    amount_gbp: 10000000
+    company_number: "16291760"     # LETTER ASSEMBLY LTD (t/a Marker), 5-6 Charlotte Road, London EC2A; AI word processor for writers; $13m/~GBP10m seed led by Index Ventures + LocalGlobe; founders Jon Steinback (ex-DeepMind) + Ryan Bowman; announced 07-09, BEFORE the 07-13 window; drops on recency
+    source: Tech.eu
+  #
+  # Held for human sign-off, NOT added (no resolvable/featurable UK entity):
+  #   Velocity (velocity.xyz, Series A $38m/~GBP29m, London per press): no UK
+  #     Companies House entity resolvable by name; US/offshore investor base
+  #     (Coinbase, Ripple, Capital One, QED); the Flagright pattern, the raise
+  #     likely sits in a US/offshore parent. Needs a human to find the UK entity.
+  #   Arrakis: RESOLVED 2026-07-26 to ARRAKIS TECHNOLOGIES LIMITED (16922906,
+  #     a real domestic UK company, founder-owned), now added as a lead above
+  #     with its caveats; NOT French (the only Paris "Arrakis" is a 2019 law firm).
+  #   Worldmodeldata (Cambridge, GBP7m seed) and a Coventry GBP4.65m seed: rest of
+  #     UK, from scout PR #19; not verified in depth this session.
 
 # Public accelerator/investor portfolio pages for the candidate-mapping
 # tool (python -m radar.accelerators). It writes a reviewable list to
@@ -249,6 +352,17 @@ website_overrides:
   kord: https://kord.com
   xylo: https://buildxylo.ai
   whering: https://whering.co
+  # Issue 3 set, verified live 2026-07-26 (HTTP 200, page names the company):
+  valarian: https://valarian.com
+  meticulous: https://www.meticulous.ai
+  prolo: https://prolo.io
+  tyred: https://tyred.io
+  ossprey: https://ossprey.com
+  becertain: https://becertain.ai
+  saible: https://saible.co.uk
+  humanoid: https://thehumanoid.ai
+  marker: https://marker.page
+  arrakis: https://arrakis.tech
 
 # Manual ATS board mappings for live mode, same key as above.
 ats_overrides: {}

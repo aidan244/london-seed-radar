@@ -1,0 +1,22 @@
+{
+  "_note": "Verified 2026-07-27: founders confirmed against Companies House officers for VALARIAN TECHNOLOGIES LIMITED (12295525), which lists Maximilian Alastair Buchan as a director from incorporation on 2019-11-04 and Joshua McLaughlin as a director from 2023-10-31, and against the live team page at valarian.com/about. The one-liner and the ACRA product were verified on valarian.com and corroborated by the Series A press: NEA's investment post and TheNextWeb both describe a $50m Series A led by NEA (about GBP37.3m, roughly $70m raised to date), NEA's first defence and dual-use investment in Europe. Max Buchan's CoinShares background is from NEA's post; Josh McLaughlin's US Army and Palantir background is from valarian.com/about. Nick Trim (chairman) and later directors are on the register but are not founders and are not featured here. Public facts only; no contact data.",
+  "company_number": "12295525",
+  "one_liner": "Valarian builds sovereign infrastructure, delivered as a hardened Kubernetes control layer called ACRA, that lets governments, defence, and regulated enterprises run high-consequence AI and other sensitive workloads while keeping control over where their data lives and who can access it.",
+  "one_liner_source": "https://valarian.com (verified 2026-07-27)",
+  "headcount_estimate": "26-50",
+  "headcount_source": "Press reported about 31 staff in London around the Series A, 2026-07; consistent with the 26-50 bucket and the leadership team named on valarian.com/about. The 31 figure is press-reported and was not independently re-verified in this pass.",
+  "founders": [
+    {
+      "name": "Maximilian (Max) Buchan",
+      "role": "Co-founder and CEO",
+      "background": "An early employee at digital asset manager CoinShares, where he helped launch one of the first publicly listed bitcoin exchange-traded products, before founding Valarian.",
+      "source_url": "https://www.nea.com/blog/our-investment-in-valarian-sovereign-infrastructure-for-the-free-world"
+    },
+    {
+      "name": "Joshua (Josh) McLaughlin",
+      "role": "Co-founder and COO",
+      "background": "A retired US Army officer and Ranger who previously led new market expansion at Palantir before co-founding Valarian.",
+      "source_url": "https://valarian.com/about"
+    }
+  ]
+}

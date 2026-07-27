@@ -1,0 +1,22 @@
+{
+  "_note": "Verified 2026-07-27. Companies House 14177185 confirms Gabriel Spencer-Harper as the sole director (appointed 2022-06-16; corporate secretary Taylor Wessing Secretaries Limited). Product one-liner from the live site meticulous.ai and its /blog/series-a. Gabriel's CEO and co-founder role and his Dropbox and Opendoor background are from the company's own author page (meticulous.ai/author/gabriel-spencer-harper). Quentin Spencer-Harper's co-founder status, his decade leading frontend engineering on Palantir's Foundry, and the fact that the two are brothers are from press (Software Testing Magazine, Vestbee, Tech Funding News, all 2026-07); Quentin is not on the Companies House register, and his CTO role is corroborated by the company's Series A post, which carries his byline and refers to 'our CTO (formerly lead of Palantir's main engineering group),' matching his press-confirmed Palantir background, while Gabriel is separately confirmed as CEO. The raise, a $15m Series A led by Chemistry with Menlo Ventures announced 2026-07-15 on the company blog, lives on the funding event and is not restated as a field here. Headcount is a bucketed estimate only. Y Combinator company (Summer 2021), London. Public facts only; no contact data.",
+  "company_number": "14177185",
+  "one_liner": "Meticulous makes an AI testing tool that records real usage of a web app and automatically writes and maintains its end-to-end UI tests, catching visual and behavioural regressions so engineering teams do not have to hand-write frontend tests.",
+  "one_liner_source": "https://www.meticulous.ai (verified 2026-07-27)",
+  "headcount_estimate": "11-25",
+  "headcount_source": "Bucketed estimate. The company's Y Combinator profile lists a team of roughly 15, and the live Ashby careers board shows 7 open roles (5 London, 2 San Francisco), 2026-07.",
+  "founders": [
+    {
+      "name": "Gabriel Spencer-Harper",
+      "role": "Co-founder and CEO",
+      "background": "Co-founder and CEO of Meticulous, and its sole director on the Companies House register; previously an engineer at Dropbox and Opendoor.",
+      "source_url": "https://www.meticulous.ai/author/gabriel-spencer-harper"
+    },
+    {
+      "name": "Quentin Spencer-Harper",
+      "role": "Co-founder and CTO",
+      "background": "Co-founder and CTO of Meticulous and Gabriel's brother; spent about a decade leading frontend engineering on Palantir's Foundry product before starting the company.",
+      "source_url": "https://www.softwaretestingmagazine.com/news/meticulous-ai-automated-frontend-testing-platform-raises-15-million/"
+    }
+  ]
+}
