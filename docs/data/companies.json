@@ -1,13 +1,148 @@
 {
-  "generated_at": "2026-07-12 20:52",
-  "count": 10,
+  "generated_at": "2026-07-27 10:43",
+  "count": 15,
   "companies": [
+    {
+      "name": "Arrakis",
+      "company_number": "16922906",
+      "domain": "arrakis.tech",
+      "website": "https://arrakis.tech",
+      "location_text": "London (and Paris), per the company and press; registered office at B1 Vantage Park, Bristol is a formation-agent address",
+      "incorporated_on": "2025-12-19",
+      "one_liner": "Arrakis is an industrial AI company whose platform deploys AI agents into mission-critical operations for enterprises in sectors such as aerospace and defense, energy, engineering and construction, shipping, and telecommunications, without requiring them to replace their existing systems.",
+      "headcount_estimate": "11-25",
+      "headcount_source": "Fortune and The Next Web report approximately 15 employees as of July 2026, with the company planning to triple headcount; the UK company was incorporated 19 December 2025, so it is about seven months old. Treat as a reported figure at the low end of this bucket.",
+      "ats_provider": "ashby",
+      "ats_status": "verified",
+      "founders": [
+        {
+          "name": "Haroun Beltaifa",
+          "role": "Co-founder",
+          "background": "One of Arrakis's four named co-founders; The Next Web reports he previously worked at Palantir."
+        },
+        {
+          "name": "Mikhail Galkov",
+          "role": "Co-founder",
+          "background": "One of Arrakis's four named co-founders; The Next Web reports he previously worked at Delivery Hero."
+        },
+        {
+          "name": "Rafael Quintanilla",
+          "role": "Co-founder and CEO",
+          "background": "Registered at Companies House as Rafael Louis Fernandez-Quintanilla, the UK company's sole director since incorporation on 19 December 2025; a former vice president at Accel, where he spent about a year developing the firm's investment thesis on defense and industrial resilience before leaving to found Arrakis."
+        },
+        {
+          "name": "Romain Fouilland",
+          "role": "Co-founder",
+          "background": "One of Arrakis's four named co-founders; The Next Web reports he previously worked at Palantir."
+        }
+      ]
+    },
+    {
+      "name": "Tyred",
+      "company_number": "14293054",
+      "domain": "tyred.io",
+      "website": "https://tyred.io",
+      "location_text": "5th Floor Palladium House, 1-4 Argyll Street, London, W1F 7TA",
+      "incorporated_on": "2022-08-12",
+      "one_liner": "Tyred is a London company that sends bike mechanics to riders on demand and services shared e-bike fleets, including roughly 50,000 of Lime's bikes in London, while building a connected 'ownership' platform that bundles bike repairs, maintenance, insurance, warranty, and finance.",
+      "headcount_estimate": "11-25",
+      "headcount_source": "No public headcount figure; qualitative estimate of the core team for a 2022-founded seed startup that has raised GBP2.5m and is hiring engineers. Its field mechanic operation is larger (100,000+ bikes serviced in the past year and a roughly 50,000-bike Lime fleet in London) and is likely partly a contractor network, so this bucket reflects the core company only and is uncertain (BikeBiz and ZAG Daily, 16 July 2026).",
+      "ats_provider": null,
+      "ats_status": "none",
+      "founders": [
+        {
+          "name": "Daniel Bursztynski",
+          "role": "Co-founder and CTO",
+          "background": "Named in the July 2026 seed-round press coverage as a co-founder of Tyred and its chief technology officer."
+        },
+        {
+          "name": "Lancelot Hoare",
+          "role": "Co-founder and CEO",
+          "background": "Co-founder and CEO of Tyred; the company's sole Companies House-registered director (TYRED LTD, 14293054), appointed on incorporation in August 2022."
+        },
+        {
+          "name": "Nikita Baranov",
+          "role": "Co-founder and COO",
+          "background": "Named in the July 2026 seed-round press coverage as a co-founder of Tyred and its chief operating officer."
+        }
+      ]
+    },
+    {
+      "name": "Valarian",
+      "company_number": "12295525",
+      "domain": "valarian.com",
+      "website": "https://valarian.com",
+      "location_text": "Unit 4.04, 175 High Holborn, Tottenham Court Road, London, WC1V 7AA",
+      "incorporated_on": "2019-11-04",
+      "one_liner": "Valarian builds sovereign infrastructure, delivered as a hardened Kubernetes control layer called ACRA, that lets governments, defence, and regulated enterprises run high-consequence AI and other sensitive workloads while keeping control over where their data lives and who can access it.",
+      "headcount_estimate": "26-50",
+      "headcount_source": "Press reported about 31 staff in London around the Series A, 2026-07; consistent with the 26-50 bucket and the leadership team named on valarian.com/about. The 31 figure is press-reported and was not independently re-verified in this pass.",
+      "ats_provider": "lever",
+      "ats_status": "verified",
+      "founders": [
+        {
+          "name": "Joshua (Josh) McLaughlin",
+          "role": "Co-founder and COO",
+          "background": "A retired US Army officer and Ranger who previously led new market expansion at Palantir before co-founding Valarian."
+        },
+        {
+          "name": "Maximilian (Max) Buchan",
+          "role": "Co-founder and CEO",
+          "background": "An early employee at digital asset manager CoinShares, where he helped launch one of the first publicly listed bitcoin exchange-traded products, before founding Valarian."
+        }
+      ]
+    },
+    {
+      "name": "Meticulous",
+      "company_number": "14177185",
+      "domain": "meticulous.ai",
+      "website": "https://www.meticulous.ai",
+      "location_text": "5 New Street Square, London, EC4A 3TW",
+      "incorporated_on": "2022-06-16",
+      "one_liner": "Meticulous makes an AI testing tool that records real usage of a web app and automatically writes and maintains its end-to-end UI tests, catching visual and behavioural regressions so engineering teams do not have to hand-write frontend tests.",
+      "headcount_estimate": "11-25",
+      "headcount_source": "Bucketed estimate. The company's Y Combinator profile lists a team of roughly 15, and the live Ashby careers board shows 7 open roles (5 London, 2 San Francisco), 2026-07.",
+      "ats_provider": "ashby",
+      "ats_status": "verified",
+      "founders": [
+        {
+          "name": "Gabriel Spencer-Harper",
+          "role": "Co-founder and CEO",
+          "background": "Co-founder and CEO of Meticulous, and its sole director on the Companies House register; previously an engineer at Dropbox and Opendoor."
+        },
+        {
+          "name": "Quentin Spencer-Harper",
+          "role": "Co-founder and CTO",
+          "background": "Co-founder and CTO of Meticulous and Gabriel's brother; spent about a decade leading frontend engineering on Palantir's Foundry product before starting the company."
+        }
+      ]
+    },
+    {
+      "name": "Prolo",
+      "company_number": "15801023",
+      "domain": "prolo.io",
+      "website": "https://prolo.io",
+      "location_text": "3rd Floor 86-90 Paul Street, London, EC2A 4NE",
+      "incorporated_on": "2024-06-25",
+      "one_liner": "Prolo is an AI-powered procurement platform for small and mid-sized construction firms, helping builders source, compare, and buy materials, equipment, and hire from a nationwide network of more than 185 supplier brands at competitive trade rates.",
+      "headcount_estimate": "11-25",
+      "headcount_source": "No headcount figure published in the funding press; the live public team page (https://prolo.io/team) lists 14 named team members, so bucketed as 11-25. Verified 2026-07-27.",
+      "ats_provider": null,
+      "ats_status": "none",
+      "founders": [
+        {
+          "name": "James Morris-Manuel",
+          "role": "Founder and CEO",
+          "background": "Previously founded Virtual Walkthrough, scaled it into a European market leader and led its acquisition by spatial data company Matterport, then served as EMEA Managing Director at Matterport, establishing its London regional headquarters; registered at Companies House as James David Morris-Manuel, a director since 25 June 2024."
+        }
+      ]
+    },
     {
       "name": "Kord",
       "company_number": "12243866",
       "domain": "kord.com",
       "website": "https://kord.com",
-      "location_text": "853-859 Salisbury House, 29 Finsbury Circus, London, EC2M 5QQ",
+      "location_text": "853-859 Salisbury House 29 Finsbury Circus, London, EC2M 5QQ",
       "incorporated_on": "2019-10-04",
       "one_liner": "Kord is an FCA-regulated platform that combines identity verification, AML and compliance checks, client onboarding and e-signing, and payment processing into a single system for regulated industries such as estate agents, law firms, and conveyancers.",
       "headcount_estimate": "26-50",

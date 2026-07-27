@@ -1,7 +1,34 @@
 {
-  "generated_at": "2026-07-12 20:52",
-  "count": 31,
+  "generated_at": "2026-07-27 10:43",
+  "count": 47,
   "jobs": [
+    {
+      "company_name": "Arrakis",
+      "title": "Junior Business Development Manager",
+      "location": "Zurich",
+      "url": "https://jobs.ashbyhq.com/arrakis/17f4359f-c83c-4fe4-b61e-9827f94823cb",
+      "ats_provider": "ashby",
+      "first_seen": "2026-07-27 09:06:49",
+      "junior_flag": true
+    },
+    {
+      "company_name": "Arrakis",
+      "title": "Quant (DeFi)",
+      "location": "Zurich",
+      "url": "https://jobs.ashbyhq.com/arrakis/70f21747-d925-482f-840f-9fceaf47b861",
+      "ats_provider": "ashby",
+      "first_seen": "2026-07-27 09:06:49",
+      "junior_flag": false
+    },
+    {
+      "company_name": "Arrakis",
+      "title": "Senior Quant Engineer",
+      "location": "Zurich",
+      "url": "https://jobs.ashbyhq.com/arrakis/1024b3a9-bf05-45ca-842e-eb276055b83f",
+      "ats_provider": "ashby",
+      "first_seen": "2026-07-27 09:06:49",
+      "junior_flag": false
+    },
     {
       "company_name": "Capsa AI",
       "title": "AI Consultant",
@@ -279,6 +306,123 @@
       "url": "https://jobs.ashbyhq.com/isometric/fdbd4715-de29-4869-9cb9-96a3be70d229",
       "ats_provider": "ashby",
       "first_seen": "2026-06-28 23:34:12",
+      "junior_flag": false
+    },
+    {
+      "company_name": "Meticulous",
+      "title": "Forward Deployed Engineer (New Grad)",
+      "location": "London",
+      "url": "https://jobs.ashbyhq.com/meticulous/e6d1e0ab-8a28-49ee-94ed-d232886cd7d5",
+      "ats_provider": "ashby",
+      "first_seen": "2026-07-26 18:17:06",
+      "junior_flag": true
+    },
+    {
+      "company_name": "Meticulous",
+      "title": "Forward Deployed Engineer, London",
+      "location": "London",
+      "url": "https://jobs.ashbyhq.com/meticulous/9b592dc5-6262-42ff-bbd7-f1b2ae8e7543",
+      "ats_provider": "ashby",
+      "first_seen": "2026-07-26 18:17:06",
+      "junior_flag": false
+    },
+    {
+      "company_name": "Meticulous",
+      "title": "Forward Deployed Engineer, San Francisco",
+      "location": "San Francisco",
+      "url": "https://jobs.ashbyhq.com/meticulous/e4f7bc5d-1aac-4ed7-a8c3-b4f96002d416",
+      "ats_provider": "ashby",
+      "first_seen": "2026-07-26 18:17:06",
+      "junior_flag": false
+    },
+    {
+      "company_name": "Meticulous",
+      "title": "Founding Account Executive",
+      "location": "San Francisco",
+      "url": "https://jobs.ashbyhq.com/meticulous/cfe53049-5928-422d-91fa-245dfe52635a",
+      "ats_provider": "ashby",
+      "first_seen": "2026-07-26 18:17:06",
+      "junior_flag": false
+    },
+    {
+      "company_name": "Meticulous",
+      "title": "GTM Operator",
+      "location": "London",
+      "url": "https://jobs.ashbyhq.com/meticulous/dd1a8b2d-1087-46cd-af64-999fdaacfec6",
+      "ats_provider": "ashby",
+      "first_seen": "2026-07-26 18:17:06",
+      "junior_flag": false
+    },
+    {
+      "company_name": "Meticulous",
+      "title": "Platform Engineer",
+      "location": "London",
+      "url": "https://jobs.ashbyhq.com/meticulous/2381385c-300f-4d91-91e4-b36f1ec86123",
+      "ats_provider": "ashby",
+      "first_seen": "2026-07-26 18:17:06",
+      "junior_flag": false
+    },
+    {
+      "company_name": "Meticulous",
+      "title": "Software Engineer",
+      "location": "London",
+      "url": "https://jobs.ashbyhq.com/meticulous/3197ae3d-bb26-4750-9ed7-b830f640515e",
+      "ats_provider": "ashby",
+      "first_seen": "2026-07-26 18:17:06",
+      "junior_flag": false
+    },
+    {
+      "company_name": "Valarian",
+      "title": "FinOps Associate",
+      "location": "London",
+      "url": "https://jobs.lever.co/valarian/fdaa9b57-67b4-4ece-9da4-7fbd9bc999e8",
+      "ats_provider": "lever",
+      "first_seen": "2026-07-26 18:17:03",
+      "junior_flag": true
+    },
+    {
+      "company_name": "Valarian",
+      "title": "Paralegal",
+      "location": "London",
+      "url": "https://jobs.lever.co/valarian/3ae295d1-993a-4510-8471-dcb79c01bb39",
+      "ats_provider": "lever",
+      "first_seen": "2026-07-26 18:17:03",
+      "junior_flag": false
+    },
+    {
+      "company_name": "Valarian",
+      "title": "Platform Engineer",
+      "location": "London",
+      "url": "https://jobs.lever.co/valarian/4199857d-92f7-4bbc-9e28-51a75d76e8e1",
+      "ats_provider": "lever",
+      "first_seen": "2026-07-26 18:17:03",
+      "junior_flag": false
+    },
+    {
+      "company_name": "Valarian",
+      "title": "Senior Infrastructure Engineer",
+      "location": "London",
+      "url": "https://jobs.lever.co/valarian/70b60f6c-9357-4348-a0fc-b841e5d41f0d",
+      "ats_provider": "lever",
+      "first_seen": "2026-07-26 18:17:03",
+      "junior_flag": false
+    },
+    {
+      "company_name": "Valarian",
+      "title": "Senior Software Engineer",
+      "location": "London",
+      "url": "https://jobs.lever.co/valarian/872aec4d-d770-4962-a374-b278dcd513e2",
+      "ats_provider": "lever",
+      "first_seen": "2026-07-26 18:17:03",
+      "junior_flag": false
+    },
+    {
+      "company_name": "Valarian",
+      "title": "Software Engineer",
+      "location": "London",
+      "url": "https://jobs.lever.co/valarian/a64d97fb-b6b2-41ec-a3ca-b0997c1f3cb3",
+      "ats_provider": "lever",
+      "first_seen": "2026-07-26 18:17:03",
       "junior_flag": false
     }
   ]

@@ -1,7 +1,57 @@
 {
-  "generated_at": "2026-07-12 20:52",
-  "count": 10,
+  "generated_at": "2026-07-27 10:43",
+  "count": 15,
   "funding_events": [
+    {
+      "stage": "series-a",
+      "amount_gbp": null,
+      "amount_source": "reported in USD (m Series A, part of m total); not converted to GBP",
+      "event_date": "2026-07-22",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-07-27",
+      "company_name": "Arrakis"
+    },
+    {
+      "stage": "seed",
+      "amount_gbp": 2500000,
+      "amount_source": "press: BikeBiz (lead)",
+      "event_date": "2026-07-16",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-07-27",
+      "company_name": "Tyred"
+    },
+    {
+      "stage": "series-a",
+      "amount_gbp": 37300000,
+      "amount_source": "press: UKTN (lead)",
+      "event_date": "2026-07-15",
+      "filing_id": "MzUzMjkwNTYxMWFkaXF6a2N4",
+      "status": "published",
+      "issue_date": "2026-07-27",
+      "company_name": "Valarian"
+    },
+    {
+      "stage": "series-a",
+      "amount_gbp": null,
+      "amount_source": "reported in USD (m Series A); not converted to GBP",
+      "event_date": "2026-07-15",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-07-27",
+      "company_name": "Meticulous"
+    },
+    {
+      "stage": "seed",
+      "amount_gbp": 4200000,
+      "amount_source": "press: UKTN (lead)",
+      "event_date": "2026-07-14",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-07-27",
+      "company_name": "Prolo"
+    },
     {
       "stage": "series-a",
       "amount_gbp": 6400000,

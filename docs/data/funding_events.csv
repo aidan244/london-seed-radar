@@ -1,4 +1,9 @@
 company_name,stage,amount_gbp,amount_source,event_date,filing_id,status,issue_date
+Arrakis,series-a,,"reported in USD (m Series A, part of m total); not converted to GBP",2026-07-22,,published,2026-07-27
+Tyred,seed,2500000,press: BikeBiz (lead),2026-07-16,,published,2026-07-27
+Valarian,series-a,37300000,press: UKTN (lead),2026-07-15,MzUzMjkwNTYxMWFkaXF6a2N4,published,2026-07-27
+Meticulous,series-a,,reported in USD (m Series A); not converted to GBP,2026-07-15,,published,2026-07-27
+Prolo,seed,4200000,press: UKTN (lead),2026-07-14,,published,2026-07-27
 Kord,series-a,6400000,press: UKTN (lead),2026-07-08,,published,2026-07-13
 Whering,seed,5200000,press: about GBP5.2m ($7m),2026-07-07,,published,2026-07-13
 geoSurge,seed,9400000,press: UKTN (lead),2026-07-03,MzUyNjQ0MDQyNGFkaXF6a2N4,published,2026-07-13
