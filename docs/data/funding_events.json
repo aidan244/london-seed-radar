@@ -1,11 +1,91 @@
 {
-  "generated_at": "2026-07-27 10:43",
-  "count": 15,
+  "generated_at": "2026-08-23 20:57",
+  "count": 23,
   "funding_events": [
+    {
+      "stage": "pre-seed",
+      "amount_gbp": 270000,
+      "amount_source": "press: Tech.eu (lead)",
+      "event_date": "2026-08-20",
+      "filing_id": "MzUzNDM1NjkwMmFkaXF6a2N4",
+      "status": "published",
+      "issue_date": "2026-08-24",
+      "company_name": "Paralo"
+    },
+    {
+      "stage": "seed",
+      "amount_gbp": null,
+      "amount_source": "reported in USD ($8m seed); not converted to GBP",
+      "event_date": "2026-08-19",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-08-24",
+      "company_name": "Medly AI"
+    },
+    {
+      "stage": "pre-seed",
+      "amount_gbp": 700000,
+      "amount_source": "press: UKTN (lead)",
+      "event_date": "2026-08-13",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-08-24",
+      "company_name": "Metal Morph"
+    },
+    {
+      "stage": "series-a",
+      "amount_gbp": 22200000,
+      "amount_source": "press: UKTN (lead)",
+      "event_date": "2026-08-13",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-08-24",
+      "company_name": "Mindgard"
+    },
     {
       "stage": "series-a",
       "amount_gbp": null,
-      "amount_source": "reported in USD (m Series A, part of m total); not converted to GBP",
+      "amount_source": "reported in USD ($7m Series A); not converted to GBP",
+      "event_date": "2026-08-12",
+      "filing_id": "MzUzNzIzNTg5NWFkaXF6a2N4",
+      "status": "published",
+      "issue_date": "2026-08-24",
+      "company_name": "Cytix"
+    },
+    {
+      "stage": "seed",
+      "amount_gbp": null,
+      "amount_source": "reported in USD ($11m seed); not converted to GBP",
+      "event_date": "2026-07-30",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-08-10",
+      "company_name": "Intropy"
+    },
+    {
+      "stage": "seed",
+      "amount_gbp": null,
+      "amount_source": "reported in USD ($30m seed: a $7m pre-seed tranche plus a $23m seed); not converted to GBP",
+      "event_date": "2026-07-29",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-08-10",
+      "company_name": "Agon"
+    },
+    {
+      "stage": "series-a",
+      "amount_gbp": 15800000,
+      "amount_source": "press: UKTN (lead)",
+      "event_date": "2026-07-29",
+      "filing_id": null,
+      "status": "published",
+      "issue_date": "2026-08-10",
+      "company_name": "LemonEdge"
+    },
+    {
+      "stage": "series-a",
+      "amount_gbp": null,
+      "amount_source": "reported in USD ($30m Series A, part of a $38m total); not converted to GBP",
       "event_date": "2026-07-22",
       "filing_id": null,
       "status": "published",
@@ -35,7 +115,7 @@
     {
       "stage": "series-a",
       "amount_gbp": null,
-      "amount_source": "reported in USD (m Series A); not converted to GBP",
+      "amount_source": "reported in USD ($15m Series A); not converted to GBP",
       "event_date": "2026-07-15",
       "filing_id": null,
       "status": "published",
