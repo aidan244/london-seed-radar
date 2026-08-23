@@ -1,0 +1,22 @@
+{
+  "_note": "Verified 2026-08-23. CYTIX LTD (14043556), Eagle House, 64 Cross Street, Manchester M2, incorporated 2022-04-12. This is a rest-of-UK entry, not London: the registered office and the address on the company's own site are both Manchester, and the round was led by Northern Gritstone with NPIF II, both Northern England funds. Companies House confirms Thomas Jacob Ballin as a director from incorporation and Benjamin John Armstrong from 2022-10-28, matching the two founders named in scout reporting; Ben Armstrong is named as chief executive in the funding coverage. SH01s filed 2026-08-05 and 2026-08-14 corroborate the round inside the window. Public facts only; no contact data.",
+  "company_number": "14043556",
+  "one_liner": "Cytix is a security decision layer for teams whose software never stops changing: it assesses the risk each change introduces, continuously rather than at an annual pen test, and automates the approvals that follow.",
+  "one_liner_source": "https://www.cytix.io (read 2026-08-23) corroborated by https://tech.eu/2026/08/12/cytix-raises-7m-series-a-to-tackle-cyber-risks-from-ai-driven-software-development/",
+  "headcount_estimate": "11-25",
+  "headcount_source": "Bucketed estimate, not a published figure: no headcount appears on the site or in the funding coverage. Inferred from a company founded in 2022 raising a $7m Series A with four roles open on its public job board. Uncertain; confirm before relying on it.",
+  "founders": [
+    {
+      "name": "Ben Armstrong",
+      "role": "Co-founder and CEO",
+      "background": "Named as chief executive in the Series A coverage. Registered at Companies House as Benjamin John Armstrong, a director of CYTIX LTD since October 2022.",
+      "source_url": "https://tech.eu/2026/08/12/cytix-raises-7m-series-a-to-tackle-cyber-risks-from-ai-driven-software-development/"
+    },
+    {
+      "name": "Thomas Ballin",
+      "role": "Co-founder",
+      "background": "Registered at Companies House as Thomas Jacob Ballin, a director of CYTIX LTD from its incorporation in April 2022.",
+      "source_url": "https://tech.eu/2026/08/12/cytix-raises-7m-series-a-to-tackle-cyber-risks-from-ai-driven-software-development/"
+    }
+  ]
+}

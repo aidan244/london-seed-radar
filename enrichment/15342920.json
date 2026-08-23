@@ -1,0 +1,22 @@
+{
+  "_note": "Backfilled and verified 2026-08-23 for the issue-4 archive record. INTROPY AI LTD (15342920) is registered at WeWork, Churchill Place, London E14, incorporated 2023-12-11. Companies House lists exactly two directors, Franziska Katharina Kerstin Kirschner and Yih Kai Teh, matching the two founders named in the press. The register holds no capital filings for this company, so the round is corroborated by press alone; the issue says so. Both founders' Tractable background is press-reported and was not independently confirmed against an employer record. Public facts only; no contact data.",
+  "company_number": "15342920",
+  "one_liner": "Intropy builds an AI-native operating system for the spare-parts trade: it plugs into a distributor's existing systems and automates the inventory, pricing, obsolescence, and salvage decisions that distributors, manufacturers, and recyclers still make by hand in spreadsheets.",
+  "one_liner_source": "https://intropy.ai (read 2026-08-23; the site describes itself as the AI engine for parts distribution, automating inventory and pricing decisions across a distribution network) corroborated by https://tech.eu/2026/07/30/ai-for-spare-parts-startup-intropy-raises-11m/",
+  "headcount_estimate": "11-25",
+  "headcount_source": "Bucketed estimate, not a published figure: no headcount appears in the funding coverage or on the company site. Inferred from a company incorporated in December 2023 raising a seed round of this size and stating it will expand the team. Uncertain; confirm before relying on it.",
+  "founders": [
+    {
+      "name": "Yih Kai Teh",
+      "role": "Co-founder and CTO",
+      "background": "Press reports him as a former researcher at UK AI company Tractable. A director of INTROPY AI LTD at Companies House.",
+      "source_url": "https://tech.eu/2026/07/30/ai-for-spare-parts-startup-intropy-raises-11m/"
+    },
+    {
+      "name": "Franziska Kirschner",
+      "role": "Co-founder",
+      "background": "Press reports her as a former researcher at UK AI company Tractable. Registered at Companies House as Franziska Katharina Kerstin Kirschner, a director of INTROPY AI LTD.",
+      "source_url": "https://tech.eu/2026/07/30/ai-for-spare-parts-startup-intropy-raises-11m/"
+    }
+  ]
+}

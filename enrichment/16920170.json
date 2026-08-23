@@ -1,0 +1,22 @@
+{
+  "_note": "Verified 2026-08-23. PARALO LTD (16920170), 124 City Road, London EC1V, incorporated 2025-12-18. Companies House confirms both founders as the company's only persons with significant control: Jarrad Christopher Hicks, a director from incorporation, and Zaheer Abbas Merali, appointed 2026-07-23. An SH01 filed 2026-07-22 corroborates the raise on the register, a month before the announcement. Tech.eu describes an oversubscribed founder-led round with angels investing under SEIS and names no institutional lead. This company reached the briefing through the local RSS ingest, not through any scout or pre-draft report. Public facts only; no contact data.",
+  "company_number": "16920170",
+  "one_liner": "Paralo builds a single operating system for golf clubs, replacing the separate legacy tools a club runs its tee sheet, competitions, live scoring, member app, till, and finances on, plus a connected app for the golfers themselves.",
+  "one_liner_source": "https://getparalo.com (read 2026-08-23) corroborated by https://tech.eu/2026/08/20/paralo-raises-ps270k-to-tackle-golfs-fragmented-technology-stack/",
+  "headcount_estimate": "1-10",
+  "headcount_source": "Qualitative estimate, not a published figure: a company incorporated in December 2025 with two directors on the register, raising a GBP270k pre-seed. Uncertain.",
+  "founders": [
+    {
+      "name": "Jarrad Hicks",
+      "role": "Co-founder and CEO",
+      "background": "A director of PARALO LTD from its incorporation in December 2025 and one of its two persons with significant control.",
+      "source_url": "https://tech.eu/2026/08/20/paralo-raises-ps270k-to-tackle-golfs-fragmented-technology-stack/"
+    },
+    {
+      "name": "Zaheer Merali",
+      "role": "Co-founder and CTO",
+      "background": "Registered at Companies House as Zaheer Abbas Merali, a director of PARALO LTD from July 2026 and one of its two persons with significant control.",
+      "source_url": "https://tech.eu/2026/08/20/paralo-raises-ps270k-to-tackle-golfs-fragmented-technology-stack/"
+    }
+  ]
+}

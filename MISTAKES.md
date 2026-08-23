@@ -270,3 +270,63 @@ Format:
   UNIQUE-constrained write reached inside a batch loop must degrade to
   dropping the one row, never abort the batch (the same lesson as the
   2026-07-03 "one bad record must not abort the run" hardening).
+
+## 2026-08-23: issue 4 was sent to readers but never reached the pipeline, the DB, or the archive
+- What happened: issue 4 (2026-08-10) went out on Substack on time, but
+  nothing downstream of the send happened. radar.db had no issues row and
+  none of its five companies; docs/ and the public dataset still stopped at
+  2026-07-27, two weeks stale against a live newsletter; no issue-4 human
+  todos were ever created, so the LinkedIn post, the founder notes, and the
+  metrics for that issue were never tracked; and HANDOVER.md had no entry
+  for the session that built it. Found on 2026-08-23 while answering "is it
+  a release week", by comparing the Substack archive against docs/issues/.
+- Why: the issue was hand-built outside radar.issue, because two of its five
+  entries ("on the radar" items: Paddington Robotics, whose money was from
+  2025, and Darcy, which had disclosed no round) cannot pass the four gates.
+  Building the markdown by hand is legitimate and the paste checklist in the
+  draft says so, but it skipped every side effect radar.issue has: the issues
+  row, the featured statuses, the todos, and therefore publish. Nothing in
+  the repo notices that a sent issue is missing, because nothing in the repo
+  knows what was sent.
+- Fix: backfilled 2026-08-23. The three gated companies (Agon, LemonEdge,
+  Intropy) were re-verified against Companies House, added as leads with
+  pinned company numbers, and replayed through the real pipeline at
+  --as-of 2026-08-10 using an isolated RADAR_ROOT holding only those three
+  leads and no rss_feeds, with --db pointed at the live radar.db, so no
+  current news could bleed into a two-week-old window and the hand-built
+  draft (the record of what was actually sent) was never overwritten.
+  Published to docs/. Paddington Robotics was added as a lead so its recency
+  drop is recorded; Darcy deliberately was not, because with no disclosed
+  round there is no funding event to record and inventing one to make the
+  archive match the email would be dishonest.
+- Prevention: an issue is not done when the email goes out. If a draft is
+  hand-built, the DB still needs the issue row, the featured statuses, and
+  the todos, and publish still needs to run, or the public archive silently
+  drifts behind the newsletter. Check docs/issues/ against the Substack
+  archive at the start of any session that touches an issue; they must have
+  the same number of entries.
+
+## 2026-08-23: an unquoted dollar figure was eaten by the shell and shipped in the public dataset
+- What happened: the public funding dataset described two issue-3 rounds as
+  "reported in USD (m Series A); not converted to GBP" and "reported in USD
+  (m Series A, part of m total); not converted to GBP". The dollar amounts
+  had vanished, leaving a sentence that says a round was reported in dollars
+  while withholding the number, on the one artifact whose whole purpose is
+  verifiable honesty. Live in docs/data/funding_events.json and .csv since
+  2026-07-27.
+- Why: the strings were written into the DB from a double-quoted shell
+  string, where a dollar sign followed by digits is a positional parameter
+  and expands to nothing. The amounts were correct in sources.yaml and in
+  the sent newsletter, so nothing downstream looked wrong; only the dataset
+  carried the damage, and no test asserts that an amount_source that says
+  "reported in USD" actually contains a currency figure.
+- Fix: rewrote both strings from a quoted Python heredoc, which the shell
+  does not expand, and re-ran publish. Scanned every amount_source in the DB
+  for the same shape (an empty parenthesis before a bare "m") and found only
+  those two. The same care was taken writing the issue-4 and issue-5
+  dollar figures.
+- Prevention: never build a string containing a currency figure inside a
+  double-quoted shell string. Write it in a quoted heredoc, a Python file,
+  or single quotes. When a value must be exact and public, read it back out
+  of the artifact after writing, not out of the source you typed.
+

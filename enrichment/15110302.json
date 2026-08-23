@@ -1,0 +1,22 @@
+{
+  "_note": "Verified 2026-08-23. MEDLY AI LIMITED (15110302), 167-169 Great Portland Street, London W1W, incorporated 2023-09-01. Companies House confirms both founders as directors from incorporation and as the company's only persons with significant control: Guyun Jung, who appears in the press as Dr Paul Jung, and Dr Kavitej Singh Samra, who appears as Dr Kavi Samra. Two later directors (Jonathan Coker, Ling Chou) are not founders and are not listed. The 400,000 UK user figure and the February 2025 launch date are press-reported and were not independently verified. Latest capital filing is 2025-12-27, before this round, so the seed is press-corroborated. Public facts only; no contact data.",
+  "company_number": "15110302",
+  "one_liner": "Medly builds an AI tutor for exam revision, giving students personalised practice and instant feedback across GCSE, A-Level, IB, AP, and SAT courses.",
+  "one_liner_source": "https://www.medlyai.com (read 2026-08-23) corroborated by https://tech.eu/2026/08/19/medly-ai-raises-8m-to-bring-ai-powered-tutoring-to-more-students/",
+  "headcount_estimate": "11-25",
+  "headcount_source": "Bucketed estimate, not a published figure: no headcount appears on the site or in the funding coverage. Inferred from a company two years past incorporation raising an $8m seed with four serving directors. Uncertain; confirm before relying on it.",
+  "founders": [
+    {
+      "name": "Paul Jung",
+      "role": "Co-founder and CEO",
+      "background": "A UCL medicine graduate per the funding coverage. Registered at Companies House as Guyun Jung, a director of MEDLY AI LIMITED from incorporation and one of its two persons with significant control.",
+      "source_url": "https://tech.eu/2026/08/19/medly-ai-raises-8m-to-bring-ai-powered-tutoring-to-more-students/"
+    },
+    {
+      "name": "Kavi Samra",
+      "role": "Co-founder",
+      "background": "A UCL medicine graduate per the funding coverage. Registered at Companies House as Dr Kavitej Singh Samra, a director from incorporation and one of the two persons with significant control.",
+      "source_url": "https://tech.eu/2026/08/19/medly-ai-raises-8m-to-bring-ai-powered-tutoring-to-more-students/"
+    }
+  ]
+}

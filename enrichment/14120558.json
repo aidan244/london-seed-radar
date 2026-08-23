@@ -1,0 +1,16 @@
+{
+  "_note": "Verified 2026-08-23. MINDGARD LTD (14120558), 34 Lime Street, London EC3M, incorporated 2022-05-20. The company's own leadership page names Dr Peter Garraghan as Chief Science Officer and Founder, and Companies House shows him a director from incorporation, so he is listed as the founder here. Scout reporting also named Prof Neeraj Suri as a co-founder; he appears neither on the leadership page nor as a serving director, so he is deliberately not listed. CEO James Brear joined the board 2025-09-15; investor directors include Gregory Dracon (.406 Ventures) and an IQ Capital nominee. The company describes itself as headquartered in Boston and London and as a spinout of over a decade of AI security research at Lancaster University, so do not present it as a purely London company. The latest capital filing is 2026-07-02 (allotment 2026-06-12), before this round, so the August raise is press-corroborated. Public facts only; no contact data.",
+  "company_number": "14120558",
+  "one_liner": "Mindgard is an AI security platform that finds the AI systems an organisation is actually running, including the ones nobody registered, red teams them for weaknesses, and then defends the models, agents, and applications at runtime.",
+  "one_liner_source": "https://mindgard.ai/about (read 2026-08-23) corroborated by https://www.uktech.news/ai/lancaster-spinout-mindgard-raises-22m-to-scale-ai-security-platform-20260813",
+  "headcount_estimate": "26-50",
+  "headcount_source": "Bucketed estimate, not a published figure: no headcount appears on the site or in the funding coverage. Inferred from a six-person named leadership team, dual Boston and London operations, and roughly $42m raised in total. Uncertain; confirm before relying on it.",
+  "founders": [
+    {
+      "name": "Peter Garraghan",
+      "role": "Founder and Chief Science Officer",
+      "background": "A Lancaster University professor whose AI security research the company was spun out of. A director of MINDGARD LTD from its incorporation in May 2022.",
+      "source_url": "https://mindgard.ai/about"
+    }
+  ]
+}

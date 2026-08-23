@@ -317,6 +317,155 @@ leads:
   #   Worldmodeldata (Cambridge, GBP7m seed) and a Coventry GBP4.65m seed: rest of
   #     UK, from scout PR #19; not verified in depth this session.
 
+  # Issue 4 batch (2026-08-10), BACKFILLED 2026-08-23. The issue was sent on
+  # Substack on 2026-08-10 but was hand-built outside the pipeline (two "on the
+  # radar" entries do not pass the gates), so nothing reached the database or
+  # the public archive. These three are the gated companies from that issue,
+  # re-verified against the Companies House register on 2026-08-23
+  # (director/PSC cross-checks) and against each company's own live site.
+  - name: Agon
+    stage: seed
+    url: https://tech.eu/2026/07/29/british-defence-startup-agon-creating-virtual-battlefields-launches-raising-30m/
+    date: 2026-07-29
+    # Amount deliberately omitted: reported in USD only (a 30m-dollar seed, a
+    # 7m-dollar pre-seed tranche plus a 23m-dollar seed), and the currency rule
+    # forbids converting. amount_source carries the dollar figure.
+    company_number: "16605303"     # SPIEL LTD (t/a Agon), c/o Founders Law, Hamilton House, 1 Temple Avenue, London EC4Y. The register name differs from the brand, which is why the number is essential: a name search for "Agon" returns only unrelated companies (an Eastbourne security firm, a Ballymena Ltd, gaming shells). Confirmed 2026-08-23: directors Tristam Constant (CEO) and Junaid Aasef Hussain (appointed on incorporation 2025-07-24) are both PSCs, and the board also holds David Helgason (Unity founder, chair) and Klaus Hommels (Lakestar), matching the press exactly. SH01 filed 2026-07-17 (statement of capital GBP851, nominal, not the raise).
+    source: Tech.eu
+  - name: LemonEdge
+    stage: series-a
+    url: https://www.uktech.news/fintech/lemonedge-raises-15-8m-to-modernise-private-market-infrastructure-20260729
+    date: 2026-07-29
+    amount_gbp: 15800000           # UKTN printed GBP15.8m; US coverage printed the same round as 21m dollars
+    company_number: "07629640"     # LEMONEDGE TECHNOLOGY LTD, 46 New Broad Street, London EC2M. Fund accounting and operations for private markets. Confirmed 2026-08-23: director David Thomas O'Malley matches the CEO named in the funding coverage, and an SH01 filed 2026-07-29 (allotment 2026-06-04) corroborates the round on the announcement date. Previously BLUE WATER SOFTWARE LTD and WHITE SKY SOFTWARE LTD; incorporated 2011, so an older company than a first-round startup.
+    source: UKTN
+  - name: Intropy
+    stage: seed
+    url: https://tech.eu/2026/07/30/ai-for-spare-parts-startup-intropy-raises-11m/
+    date: 2026-07-30
+    # Amount deliberately omitted: reported in USD only (an 11m-dollar seed);
+    # EU-Startups printed the same round in euros. amount_source carries it.
+    company_number: "15342920"     # INTROPY AI LTD, WeWork, Churchill Place, London E14. AI operating system for spare-parts distribution. Confirmed 2026-08-23: directors Franziska Kirschner and Yih Kai Teh match the two founders named in the press. No capital filings on the register, so this round is press-corroborated only.
+    source: Tech.eu
+
+  # Issue 4 "on the radar" entry, added 2026-08-23 so the sieve records why it
+  # is not in the dataset: a real London company whose money is from 2025.
+  - name: Paddington Robotics
+    stage: pre-seed
+    url: https://www.thebaehq.com/news/paddington-robotics-raises-1-9m-ai-robotics-7percent
+    date: 2025-02-11
+    amount_gbp: 1900000
+    company_number: "16015385"     # PADDINGTON ROBOTICS LIMITED, We.223 Westbourne Studios, 242 Acklam Road, London W10. Embodied AI for the supermarket shop floor; sole director Zehan Wang (previously co-founded Magic Pony Technology, sold to Twitter in 2016), confirmed 2026-08-23, with SH01s filed through 2025-05-01. The issue-4 email carried it as an "on the radar" entry, clearly labelled as not that fortnight's money; it drops on recency, which is correct.
+    source: The Bae HQ
+  # Darcy (darcyplans.com, London, Project Europe-backed, hiring) was the other
+  # issue-4 "on the radar" entry. It is deliberately NOT a lead: no round has
+  # been disclosed, so there is no funding event to record, and inventing one to
+  # get it into the dataset would be dishonest. It stays an email-only mention.
+  #
+  # Issue 5 batch (2026-08-24). Resolved and verified against the Companies
+  # House register on 2026-08-23 (director, PSC, and capital-filing
+  # cross-checks) and against each company's own live site, from the Sunday
+  # pre-draft (PR #34) and scout reports PR #29/#30/#32/#33. Every press URL
+  # below was re-fetched and content-checked on 2026-08-23, not taken from a
+  # search snippet. company_number pins the real entity.
+  #
+  # -- London, in window (2026-08-10..2026-08-24) --
+  - name: Callosum
+    stage: seed
+    url: https://tech.eu/2026/08/20/callosum-raises-100m-seed-round/
+    date: 2026-08-20
+    # Amount omitted: Tech.eu printed 100m dollars and EU-Startups printed
+    # 85.4m euros; no UK outlet printed a GBP figure, and the currency rule
+    # forbids converting. amount_source carries the dollar figure.
+    company_number: "16646869"     # CALLOSUM TECHNOLOGIES LTD, 56 Leman Street, London E1. IMPORTANT: this is the TOPCO, and it is the funded entity. There is a second, older company, CALLOSUM LTD (16076949, ex-SERNN LTD, same address), which the topco owns 75-100 percent and which has NO capital filings at all. Pinning the opco would have hung a 100m-dollar seed on a subsidiary with nothing on its register. The topco's SH01 filed 2026-08-10 (allotment 2026-07-08) lifts stated capital from GBP13.7m to GBP18.0m, inside the window. Founders Dr Jascha Achterberg and Dr Danyal Akarca are directors and the only PSCs of the topco; Ian Hogarth (Plural, an investor in the round) joined the board 2026-06-24. FLAG: at 100m dollars this is 10-15x a normal UK seed, growth-stage in substance. Same editorial position as Humanoid in issue 3: feature only as a clearly labelled outlier, or hold.
+    source: Tech.eu
+  - name: Mindgard
+    stage: series-a
+    url: https://www.uktech.news/ai/lancaster-spinout-mindgard-raises-22m-to-scale-ai-security-platform-20260813
+    date: 2026-08-13
+    amount_gbp: 22200000           # UKTN printed "$30m (GBP22.2m)", so the GBP figure is the source's own, not a conversion
+    company_number: "14120558"     # MINDGARD LTD, 34 Lime Street, London EC3M. AI security: shadow-AI discovery, red teaming, runtime protection. Founder Prof Peter Garraghan is a director from incorporation (2022-05-20); CEO James Brear joined the board 2025-09-15, and investor directors include Gregory Dracon (.406 Ventures) and an IQ Capital nominee. FLAG: a Lancaster University spinout with dual London and Boston headquarters per UKTN; the London registered office is real, but say "dual HQ" rather than calling it purely London. Latest SH01 is 2026-07-02 (allotment 2026-06-12), before the window, so the August round is press-corroborated.
+    source: UKTN
+  - name: Medly AI
+    stage: seed
+    url: https://tech.eu/2026/08/19/medly-ai-raises-8m-to-bring-ai-powered-tutoring-to-more-students/
+    date: 2026-08-19
+    # Amount omitted: Tech.eu printed 8m dollars, EU-Startups 6.9m euros; no
+    # GBP figure printed. amount_source carries the dollar figure.
+    company_number: "15110302"     # MEDLY AI LIMITED, 167-169 Great Portland Street, London W1W. AI tutor for GCSE, A-Level, IB, AP and SAT revision; press reports 400,000 UK users since a February 2025 launch. Confirmed 2026-08-23: the two founders are directors from incorporation and the only PSCs, Guyun Jung (the "Dr Paul Jung" of the press) and Dr Kavitej Singh Samra ("Dr Kavi Samra"); both are UCL medicine graduates per Tech.eu. Felix Capital led. Latest SH01 2025-12-27, before the window, so the round is press-corroborated.
+    source: Tech.eu
+  - name: Metal Morph
+    stage: pre-seed
+    url: https://www.uktech.news/climate-tech/metal-morph-raises-pre-seed-round-to-turn-wastewater-into-supply-chains-20260813
+    date: 2026-08-13
+    amount_gbp: 700000             # UKTN printed GBP700k equity; a separate GBP100k Ofwat grant and a further GBP450k milestone-contingent tranche are NOT counted in this figure
+    company_number: "16235318"     # METAL MORPH LTD, Ashmere Grove Flat 1, 24 Ashmere Grove, London SW2 (a founder's address, not an office). Recovers aluminium and iron-based coagulant chemicals from municipal and industrial wastewater for reuse. Sole director and sole PSC is Moletsane Mophethe, matching the press, confirmed 2026-08-23. No capital filings on the register, so press-corroborated only. Press names six UK water-utility partnerships including Thames Water and Anglian Water.
+    source: UKTN
+  - name: Edgify
+    stage: series-a
+    url: https://www.uktech.news/ai/edgify-raises-6-7m-to-power-ai-infrastructure-for-physical-retail-20260811
+    date: 2026-08-11
+    amount_gbp: 6700000            # UKTN printed "$9m (GBP6.7m)"; total raised to date $25m (GBP18.5m)
+    company_number: "09359462"     # EDGIFY AI LTD., 307 Euston Road, London NW1, incorporated 2014-12-17 and previously PICSONEYE SEGMENTATION INNOVATIONS LIMITED. Edge AI for physical retail (self-checkouts, cameras, scales). CEO and co-founder Nadav Tal Israel is a director from incorporation; co-founder Mitchell Bayer-Goldman joined the board 2023-08-03. Fresh SH01s filed 2026-08-13 and 2026-08-17 corroborate the round on the register. FLAG: press calls this "Series A+", an extension of an earlier Series A, on a company eleven years old with a Luxembourg VC (Mangrove V Investments S.A.R.L) as its controlling PSC. The stage gate accepts series-a; whether an A+ extension belongs in a newly-funded briefing is an editorial call, the Alchemab question from issue 2.
+    source: UKTN
+  - name: FlairMakers
+    stage: pre-seed
+    url: https://www.uktech.news/recruitment/flairmakers-raises-500k-to-build-platform-for-hospitality-portfolio-careers-20260812
+    date: 2026-08-12
+    amount_gbp: 500000
+    company_number: "14549699"     # UPTALENT LIMITED (t/a FlairMakers), registered C/O MTM, 3rd Floor, 82 King Street, MANCHESTER M2. Talent-as-a-service for hospitality. Both press-named founders are directors, Raluca Mirela Epureanu (from incorporation 2022-12-19, sole PSC) and Alexis Sikorsky (from 2026-06-01), so the entity is right. FLAG: UKTN calls the company London-headquartered but the register says a Manchester agent address, and the latest capital filing is 2024-11-13, so nothing on the register corroborates a 2026 raise. Also operates in Romania. Treat the London label as press-only and make an editorial call before featuring it as London.
+    source: UKTN
+  #
+  # -- Rest of UK (passes geography as UK, not London) --
+  - name: Cytix
+    stage: series-a
+    url: https://tech.eu/2026/08/12/cytix-raises-7m-series-a-to-tackle-cyber-risks-from-ai-driven-software-development/
+    date: 2026-08-12
+    # Amount omitted: Tech.eu printed 7m dollars and EU-Startups 6m euros.
+    company_number: "14043556"     # CYTIX LTD, 64 Cross Street, MANCHESTER M2. Change-risk management for security risk introduced by AI-driven software development. Founders Ben Armstrong and Thomas Ballin are both directors, confirmed 2026-08-23, and SH01s filed 2026-08-05 and 2026-08-14 corroborate the round inside the window. Led by Northern Gritstone with Auriga Cyber Ventures and NPIF II, which fits the Manchester base. Rest of UK, not London.
+    source: Tech.eu
+  - name: EcoNomad Solutions
+    stage: pre-seed
+    url: https://tech.eu/2026/08/19/economad-raises-ps400k-to-bring-waste-to-energy-tech-to-small-livestock-farms/
+    date: 2026-08-19
+    amount_gbp: 400000
+    company_number: "11480845"     # ECONOMAD SOLUTIONS LTD, 201 Daniel Hall Building, Rothamsted Enterprise, West Common, HARPENDEN, Hertfordshire. Compact modular anaerobic digestion (the BioNomad unit) turning livestock farm waste into biogas and biofertiliser for farms too small for conventional kit. Director and sole PSC Dr Ilan Jaime Adler, from incorporation 2018-07-24. Funded by British Design Fund, an Innovate UK Investor Partnership grant, and a Beeches Group follow-on; SH01 filed 2026-07-14. Rest of UK, not London.
+    source: Tech.eu
+  #
+  # -- Surfaced by the local RSS feeds during the issue-5 ingest on 2026-08-23,
+  #    not by any scout or pre-draft report (the cloud legs are egress-blocked
+  #    from the feed proxy, so this is the local pipeline earning its keep).
+  #    Both verified against Companies House and their own live sites the same
+  #    day; added as leads for rebuild durability, the Whering precedent.
+  - name: Paralo
+    stage: pre-seed
+    url: https://tech.eu/2026/08/20/paralo-raises-ps270k-to-tackle-golfs-fragmented-technology-stack/
+    date: 2026-08-20
+    amount_gbp: 270000            # Tech.eu printed GBP270k, an oversubscribed founder-led pre-seed with SEIS angels; no institutional lead named
+    company_number: "16920170"     # PARALO LTD, 124 City Road, London EC1V, incorporated 2025-12-18. An operating system for golf clubs (tee sheet, competitions, live scoring, member app, EPOS, finance) plus a connected product for golfers. Confirmed 2026-08-23: Jarrad Christopher Hicks (CEO, director from incorporation) and Zaheer Abbas Merali (CTO, director from 2026-07-23) are the only PSCs, matching the press. SH01 filed 2026-07-22 corroborates on the register.
+    source: Tech.eu
+  - name: Noggin HQ
+    stage: seed
+    url: https://www.uktech.news/fintech/noggin-hq-raises-2-3m-for-its-alternative-credit-scoring-tech-20260819
+    date: 2026-08-19
+    amount_gbp: 2300000
+    company_number: "13409453"     # NOGGIN HQ LTD, Toffee Factory, Lower Steenbergs Yard, Walker Road, NEWCASTLE UPON TYNE, incorporated 2021-05-19. Cashflow-based credit data: permissioned banking transaction data turned into credit insights for lenders, FCA-authorised as a credit reference agency. Confirmed 2026-08-23: founders Evangeline Atkinson (director from incorporation, sole PSC) and Laura Mills (from 2021-09-01) match the press, and David Edward Christian Mott of Oxford Capital, an investor in the round, joined the board 2026-08-03. Rest of UK, not London.
+    source: UKTN
+  #
+  # Seen in the window and deliberately NOT added (recorded so the next run does
+  # not re-litigate them): OLIX (Series B), Cambridge Aerospace (Series C, and
+  # Cambridge), Mironid (Glasgow, Series B), Wordsmith AI (Edinburgh, Series B
+  # extension), Vertical Aerospace (NYSE-listed, not a startup round), Advanced
+  # Electric Machines (Sunderland), Versatile RobotX (Colchester), SkinScanner.gg
+  # (Liverpool), Watercycle Technologies (Runcorn, government grant), Flok Health
+  # (Cambridge), GALLOS Technologies (a venture studio raising its own balance
+  # sheet, not a startup raise), Model ML (an HSBC Asset Management strategic
+  # stake on a company already past 100m dollars raised), Uforce (in talks, no
+  # close), ETN (London seed, announced on or before 2026-08-03, outside the
+  # window), Aavalynx (London pre-seed, announced 2026-08-05, outside the
+  # window), Reimagine Robotics (London pre-seed, 2026-08-03, outside the
+  # window), Applied Computing (London Series A, 2026-07-16, outside the window).
+
 # Public accelerator/investor portfolio pages for the candidate-mapping
 # tool (python -m radar.accelerators). It writes a reviewable list to
 # reports/accelerators/; it never touches the database or auto-resolves
@@ -363,6 +512,22 @@ website_overrides:
   humanoid: https://thehumanoid.ai
   marker: https://marker.page
   arrakis: https://arrakis.tech
+  # Issue 4 set, verified live 2026-08-23 (HTTP 200, page names the company):
+  agon: https://www.agon.com
+  lemonedge: https://www.lemonedge.com
+  intropy: https://intropy.ai
+  # Issue 5 set, verified live 2026-08-23 (HTTP 200, page names the company):
+  callosum: https://www.callosum.com
+  mindgard: https://mindgard.ai
+  medly ai: https://www.medlyai.com
+  metal morph: https://metalmorph.co.uk
+  edgify: https://www.edgify.ai
+  flairmakers: https://flairmakers.com
+  cytix: https://www.cytix.io
+  economad solutions: https://economad.co.uk
+  paralo: https://getparalo.com
+  noggin hq: https://nogginhq.com
+  paddington robotics: https://paddington-robotics.com
 
 # Manual ATS board mappings for live mode, same key as above.
 ats_overrides: {}

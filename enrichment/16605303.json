@@ -1,0 +1,22 @@
+{
+  "_note": "Backfilled and verified 2026-08-23 for the issue-4 archive record. The register entity is SPIEL LTD (16605303), not a company named Agon: Agon is the trading brand, which is why the lead pins the number. Companies House confirms Tristam Constant and Junaid Aasef Hussain as directors and as the only persons with significant control, with Hussain appointed on incorporation (2025-07-24); David Helgason (Unity founder, chair) and Klaus Hommels (Lakestar) are also directors but are backers, not founders, and are not listed below. Founder backgrounds are press-reported (Tech.eu 2026-07-29, Army Technology 2026-07-30) and were not independently confirmed against an employer record. Public facts only; no contact data.",
+  "company_number": "16605303",
+  "one_liner": "Agon builds synthetic battlefields, virtual environments where autonomous defence systems such as counter-drone platforms train at machine speed against adaptive adversaries modelled on live conflict intelligence, long before they meet a real threat.",
+  "one_liner_source": "https://tech.eu/2026/07/29/british-defence-startup-agon-creating-virtual-battlefields-launches-raising-30m/ and https://www.army-technology.com/news/agon-seed-round-funding/ (both re-read 2026-08-23). The company site, agon.com, was a single stealth page reading 'Enter the arena' at that date and carries no product description.",
+  "headcount_estimate": "11-25",
+  "headcount_source": "Qualitative estimate, not a published figure: a company incorporated 2025-07-24 that launched out of stealth in July 2026 with a 30m-dollar seed and offices in London and Berlin. Treat as uncertain.",
+  "founders": [
+    {
+      "name": "Tristam Constant",
+      "role": "Co-founder and CEO",
+      "background": "A former British Army officer who, per the launch coverage, was a senior director at defence company Anduril in Europe before founding Agon. Registered at Companies House as Tristam Charles Ashley Meyricke Constant and a person with significant control of SPIEL LTD.",
+      "source_url": "https://www.army-technology.com/news/agon-seed-round-funding/"
+    },
+    {
+      "name": "Junaid Hussain",
+      "role": "Co-founder",
+      "background": "Press reports him as a co-founder of Cambridge Aerospace and of Iconic. Appointed a director of SPIEL LTD on its incorporation, 2025-07-24, and a person with significant control.",
+      "source_url": "https://tech.eu/2026/07/29/british-defence-startup-agon-creating-virtual-battlefields-launches-raising-30m/"
+    }
+  ]
+}

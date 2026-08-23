@@ -1,0 +1,22 @@
+{
+  "_note": "Backfilled and verified 2026-08-23 for the issue-4 archive record. LEMONEDGE TECHNOLOGY LTD (07629640) is registered at 46 New Broad Street, London EC2M, incorporated 2011-05-11 and previously named BLUE WATER SOFTWARE LTD and WHITE SKY SOFTWARE LTD, so it is an established company rather than a first-round startup; the issue-4 draft assumed a 2020-era founding, which the register corrects. An SH01 filed 2026-07-29, the announcement date, corroborates the round (allotment dated 2026-06-04); its stated capital is nominal and is not the amount raised. Gareth Hewitt is described as a co-founder on the company's own site and is a serving director. David T. O'Malley is listed below because the funding coverage names him as CEO and board chair appointed around this round; he is not described anywhere as a founder. Public facts only; no contact data.",
+  "company_number": "07629640",
+  "one_liner": "LemonEdge builds fund accounting and operations software for private markets, replacing the spreadsheets and legacy systems that private equity firms, fund administrators, and family offices still run their accounting, data, and reporting on with one auditable platform.",
+  "one_liner_source": "https://www.lemonedge.com (read 2026-08-23; the site describes itself as next-generation fund accounting software for private markets) corroborated by https://www.uktech.news/fintech/lemonedge-raises-15-8m-to-modernise-private-market-infrastructure-20260729",
+  "headcount_estimate": "26-50",
+  "headcount_source": "Bucketed estimate, not a published figure: no headcount appears in the funding coverage or on the company site. Inferred from a company operating across London and New York and raising a Series A of this size. Uncertain; confirm before relying on it.",
+  "founders": [
+    {
+      "name": "Gareth Hewitt",
+      "role": "Co-founder",
+      "background": "Named as a co-founder on lemonedge.com and a serving director of LEMONEDGE TECHNOLOGY LTD at Companies House.",
+      "source_url": "https://www.lemonedge.com"
+    },
+    {
+      "name": "David T. O'Malley",
+      "role": "CEO and board chair (appointed around this round; not a founder)",
+      "background": "Named in the Series A coverage as chief executive and board chair. Registered at Companies House as David Thomas O'Malley, a director of LEMONEDGE TECHNOLOGY LTD.",
+      "source_url": "https://www.uktech.news/fintech/lemonedge-raises-15-8m-to-modernise-private-market-infrastructure-20260729"
+    }
+  ]
+}
